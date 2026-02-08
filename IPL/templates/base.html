@@ -60,17 +60,6 @@
           <li class="nav-item">
             <a href="{{ url_for('main.battingstats') }}" class="nav-link">STATS</a>
           </li>
-          <!-- Custom dropdown (uses unique class names to avoid Bootstrap dropdown styles) -->
-          <li class="nav-item custom-dropdown">
-            <a class="nav-link custom-dropdown-toggle" href="#" id="allTimeCustomToggle" role="button" aria-haspopup="true" aria-expanded="false">
-              ALL TIME IPL <i class="fa fa-chevron-down"></i>
-            </a>
-      
-            <div class="custom-dropdown-menu" aria-labelledby="allTimeCustomToggle">
-              <a class="custom-dropdown-item" style="font-weight: bold;" href="{{ url_for('main.alltimeipl') }}">STATISTICS</a>
-              <a class="custom-dropdown-item" style="font-weight: bold;" href="{{ url_for('main.render_page', page='resultrecords') }}">RECORDS</a>
-            </div>
-          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           {% if not current_user.is_authenticated %}
