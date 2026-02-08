@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+    <title>TATA IPL 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename= 'images/title-ipl-logo.ico') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <link href="{{ url_for('static', filename= 'css/base.css') }}" rel="stylesheet">
+    {% endblock %}
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand extra-pr-100 {% block nav_class %}{% endblock %}" href="{{ url_for('main.index') }}">
+        <img src="{{ url_for('static', filename= 'images/logo.png') }}"
+              alt="user photo" width="25" height="40" />
+        &nbsp;TATA IPL 2025
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a href="{{ url_for('main.displayPT') }}" class="nav-link">POINTS TABLE</a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('main.displayFR') }}" class="nav-link">MATCHES</a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('main.teams') }}" class="nav-link">TEAMS</a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('main.todayMatch') }}" class="nav-link">LIVE</a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('main.battingstats') }}" class="nav-link">STATS</a>
+          </li>
+          <!-- Custom dropdown (uses unique class names to avoid Bootstrap dropdown styles) -->
+          <li class="nav-item custom-dropdown">
+            <a class="nav-link custom-dropdown-toggle" href="#" id="allTimeCustomToggle" role="button" aria-haspopup="true" aria-expanded="false">
+              ALL TIME IPL <i class="fa fa-chevron-down"></i>
+            </a>
+      
+            <div class="custom-dropdown-menu" aria-labelledby="allTimeCustomToggle">
+              <a class="custom-dropdown-item" style="font-weight: bold;" href="{{ url_for('main.alltimeipl') }}">STATISTICS</a>
+              <a class="custom-dropdown-item" style="font-weight: bold;" href="{{ url_for('main.render_page', page='resultrecords') }}">RECORDS</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('auth.login') }}" class="outline-btn outline-btn--white">Login</a>
+          {% endif %}
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('main.update') }}" class="outline-btn outline-btn--accent">Update/Delete</a>
+          <a href="{{ url_for('auth.logout') }}" class="outline-btn outline-btn--danger">Log Out</a>
+          {% endif %}
+        </form>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9JoBS8Nf5CFcSZ6p4UcCozDz2bK5u2v9KgN3" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  </body>
+</html>

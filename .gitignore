@@ -1,0 +1,7 @@
+IPL/__pycache__/*
+venv/*
+.idea/*
+__pycache__/*
+flask_start.sh
+git_start.sh
+qodana.yaml

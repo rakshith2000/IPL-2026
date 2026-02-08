@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% block head %} {{ super() }}
+  <meta name="robots" content="noindex,nofollow" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" rel="stylesheet" >
+   <link href="{{ url_for('static', filename= 'fonts/css/fontawesome.min.css') }}" rel="stylesheet" >
+  <link href="{{ url_for('static', filename= 'fonts/css/brands.min.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename= 'fonts/css/solid.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename= 'css/global.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename= 'css/index.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename= 'css/live.css') }}" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+   <link href="{{ url_for('static', filename= 'css/flag-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename= 'css/records.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div style="padding-top: 55px;"></div>
+
+<section id="center" class="pt-3 pb-3 center_live">
+ <div class="container-xl">
+
+   <div class="row schedule2">
+    <div class="col-md-9">
+    <div class="live">
+      <div class="live_2 mt-2"><center><span class="text-white fw-bold" style="font-size: 25px">All Time IPL Data</span></center></div>
+      <div class="score_1 mt-2">
+        <div class="tab-scroll-wrapper">
+          <div class="tab-scroll-inner">
+            <ul class="d-flex justify-content-center font_14 fw-bold nav nav-tabs border-0" id="inningsTabs">
+              <li class="me-2 mt-1 mb-1" style="font-size: 16px">
+                <a class="border_orange d-block p-1 px-3 rounded-pill" data-bs-toggle="tab" aria-expanded="true" href="{{ url_for('main.alltimeipl') }}">IPL Overview</a>
+              </li>
+              <li class="me-2 mt-1 mb-1" style="font-size: 16px">
+                <a class="border_orange d-block p-1 px-3 rounded-pill active" data-bs-toggle="tab" aria-expanded="true" href="{{ url_for('main.render_page', page='iplawards') }}">IPL Awards</a>
+              </li>
+              <li class="me-2 mt-1 mb-1" style="font-size: 16px">
+                <a class="border_orange d-block p-1 px-3 rounded-pill" data-bs-toggle="tab" aria-expanded="true" href="{{ url_for('main.render_page', page='alltimept') }}">IPL Points Table</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <center><div class="pt-3 dropdown">
+        <button class="dropdown-toggle" onclick="toggleDropdown()" id="dropdownButton">Orange Cap<i class="fa fa-chevron-down font_10 ms-1"></i></button>
+        <div class="dropdown-menu pt-0 pb-0" id="dropdownMenu">
+        <a href="#" class="activeD" onclick="selectOption(this, 'Orange Cap')">Orange Cap <img src="{{ url_for('static', filename='images/oc.png') }}" alt="orange cap" class="team-logo" onerror="this.style.display='none'"></a>
+        <a href="#" onclick="selectOption(this, 'Purple Cap')">Purple Cap <img src="{{ url_for('static', filename='images/pc.png') }}" alt="purple cap" class="team-logo" onerror="this.style.display='none'"></a>
+        <a href="#" onclick="selectOption(this, 'Most Sixes')">Most Sixes <img src="{{ url_for('static', filename='images/6s.jpg') }}" alt="most sixes" class="team-logo" onerror="this.style.display='none'"></a>
+        <a href="#" onclick="selectOption(this, 'Most Fours')">Most Fours <img src="{{ url_for('static', filename='images/4s.png') }}" alt="most fours" class="team-logo" onerror="this.style.display='none'"></a>
+        <a href="#" onclick="selectOption(this, 'Most Valuable Player')">Most Valuable Player</a>
+        <a href="#" onclick="selectOption(this, 'Player of the Final')">Player of the Final</a>
+        <a href="#" onclick="selectOption(this, 'Emerging Player')">Emerging Player</a>
+        <a href="#" onclick="selectOption(this, 'Highest Strike Rate')">Highest Strike Rate</a>
+        <a href="#" onclick="selectOption(this, 'Best Catch')">Best Catch</a>
+        <a href="#" onclick="selectOption(this, 'Fair Play Award')">Fair Play Award</a>
+        </div>
+      </div></center>
+      <div id="tableContainer" class="table-wrapper"></div>
+    </div>
+  </div>
+   </div>
+ </div>
+</section>
+<script src="{{ url_for('static', filename='js/ipl_records_stats_gen.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ipl-awards.js') }}"></script>
+{% endblock %}
