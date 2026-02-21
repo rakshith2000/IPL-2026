@@ -2,13 +2,15 @@
 <html lang="en">
   <head>
     {% block head %}
-    <title>TATA IPL 2025</title>
+    <title>TATA IPL 2026</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="shortcut icon"
       type="image/x-icon"
-      href="{{ url_for('static', filename= 'images/title-ipl-logo.ico') }}"
+      href="{{ url_for('static', filename= 'images/ipl.ico') }}"
     />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
     <link
       href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap"
       rel="stylesheet"
@@ -27,9 +29,8 @@
   <body>
     <nav class="navbar navbar-expand-lg">
       <a class="navbar-brand extra-pr-100 {% block nav_class %}{% endblock %}" href="{{ url_for('main.index') }}">
-        <img src="{{ url_for('static', filename= 'images/logo.png') }}"
-              alt="user photo" width="25" height="40" />
-        &nbsp;TATA IPL 2025
+        <img src="{{ url_for('static', filename= 'images/IPL-Logo.png') }}"
+              alt="user photo" width="70" height="40" />
       </a>
       <button
         class="navbar-toggler"
@@ -66,6 +67,7 @@
           <a href="{{ url_for('auth.login') }}" class="outline-btn outline-btn--white">Login</a>
           {% endif %}
           {% if current_user.is_authenticated %}
+          <button onclick="registerBiometric()" type="button" class="outline-btn outline-btn--gray">Register Bio</button>
           <a href="{{ url_for('main.update') }}" class="outline-btn outline-btn--accent">Update/Delete</a>
           <a href="{{ url_for('auth.logout') }}" class="outline-btn outline-btn--danger">Log Out</a>
           {% endif %}
@@ -79,5 +81,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9JoBS8Nf5CFcSZ6p4UcCozDz2bK5u2v9KgN3" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/webauthn.js') }}"></script>
   </body>
 </html>

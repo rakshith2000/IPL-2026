@@ -4,14 +4,15 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
     /* Body and Page Background */
     body {
-        background: #081033;
-  background-image: url('/static/images/banner_bg.png');
-  background-size: 100%;
-  background-position: center top -48px;
+        background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background-size: 100%, cover;
+  background-position: center top -48px, center top;
+  background-repeat: repeat, repeat;
         font-family: 'Exo 2', sans-serif;
         color: #fff;
         margin: 0;
@@ -22,7 +23,7 @@
     }
 
     .banner {
-        padding: 2rem 0;
+        padding: 20px 0;
         text-align: center;
         margin-top: -20px;
     }
@@ -95,6 +96,15 @@
         }
     }
 
+    td a {
+        color: inherit;
+        text-decoration: none;
+    }
+    td a:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+
     body::-webkit-scrollbar {
         width: 3px;
         height: 12px;
@@ -145,8 +155,8 @@
     'UP Worriorz': ['#b100cd', '#7600bc']
 } %}
 
-<div class="banner">
-<center>    <span class="title-banner">IPL 2025 Points Table</span>
+<div class="banner extra-padding">
+<center>    <span class="title-banner">Points Table</span>
 
     <main class="table" id="customers_table">
         <section class="table__body">
@@ -167,20 +177,20 @@
                     {% for i in range(10) %}
                     {% if i >= 3 %}{% set bgclr1 = '#ee7171' %}{% set bgclr2 = '#ee2929' %}{% else %}{% set bgclr1 = '#80ee76' %}{% set bgclr2 = '#39b329' %}{% endif %}
                     <tr style="--c1: #2b2a29; --c2: #444444">
-                        <td class="text-center" style="background-color: #444444;"> {{ PT[1][i] }} </td>
+                        <td class="text-center" style="background-color: #444444;"> {% if PT[1][i] != "Champions" %} {{ PT[1][i] }} {% else %}<img src="/static/images/trophy.png" alt="Champions Trophy" style="width: 20px; height: 22px;"> {% endif %} </td>
                         {% set gradient_color = '' %}
                         {% if TABV[i] == 'RCB' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ', ' ~ clr[TABV[i]]['c1'] %}
+                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c1'] ~ ' 70%' %}
                         {% elif TABV[i] == 'PBKS' %}
-                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ', ' ~ clr[TABV[i]]['c1'] %}
+                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ' 10%, ' ~ clr[TABV[i]]['c1'] ~ ' 70%' %}
                         {% elif TABV[i] == 'KKR' %}
-                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ', ' ~ clr[TABV[i]]['c3'] %}
+                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ' 10%, ' ~ clr[TABV[i]]['c3'] ~ ' 70%' %}
                         {% elif TABV[i] == 'MI' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ', ' ~ clr[TABV[i]]['c2'] %}
+                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
                         {% elif TABV[i] == 'GT' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ', ' ~ clr[TABV[i]]['c2'] %}
+                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
                         {% else %}
-                            {% set gradient_color = clr[TABV[i]]['c1'] ~ ', ' ~ clr[TABV[i]]['c2'] %}
+                            {% set gradient_color = clr[TABV[i]]['c1'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
                         {% endif %}
                         <td class="text-center" style="background: linear-gradient(145deg, {{ gradient_color }})">{% if PT[12][i] == "Q" %}<div class="position-indicatorQ"><span>Q</span>{% elif PT[12][i] == "E" %}<div class="position-indicatorE"><span>E</span>{% endif %}</div><img src="/static/images/squad_logos/{{ TABV[i] }}.png" alt=""></td>
                         <td class="team-name" full="{{ PT[3][i] }}" short="{{ TABV[i] }}" style="background: linear-gradient(180deg, #2b2a29, #444444)"> <b>{{ PT[3][i] }}</b> </td>
@@ -212,8 +222,11 @@
                             {% endfor %}
                         </td>
                         <td class="text-center">{{ PT[11][i] }}</td>
-                        {% if PT[13][i].split('%')[0] | int >= 70 %}{% set qualclr = "lightgreen" %}{% elif PT[13][i].split('%')[0] | int >= 40 %}{% set qualclr = "orange" %}{% else %}{% set qualclr = "#ff4d4d" %}{% endif %}
-                        <td class="text-center" style="color: {{ qualclr }}"><b>{{ PT[13][i] }}</b></td>
+                        <td class="text-center" >{%if PT[4][i] != 0 %}{{ ((PT[5][i] + 0.5 * PT[7][i]) / PT[4][i] * 100 )|round(2) }} %{% else %}0 %{% endif %}</td>
+                        {% if PT[13][i] | int >= 70 %}{% set qualclr = "lightgreen" %}{% elif PT[13][i] | int >= 40 %}{% set qualclr = "orange" %}{% else %}{% set qualclr = "#ff4d4d" %}{% endif %}
+                        <td class="text-center" style="background-color: #444!important; color: {{ qualclr }};"><b>{{ PT[13][i] }} %</b></td>
+                        {% if PT[14][i] | int >= 70 %}{% set qualclr = "lightgreen" %}{% elif PT[14][i] | int >= 40 %}{% set qualclr = "orange" %}{% else %}{% set qualclr = "#ff4d4d" %}{% endif %}
+                        <td class="text-center" style="color: {{ qualclr }};"><b>{{ PT[14][i] }} %</b></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -222,6 +235,43 @@
         </main>
     </center>
 </div>
+<nav class="bottom-nav">
+    <div class="bottom-nav-item">
+        <a href="{{ url_for('main.displayFR') }}">
+      <span class="material-icons-round">event</span>
+      <span class="bottom-nav-label">MATCHES</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item active">
+        <a href="{{ url_for('main.displayPT') }}">
+      <span class="material-icons-round">table_chart</span>
+      <span class="bottom-nav-label">PTS TABLE</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item live">
+        <a href="{{ url_for('main.todayMatch') }}">
+      <div class="live-circle"></div>
+      <div class="live-content">
+        <span class="material-icons-round zoomInOut">play_arrow</span>
+        <span class="bottom-nav-label">LIVE</span>
+      </div>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.teams') }}">
+      <span class="material-icons-round">groups</span>
+      <span class="bottom-nav-label">TEAMS</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.battingstats') }}">
+      <span class="material-icons-round">bar_chart</span>
+      <span class="bottom-nav-label">STATS</span>
+      </a>
+    </div>
+  </nav>
 
 <script>
     function updateTeamNames() {
@@ -233,9 +283,9 @@
         const shortName = element.getAttribute('short');
 
         if (screenWidth <= 600) { // Mobile view breakpoint
-          element.textContent = shortName;
+          element.innerHTML = `<a href="/fixtures?fteam=${shortName}">${shortName}</a>`;
         } else {
-          element.textContent = fullName;
+          element.innerHTML = `<a href="/fixtures?fteam=${shortName}">${fullName}</a>`;
         }
       });
     }

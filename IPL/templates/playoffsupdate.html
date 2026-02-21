@@ -15,10 +15,10 @@
                 <h5>Match Number:-&nbsp;&nbsp;<b>{{ FR.Match_No }}</b></h5><br>
                 <h5>Match Date:-&nbsp;&nbsp;<b>{{ FR.Date.strftime('%d-%b-%Y') }}</b></h5><br>
                 <h5>Match between:-</h5>
-                <h5><b>{% if FR.Team_A == 'TBA' %}{{ FR.Team_A }} {% else %}<img src="/static/images/{{ FR.Team_A }}.png"
+                <h5><b>{% if FR.Team_A == 'TBA' %}{{ FR.Team_A }} {% else %}<img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png"
                             alt="user photo" width="26" height="26" />&nbsp;{{ teams[FR.Team_A]}}{% endif %}
                         <br><br>
-                       {% if FR.Team_B == 'TBA' %}{{ FR.Team_B }} {% else %}<img src="/static/images/{{ FR.Team_B }}.png"
+                       {% if FR.Team_B == 'TBA' %}{{ FR.Team_B }} {% else %}<img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png"
                             alt="user photo" width="26" height="26" />&nbsp;{{ teams[FR.Team_B]}}{% endif %}</b></h5><br>
       <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#mymodal">Update</button>
             </div>

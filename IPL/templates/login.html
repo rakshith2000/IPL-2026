@@ -10,10 +10,10 @@
     /* Add a bit of customization for a modern look */
     body {
         font-family: 'Exo 2', sans-serif;
-        background: #081033;
-  background-image: url('/static/images/banner_bg.png');
-  background-size: 100%;
-  background-position: center top -48px;
+          background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background-size: 100%, cover;
+  background-position: center top -48px, center top;
+  background-repeat: repeat, repeat;
     }
 
     .form-container {
@@ -23,13 +23,20 @@
         color: white;
         padding: 2rem;
     }
+    .form-container {
+        background: linear-gradient(135deg, #dcdcdc, #9d9d9e);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        color: black;
+        padding: 2rem;
+    }
     .form-container h2 {
         font-size: 1.75rem;
         font-weight: bold;
         color: #333;
     }
     .text-center {
-        color: white;
+        color: black;
     }
     .form-container .btn {
         background-color: #3b82f6;
@@ -80,19 +87,17 @@
     <div class="container mx-auto max-w-md">
         <div class="form-container">
             <form method="POST" action="/login">
-                <h2 class="text-center" style="color: white">Admin Login</h2>
+                <h2 class="text-center" style="color: black">Admin Login</h2>
                 <p class="text-red-500 text-center" style="color: #b30021">**Admin login only**</p>
+                {{ flashes() }}
                 <div class="form-group my-4">
-                    {{ flashes() }}
                     <label for="email" class="block text-gray-700">Email address</label>
-                    <input
-                        type="email"
-                        class="form-control w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        required
-                    />
+                    <select id="email" name="email" class="form-control w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <option value="" disabled selected>Select your email</option>
+                        {% for user in users %}
+                            <option value="{{ user.email }}">{{ user.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group my-4">
                     <label for="password" class="block text-gray-700">Password</label>
@@ -119,6 +124,13 @@
                     class="btn w-full text-white font-semibold hover:bg-blue-600"
                 >
                     Log In
+                </button><br>
+                <button
+                    type="button"
+                    onclick="biometricLogin()"
+                    class="btn w-full text-white font-semibold hover:bg-blue-600 mt-3"
+                >
+                    Login with Biometric
                 </button>
             </form>
         </div>

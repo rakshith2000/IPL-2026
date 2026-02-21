@@ -3,6 +3,9 @@
     gap: 9px;
     padding: 4px 8px 4px 8px;
     border-bottom: 2px solid #ecebeb;
+    box-shadow: inset 5px 5px 10px #bcbcbc,
+                inset -5px -5px 10px #f0f0f0;
+    border-radius: 10px;
 }
 
 .over-left {
@@ -13,6 +16,7 @@
     justify-content: center;
     gap: .25rem;
     width: 16.66667%;
+    border-radius: 5px;
 }
 
 .over-left-items {
@@ -109,3 +113,163 @@
 .bg-wicket {
     background: linear-gradient(145deg, #ff3b30, #ad0404);
 }
+
+.ball-entry {
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-width: 1px 0px 1px 0px;
+    border-radius: 10px;
+}
+
+.over-entry {
+    background: #d9d9d9;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-width: 1px 0px 1px 0px;
+    border-radius: 10px;
+    box-shadow: inset 5px 5px 10px #bcbcbc,
+                inset -5px -5px 10px #f0f0f0; 
+}
+
+
+
+
+/* Styles for the live over section horizontal scroller */
+.overs-section {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.overs-section::before,
+.overs-section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 32px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+.overs-section::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 50%, transparent 100%);
+    opacity: 1;
+}
+.overs-section::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 50%, transparent 100%);
+    opacity: 1;
+}
+.overs-section.at-start::before {
+    opacity: 0;
+}
+.overs-section.at-end::after {
+    opacity: 0;
+}
+.overs-bar {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    gap: 0;
+    padding: 8px 16px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+.overs-bar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+}
+.over-group {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    padding-right: 12px;
+    position: relative;
+}
+.over-group:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background: #e0e0e0;
+}
+.over-group:last-child {
+    margin-right: 0;
+    padding-right: 0;
+}
+.over-label {
+    width: auto;
+    font-size: 14px;
+    color: #222;
+    margin-right: 5px;
+    font-weight: 400;
+}
+.over-balls {
+    display: flex;
+    gap: 4px;
+}
+.over-ball {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid #d3d3d3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    background: #fff;
+    color: #222;
+    margin-right: 0;
+    transition: border 0.2s, background 0.2s;
+}
+.over-ball.filled {
+    border: 1px solid #888;
+    background: #fff;
+    color: #111;
+}
+.over-ball.filled.four {
+    background: #2980b9;
+    color: #fff;
+    border: 1px solid #2980b9;
+}
+.over-ball.filled.six {
+    background: #27ae60;
+    color: #fff;
+    border: 1px solid #27ae60;
+}
+.over-ball.filled.wicket {
+    background: #e74c3c;
+    color: #fff;
+    border: 1px solid #e74c3c;
+}
+.over-ball.filled.extra {
+    border: 1px solid #888;
+    background: #fff;
+    color: #111;
+}
+.over-ball.empty {
+    border: 1px solid #d3d3d3;
+    background: #fff;
+    color: transparent;
+}
+.over-total {
+    font-size: 14px;
+    color: #222;
+    margin-left: 12px;
+    font-weight: bold;
+}
+.over-divider {
+    width: 1px;
+    height: 40px;
+    background: #e0e0e0;
+    margin: 0 16px;
+    align-self: center;
+}
+.no-wrap {
+    white-space: nowrap;
+}
+

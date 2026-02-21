@@ -6,11 +6,10 @@
 <style>
 body {
         font-family: 'Exo 2', sans-serif;
-        background: #081033;
-  background-image: url('/static/images/banner_bg.png');
-  background-size: 100%;
-  background-position: center top -48px;
-    }
+  background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background-size: 100%, cover;
+  background-position: center top -48px, center top;
+  background-repeat: repeat, repeat;
 </style>
 {% endblock %}
 
@@ -50,62 +49,261 @@ body {
         <!-- Body -->
             <div class="modal-body">
                 <form action="/updatematch" method="POST">
-                    <div class="container">
-                        <div class="jumbotron p-3">
-                    <h6><img src="/static/images/squad_logos/{{ FR.Team_A }}{% if FR.Team_A == 'RR' %}1{% endif %}.png" alt="user photo" width="26" height="26" />&nbsp;{{ fn[FR.Team_A] }}</h6>
                     <div class="form-group">
-                        <label for="runsA">Enter Runs:</label>
-                        <input type="number" class="form-control" id="runsA" name="runsA"
-                               aria-describedby="pushupHelp" placeholder="Runs of {{ FR.Team_A }}" required/></div>
-                    <div class="form-group">
-                        <label for="wktsA">Enter Wickets:</label>
-                        <input type="number" class="form-control" id="wktsA" name="wktsA"
-                               aria-describedby="pushupHelp" placeholder="Wickets of {{ FR.Team_A }}" required/></div>
-                    <div class="form-group">
-                        <label for="oversA">Enter Overs:</label>
-                        <input type="number" step="0.1" class="form-control" id="oversA" name="oversA"
-                               aria-describedby="pushupHelp" placeholder="Overs of {{ FR.Team_A }}" required/></div>
-                        </div></div>
+                        <label for="match_status"><b>Match Status:</b></label>
+                        <select name="match_status" id="match_status" class="form-control" required>
+                            <option value="" disabled selected>--Select Status--</option>
+                            <option value="completed">Completed (Normal)</option>
+                            <option value="tied">Tied (Super Over)</option>
+                            <option value="abandoned">Abandoned</option>
+                            <option value="interrupted_dls">Interrupted (DLS)</option>
+                        </select>
+                    </div>
 
-                    <div class="container">
-                        <div class="jumbotron p-3">
-                    <h6><img src="/static/images/squad_logos/{{ FR.Team_B }}{% if FR.Team_B == 'RR' %}1{% endif %}.png" alt="user photo" width="26" height="26" />&nbsp;{{ fn[FR.Team_B] }}</h6>
-                    <div class="form-group">
-                        <label for="runsB">Enter Runs:</label>
-                        <input type="number" class="form-control" id="runsB" name="runsB"
-                               aria-describedby="pushupHelp" placeholder="Runs of {{ FR.Team_B }}" required/></div>
-                    <div class="form-group">
-                        <label for="wktsB">Enter Wickets:</label>
-                        <input type="number" class="form-control" id="wktsB" name="wktsB"
-                               aria-describedby="pushupHelp" placeholder="Wickets of {{ FR.Team_B }}" required/></div>
-                    <div class="form-group">
-                        <label for="oversB">Enter Overs:</label>
-                        <input type="number" step="0.1" class="form-control" id="oversB" name="oversB"
-                               aria-describedby="pushupHelp" placeholder="Overs of {{ FR.Team_B }}" required/></div>
-                        </div></div>
+                    <!-- Normal/Completed Fields -->
+                    <div id="normal_fields">
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                        <h6><img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_A] }}</b></h6>
+                        <div class="form-group">
+                            <label for="runsA">Enter Runs:</label>
+                            <input type="number" class="form-control" id="runsA" name="runsA"
+                                   aria-describedby="pushupHelp" placeholder="Runs of {{ FR.Team_A }}" required/></div>
+                        <div class="form-group">
+                            <label for="wktsA">Enter Wickets:</label>
+                            <input type="number" class="form-control" id="wktsA" name="wktsA"
+                                   aria-describedby="pushupHelp" placeholder="Wickets of {{ FR.Team_A }}" required/></div>
+                        <div class="form-group">
+                            <label for="oversA">Enter Overs:</label>
+                            <input type="number" step="0.1" class="form-control" id="oversA" name="oversA"
+                                   aria-describedby="pushupHelp" placeholder="Overs of {{ FR.Team_A }}" required/></div>
+                            </div></div>
 
-                    <div class="container">
-                        <div class="jumbotron p-3">
-                    <h6>Match Result</h6>
-                    <div class="form-group">
-                        <label for="wt">Enter won team name:</label>
-                        <select name="wt" id="wt" required="required" class="form-control">
-                        <option value="" disabled selected>----Select----</option>
-                        <option value="{{ FR.Team_A }}"><img src="/static/images/squad_logos/{{ FR.Team_A }}.png" alt="user photo" width="26" height="26" />&nbsp;{{ FR.Team_A }}</option>
-                        <option value="{{ FR.Team_B }}"><img src="/static/images/squad_logos/{{ FR.Team_B }}.png" alt="user photo" width="26" height="26" />&nbsp;{{ FR.Team_B }}</option>
-                        </select></div>
-                    <div class="form-group">
-                        <label for="win_type">Select win type:</label>
-                        <select name="win_type" id="win_type" required="required" class="form-control">
-                        <option value="" disabled selected>----Select----</option>
-                        <option value="wickets">wkts</option>
-                        <option value="runs">runs</option>
-                        </select></div>
-                    <div class="form-group">
-                        <label for="win_by">Enter Won by:</label>
-                        <input type="number" class="form-control" id="win_by" name="win_by"
-                               aria-describedby="pushupHelp" placeholder="Won by" required/></div>
-                    </div></div>
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                        <h6><img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_B] }}</b></h6>
+                        <div class="form-group">
+                            <label for="runsB">Enter Runs:</label>
+                            <input type="number" class="form-control" id="runsB" name="runsB"
+                                   aria-describedby="pushupHelp" placeholder="Runs of {{ FR.Team_B }}" required/></div>
+                        <div class="form-group">
+                            <label for="wktsB">Enter Wickets:</label>
+                            <input type="number" class="form-control" id="wktsB" name="wktsB"
+                                   aria-describedby="pushupHelp" placeholder="Wickets of {{ FR.Team_B }}" required/></div>
+                        <div class="form-group">
+                            <label for="oversB">Enter Overs:</label>
+                            <input type="number" step="0.1" class="form-control" id="oversB" name="oversB"
+                                   aria-describedby="pushupHelp" placeholder="Overs of {{ FR.Team_B }}" required/></div>
+                            </div></div>
+
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                        <h6>Match Result</h6>
+                        <div class="form-group">
+                            <label for="wt">Enter won team name:</label>
+                            <select name="wt" id="wt" required="required" class="form-control">
+                            <option value="" disabled selected>----Select----</option>
+                            <option value="{{ FR.Team_A }}"><img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;{{ FR.Team_A }}</option>
+                            <option value="{{ FR.Team_B }}"><img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;{{ FR.Team_B }}</option>
+                            </select></div>
+                        <div class="form-group">
+                            <label for="win_type">Select win type:</label>
+                            <select name="win_type" id="win_type" required="required" class="form-control">
+                            <option value="" disabled selected>----Select----</option>
+                            <option value="wickets">wkts</option>
+                            <option value="runs">runs</option>
+                            </select></div>
+                        <div class="form-group">
+                            <label for="win_by">Enter Won by:</label>
+                            <input type="number" class="form-control" id="win_by" name="win_by"
+                                   aria-describedby="pushupHelp" placeholder="Won by" required/></div>
+                        </div></div>
+                    </div>
+
+                    <!-- Super Over Fields (with normal innings) -->
+                    <div id="superover_fields" style="display:none;">
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                                <h6><img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_A] }}</b></h6>
+                                <div class="form-group">
+                                    <label for="tied_runsA">Runs:</label>
+                                    <input type="number" class="form-control" id="tied_runsA" name="tied_runsA" placeholder="Runs of {{ FR.Team_A }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="tied_wktsA">Wickets:</label>
+                                    <input type="number" class="form-control" id="tied_wktsA" name="tied_wktsA" placeholder="Wickets of {{ FR.Team_A }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="tied_oversA">Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="tied_oversA" name="tied_oversA" placeholder="Overs of {{ FR.Team_A }}" />
+                                </div>
+                                <hr>
+                                <h6><img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_B] }}</b></h6>
+                                <div class="form-group">
+                                    <label for="tied_runsB">Runs:</label>
+                                    <input type="number" class="form-control" id="tied_runsB" name="tied_runsB" placeholder="Runs of {{ FR.Team_B }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="tied_wktsB">Wickets:</label>
+                                    <input type="number" class="form-control" id="tied_wktsB" name="tied_wktsB" placeholder="Wickets of {{ FR.Team_B }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="tied_oversB">Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="tied_oversB" name="tied_oversB" placeholder="Overs of {{ FR.Team_B }}" />
+                                </div>
+                                </div></div>
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                                <h6>Super Over - <img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_A] }}</b></h6>
+                                <div class="form-group">
+                                    <label for="superover_runsA">Runs:</label>
+                                    <input type="number" class="form-control" id="superover_runsA" name="superover_runsA" placeholder="Super Over Runs of {{ FR.Team_A }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_wktsA">Wickets:</label>
+                                    <input type="number" class="form-control" id="superover_wktsA" name="superover_wktsA" placeholder="Super Over Wickets of {{ FR.Team_A }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_oversA">Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="superover_oversA" name="superover_oversA" placeholder="Super Over Overs of {{ FR.Team_A }}" />
+                                </div>
+                                <hr>
+                                <h6>Super Over - <img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_B] }}</b></h6>
+                                <div class="form-group">
+                                    <label for="superover_runsB">Runs:</label>
+                                    <input type="number" class="form-control" id="superover_runsB" name="superover_runsB" placeholder="Super Over Runs of {{ FR.Team_B }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_wktsB">Wickets:</label>
+                                    <input type="number" class="form-control" id="superover_wktsB" name="superover_wktsB" placeholder="Super Over Wickets of {{ FR.Team_B }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_oversB">Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="superover_oversB" name="superover_oversB" placeholder="Super Over Overs of {{ FR.Team_B }}" />
+                                </div>
+                                </div></div>
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                                <h6>Super Over Result</h6>
+                                <div class="form-group">
+                                    <label for="superover_winner">Super Over Winner:</label>
+                                    <select name="superover_winner" id="superover_winner" class="form-control">
+                                        <option value="" disabled selected>----Select----</option>
+                                        <option value="{{ FR.Team_A }}">{{ FR.Team_A }}</option>
+                                        <option value="{{ FR.Team_B }}">{{ FR.Team_B }}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_win_type">Win Type:</label>
+                                    <select name="superover_win_type" id="superover_win_type" class="form-control">
+                                        <option value="" disabled selected>----Select----</option>
+                                        <option value="wickets">wkts</option>
+                                        <option value="runs">runs</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="superover_win_by">Won by:</label>
+                                    <input type="number" class="form-control" id="superover_win_by" name="superover_win_by" placeholder="Won by" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Abandoned Fields -->
+                    <div id="abandoned_fields" style="display:none;">
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                                <h6>Abandonment Details</h6>
+                                <div class="form-group">
+                                    <label for="abandon_toss_status">Toss Status:</label>
+                                    <select name="abandon_toss_status" id="abandon_toss_status" class="form-control" required>
+                                        <option value="" disabled selected>----Select----</option>
+                                        <option value="without_toss">Without Toss</option>
+                                        <option value="with_toss">With Toss/Play</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="abandon_reason">Reason for Abandonment:</label>
+                                    <input type="text" class="form-control" id="abandon_reason" name="abandon_reason" placeholder="e.g. Rain, Bad Light, etc." />
+                                </div>
+                                </div></div>
+                            <div class="container">
+                            <div class="jumbotron p-3">
+                                <div id="abandon_scores" style="display:none;">
+                                    <h6><img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_A] }}</b></h6>
+                                    <div class="form-group">
+                                        <label for="abandon_runsA">Runs:</label>
+                                        <input type="number" class="form-control" id="abandon_runsA" name="abandon_runsA" placeholder="Runs of {{ FR.Team_A }}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abandon_wktsA">Wickets:</label>
+                                        <input type="number" class="form-control" id="abandon_wktsA" name="abandon_wktsA" placeholder="Wickets of {{ FR.Team_A }}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abandon_oversA">Overs:</label>
+                                        <input type="number" step="0.1" class="form-control" id="abandon_oversA" name="abandon_oversA" placeholder="Overs of {{ FR.Team_A }}" />
+                                    </div>
+                                    <hr>
+                                    <h6><img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_B] }}</b></h6>
+                                    <div class="form-group">
+                                        <label for="abandon_runsB">Runs:</label>
+                                        <input type="number" class="form-control" id="abandon_runsB" name="abandon_runsB" placeholder="Runs of {{ FR.Team_B }}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abandon_wktsB">Wickets:</label>
+                                        <input type="number" class="form-control" id="abandon_wktsB" name="abandon_wktsB" placeholder="Wickets of {{ FR.Team_B }}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="abandon_oversB">Overs:</label>
+                                        <input type="number" step="0.1" class="form-control" id="abandon_oversB" name="abandon_oversB" placeholder="Overs of {{ FR.Team_B }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DLS/Interrupted Fields -->
+                    <div id="dls_fields" style="display:none;">
+                        <div class="container">
+                            <div class="jumbotron p-3">
+                                <h6>DLS/Interruption Details</h6>
+                                <br>
+                                <h6><img src="/static/images/squad_logos/{{ FR.Team_A }}{{ '1' if FR.Team_A == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_A] }}</b> Revised Innings</h6>
+                                <div class="form-group">
+                                    <label for="dls_runsA">Revised Runs:</label>
+                                    <input type="number" class="form-control" id="dls_runsA" name="dls_runsA" placeholder="Revised Runs of {{ FR.Team_A }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dls_oversA">Revised Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="dls_oversA" name="dls_oversA" placeholder="Revised Overs of {{ FR.Team_A }}" />
+                                </div>
+                                <hr>
+                                <h6><img src="/static/images/squad_logos/{{ FR.Team_B }}{{ '1' if FR.Team_B == 'RR' else '' }}.png" alt="user photo" width="26" height="26" />&nbsp;<b>{{ fn[FR.Team_B] }}</b> Revised Innings</h6>
+                                <div class="form-group">
+                                    <label for="dls_runsB">Revised Runs:</label>
+                                    <input type="number" class="form-control" id="dls_runsB" name="dls_runsB" placeholder="Revised Runs of {{ FR.Team_B }}" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dls_oversB">Revised Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="dls_oversB" name="dls_oversB" placeholder="Revised Overs of {{ FR.Team_B }}" />
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <label for="dls_target">Revised Target:</label>
+                                    <input type="number" class="form-control" id="dls_target" name="dls_target" placeholder="Target" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dls_overs">Revised Overs:</label>
+                                    <input type="number" step="0.1" class="form-control" id="dls_overs" name="dls_overs" placeholder="Overs" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dls_reason">Reason for Interruption:</label>
+                                    <input type="text" class="form-control" id="dls_reason" name="dls_reason" placeholder="e.g. Rain, Bad Light, etc." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="hidden" name="hint" value="after"/>
                     <input type="hidden" name="match" value="{{ match }}"/>
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -118,4 +316,96 @@ body {
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var matchStatus = document.getElementById('match_status');
+        var normalFields = document.getElementById('normal_fields');
+        var superoverFields = document.getElementById('superover_fields');
+        var abandonedFields = document.getElementById('abandoned_fields');
+        var dlsFields = document.getElementById('dls_fields');
+
+        function setRequiredForFields(container, required) {
+            if (!container) return;
+            var inputs = container.querySelectorAll('input, select, textarea');
+            inputs.forEach(function(input) {
+                if (required) {
+                    input.setAttribute('required', 'required');
+                } else {
+                    input.removeAttribute('required');
+                }
+            });
+        }
+        function updateFields() {
+            var status = matchStatus.value;
+            // Hide all, then show and set required for only the active section
+            normalFields.style.display = (status === 'completed' || status === 'interrupted_dls') ? '' : 'none';
+            superoverFields.style.display = (status === 'tied') ? '' : 'none';
+            abandonedFields.style.display = (status === 'abandoned') ? '' : 'none';
+            dlsFields.style.display = (status === 'interrupted_dls') ? '' : 'none';
+            // Set required only for visible fields
+            setRequiredForFields(normalFields, (status === 'completed' || status === 'interrupted_dls'));
+            setRequiredForFields(superoverFields, status === 'tied');
+            setRequiredForFields(abandonedFields, status === 'abandoned');
+            setRequiredForFields(dlsFields, status === 'interrupted_dls');
+            // Abandonment: show/hide scores based on toss status
+            var abandonToss = document.getElementById('abandon_toss_status');
+            var abandonScores = document.getElementById('abandon_scores');
+            if (abandonToss && abandonScores) {
+                if (status === 'abandoned') {
+                    abandonToss.removeAttribute('disabled');
+                    abandonToss.setAttribute('required', 'required');
+                    abandonScores.style.display = (abandonToss.value === 'with_toss') ? '' : 'none';
+                    setRequiredForFields(abandonScores, abandonToss.value === 'with_toss');
+                } else {
+                    abandonToss.removeAttribute('required');
+                    abandonToss.setAttribute('disabled', 'disabled');
+                    setRequiredForFields(abandonScores, false);
+                }
+            } else if (abandonToss) {
+                if (status === 'abandoned') {
+                    abandonToss.removeAttribute('disabled');
+                    abandonToss.setAttribute('required', 'required');
+                } else {
+                    abandonToss.removeAttribute('required');
+                    abandonToss.setAttribute('disabled', 'disabled');
+                }
+            }
+        }
+        var abandonToss = document.getElementById('abandon_toss_status');
+        if (abandonToss) {
+            abandonToss.addEventListener('change', function() {
+                var abandonScores = document.getElementById('abandon_scores');
+                abandonScores.style.display = (this.value === 'with_toss') ? '' : 'none';
+            });
+        }
+        // Set default values for abandoned score fields if empty
+        var form = document.querySelector('form[action="/updatematch"]');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (matchStatus.value === 'abandoned') {
+                    var tossStatus = document.getElementById('abandon_toss_status').value;
+                    if (tossStatus === 'with_toss') {
+                        var fields = [
+                            {id: 'abandon_runsA', def: 0},
+                            {id: 'abandon_wktsA', def: 0},
+                            {id: 'abandon_oversA', def: 0.0},
+                            {id: 'abandon_runsB', def: 0},
+                            {id: 'abandon_wktsB', def: 0},
+                            {id: 'abandon_oversB', def: 0.0}
+                        ];
+                        fields.forEach(function(f) {
+                            var el = document.getElementById(f.id);
+                            if (el && (el.value === '' || el.value === null)) {
+                                el.value = f.def;
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        matchStatus.addEventListener('change', updateFields);
+        updateFields(); // Initial call
+    });
+</script>
 {% endblock %}

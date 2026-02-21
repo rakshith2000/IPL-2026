@@ -2,12 +2,13 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
 {% endblock %}
 
 {% block content %}
 <style>
 body {
-        background: #081033;
+        background: linear-gradient(90deg, #134E5E, #71B280)!important;
         background-image: url('/static/images/banner_bg.png');
         background-size: 100%;
         background-position: center top -48px;
@@ -162,11 +163,11 @@ h3.section-title {
 }
 
 .card-front {
-  background: linear-gradient(145deg, var(--c1), var(--c2));
+  background: linear-gradient(145deg, var(--c1) 10%, var(--c2) 70%);
 }
 
 .card-back {
-  background: linear-gradient(145deg, var(--c1), var(--c2));
+  background: linear-gradient(145deg, var(--c1) 10%, var(--c2) 70%);
   transform: rotateY(180deg);
   color: var(--fc);
 }
@@ -207,19 +208,14 @@ h3.section-title {
 </style>
 
 <center>
-  <div style="padding: 30px 10px;">
-    <div class="marquee-container">
-      <marquee style="font-weight: bold; font-family: 'Exo 2', sans-serif; transform: skew(-5deg)" width="60%" direction="left" scrollamount="8">
-          <h1><b>Welcome to TATA IPL 2025 Info Tab</b></h1>
-      </marquee>
-    </div>
-
+  <div style="padding: 0px 10px 10px 10px;" class="extra-padding">
+    
     <div>
-      <img src="{{ url_for('static', filename= 'images/IPL logo 2.png') }}" class="logo" alt="TATA IPL Logo">
+      <img src="{{ url_for('static', filename= 'images/IPL-Logo.png') }}" class="logo" style="height: 345px;" alt="TATA IPL Logo">
     </div>
 
     <div class="team-container">
-      <h3 class="section-title"><span class="section-title-highlight"><span style="color: #d5edff;">🔥TATA IPL 2025🔥<br>Teams</span></span></h3>
+      <h3 class="section-title"><span class="section-title-highlight"><span style="color: #d5edff;">🔥 IPL 2026 🔥<br>Teams</span></span></h3>
       <div class="flex-container">
         {% for i in teams[:-1] %}
         <div class="card-wrapper">
@@ -239,4 +235,41 @@ h3.section-title {
     </div>
   </div>
 </center>
+<nav class="bottom-nav">
+    <div class="bottom-nav-item">
+        <a href="{{ url_for('main.displayFR') }}">
+      <span class="material-icons-round">event</span>
+      <span class="bottom-nav-label">MATCHES</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item">
+        <a href="{{ url_for('main.displayPT') }}">
+      <span class="material-icons-round">table_chart</span>
+      <span class="bottom-nav-label">PTS TABLE</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item live">
+        <a href="{{ url_for('main.todayMatch') }}">
+      <div class="live-circle"></div>
+      <div class="live-content">
+        <span class="material-icons-round zoomInOut">play_arrow</span>
+        <span class="bottom-nav-label">LIVE</span>
+      </div>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.teams') }}">
+      <span class="material-icons-round">groups</span>
+      <span class="bottom-nav-label">TEAMS</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.battingstats') }}">
+      <span class="material-icons-round">bar_chart</span>
+      <span class="bottom-nav-label">STATS</span>
+      </a>
+    </div>
+  </nav>
 {% endblock %}

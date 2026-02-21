@@ -1,6 +1,6 @@
 // Show loading spinner before fetch
 const tableContainer = document.getElementById('tableContainer');
-tableContainer.innerHTML = `<div id="loadingSpinner" style="text-align:center; padding:40px 0;"><span class="spinner-border text-primary" role="status"></span><br><span style="color:#0056d2; font-weight:bold;">Loading...</span></div>`;
+tableContainer.innerHTML = `<div id="loadingSpinner" style="text-align:center; padding:40px 0;"><span class="spinner-border" style="color: #25478A" role="status"></span><br><span style="color:#25478A; font-weight:bold;">Loading...</span></div>`;
 
 fetch("/api/battingstats")
     .then(response => {
@@ -111,7 +111,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Player'])}">${row['Player']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Player'])}">${row['Player']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td><b>${row['Runs']}</b></td>`;
@@ -164,7 +164,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td><b>${row['Runs']}</b></td>`;
         tableHTML += `<td>${row['Balls']}</td>`;
         tableHTML += `<td>${row['Sr']}</td>`;
@@ -216,7 +216,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -267,7 +267,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -319,7 +319,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -371,7 +371,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -422,7 +422,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -472,7 +472,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;
@@ -522,7 +522,7 @@ function selectOption(element, optionTitle) {
       tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
 
       // Remaining columns
-        tableHTML += `<td class="fw-bold text-blue"><a href="/${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['Team'])}/squad_details/${encodeURIComponent(row['Batter'])}">${row['Batter']}</a></td>`;
         tableHTML += `<td>${row['Matches']}</td>`;
         tableHTML += `<td>${row['Inns']}</td>`;
         tableHTML += `<td>${row['Runs']}</td>`;

@@ -1,9 +1,9 @@
  body {
         font-family: 'Exo 2', sans-serif;
-        background: #081033;
-  background-image: url('/static/images/banner_bg.png');
-  background-size: 100%;
-  background-position: center top -48px;
+ background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background-size: 100%, cover;
+  background-position: center top -48px, center top;
+  background-repeat: repeat, repeat;
     }
     .status{
         display: block;
@@ -14,16 +14,17 @@
   }
 
   .dropdown-toggle {
-    background: linear-gradient(145deg, #0056d2, #003c8a);
+    background-color: #25478A;
     color: white;
     padding: 7px 3px;
-    border: 1px solid #ffb09e;
-    border-radius: 25px;
+    border: 0px solid #ffb09e;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
     min-width: 250px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   }
 
   .dropdown-menu {
@@ -32,7 +33,7 @@
     background-color: white;
     min-width: 250px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    border: 1px solid #ffb09e;
+    border: 0px solid #ffb09e;
     border-radius: 8px;
     margin-top: 8px;
     font-weight: bold;
@@ -57,7 +58,7 @@
   }
 
   .dropdown-menu a.activeD {
-    background: linear-gradient(145deg, #0056d2, #003c8a);
+    background-color: #25478A;
     color: white;
   }
 
@@ -79,8 +80,9 @@
   margin-top: 20px;
   border-radius: 10px;
   overflow-x: auto;
-  border: 1px solid #ffb09e;
+  border: 0px solid #ffb09e;
   background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
 /* Updated table styling */
@@ -106,7 +108,7 @@ tr:last-child td {
   }
 
   thead tr {
-    background: linear-gradient(145deg, #0056d2, #003c8a);
+    background-color: #25478A;
     color: white;
   }
 

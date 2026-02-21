@@ -186,10 +186,22 @@
       .outline-btn--accent:hover { background: rgba(79,195,247,0.1); color: #4fc3f7; }
       .outline-btn--danger { border-color: #ff6b81; color: #ff6b81; }
       .outline-btn--danger:hover { background: rgba(255,107,129,0.1); color: #ff6b81; }
+      .outline-btn--gray { border-color: #b0bec5; color: #b0bec5; }
+      .outline-btn--gray:hover { background: rgba(176,190,197,0.1); color: #b0bec5; }
       .outline-btn--white { border-color: rgba(255,255,255,0.9); color: #fff; }
       .outline-btn,
       .outline-btn:hover,
       .outline-btn:focus {
         text-decoration: none !important;
         outline: none;
+      }
+
+      .extra-padding {
+        padding-bottom: 0px!important;
+      }
+
+      @media (max-width: 451px) {
+        .extra-padding {
+          padding-bottom: 70px!important;
+        }
       }
