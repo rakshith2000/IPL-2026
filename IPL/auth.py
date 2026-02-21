@@ -14,8 +14,8 @@ from webauthn import (
 
 auth = Blueprint('auth', __name__)
 
-RP_ID = "localhost" #"tataipl2026.onrender.com"
-ORIGIN = "http://localhost:5000" #"https://tataipl2026.onrender.com"
+RP_ID = "tataipl2026.onrender.com"
+ORIGIN = "https://tataipl2026.onrender.com"
 
 def b64encode(data: bytes) -> str:
     return base64.urlsafe_b64encode(data).rstrip(b'=').decode('ascii')
