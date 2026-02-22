@@ -19,7 +19,7 @@
     <style>
     body {
     	font-family: 'Exo 2', sans-serif;
-        background: #081033;
+  background: linear-gradient(90deg, #134E5E, #71B280)!important;
   background-image: url('/static/images/banner_bg.png');
   background-size: 100%;
   background-position: center top -48px;
@@ -56,6 +56,23 @@
           transition: transform 0.3s ease;
         }
         .potm-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .squad-image {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          overflow: hidden;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          border: 0px solid white;
+          position: relative;
+          z-index: 1;
+          /*margin-right: 20px;*/
+          transition: transform 0.3s ease;
+        }
+        .squad-image img {
           width: 100%;
           height: 100%;
           object-fit: cover;

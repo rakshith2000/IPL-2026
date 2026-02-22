@@ -149,12 +149,12 @@ window.addEventListener('statsReady', () => {
     } else {
     fc = 'text-danger';
     }
-    let liveHTML = `<div class="live_2 rounded_10 border mt-2" style="background: linear-gradient(145deg, #0056d2, #003c8a)">`;
+    let liveHTML = `<div class="live_2 rounded_10 box-shadow-4 mt-2" style="background-color: #25478A">`;
     liveHTML += `<div class="live_2_inner row px-3 pt-2 pb-2">
 		     <div class="col-md-8">
 			  <div class="live_2_inner_left">
 			    <b class="text-white" style="font-size: 20px">${dt1[0].Team_A} vs ${dt1[0].Team_B}</b>
-				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}, TATA Indian Premier League 2025</span>
+				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}</span>
 			  </div>
 			 </div>
              </div>`;
@@ -223,10 +223,11 @@ window.addEventListener('statsReady', () => {
             }
             // Insert partnershipHTML into your page as needed
             }
+            const ended = ['won','abandoned','no result'].some(s => dt3.info.toLowerCase().includes(s));
     liveHTML += `
         <ul class="mb-0 bg-tab rounded_bottom score_tab d-flex justify-content-evenly flex-wrap">
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/matchInfo?source=${source}&fteam=${fteam}">Info</a></li>
-        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">Live</a></li>
+        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">${!ended ? 'Live' : 'Commentary'}</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/scoreCard?source=${source}&fteam=${fteam}">Scorecard</a></li>
         <li class="d-inline-block"><a class="active d-block" href="/match-${match}/Overs?source=${source}&fteam=${fteam}">Overs</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveSquad?source=${source}&fteam=${fteam}">Squad</a></li>
@@ -235,8 +236,7 @@ window.addEventListener('statsReady', () => {
 
     // Match Info Session
     if (dt3.innings && dt3.innings.length > 0) {
-    liveHTML += `<div class="live_5 border rounded_10 bg-white mt-3 pt-3">
-        <div style="border-bottom: 2px solid #ecebeb;"></div>`;
+    liveHTML += `<div class="live_5 box-shadow-4 rounded_10 bg-white mt-3 overflow-hidden">`;
         if (inn2 && inn2.inning) {
             let i = tid[dt3.score_strip[1].team_id][0];
             inn2.inning.overs.slice(0, -1).forEach(function(over) {
@@ -387,3 +387,28 @@ window.addEventListener('statsReady', () => {
 });
 });
 
+// Add Move to Top button logic
+(function() {
+    // Create the button
+    const moveTopBtn = document.createElement('button');
+    moveTopBtn.id = 'moveTopBtn';
+    moveTopBtn.className = 'floating-move-top-btn';
+    moveTopBtn.title = 'Move to Top';
+    moveTopBtn.style.display = 'none';
+    moveTopBtn.innerHTML = '<i class="fa fa-arrow-up"></i>';
+    document.body.appendChild(moveTopBtn);
+
+    // Show/hide button on scroll
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+            moveTopBtn.style.display = 'flex';
+        } else {
+            moveTopBtn.style.display = 'none';
+        }
+    });
+
+    // Scroll to top on click
+    moveTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();

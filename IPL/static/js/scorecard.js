@@ -3,6 +3,47 @@ const liveContainer = document.getElementById('liveContainer');
 let firstLoad = true;
 let refreshInterval = null;
 
+function parseOvers(oversStr) {
+  // Converts "3.2" to balls: 3*6 + 2 = 20
+  const [whole, part] = oversStr.split('.').map(Number);
+  return whole * 6 + (isNaN(part) ? 0 : part);
+}
+
+function getTopBatters(batting) {
+    const allBatting = batting[0].batting.concat(batting[1].batting);
+    return allBatting.slice().sort((a, b) => {
+        const runsA = Number(a.runs);
+        const runsB = Number(b.runs);
+        const ballsA = Number(a.balls);
+        const ballsB = Number(b.balls);
+
+    if (runsA !== runsB) {
+      return runsB - runsA; // Descending runs
+    }
+    return ballsA - ballsB; // Ascending balls
+  });
+}
+
+function getTopBowlers(bowling) {
+    const allBowling = bowling[0].bowling.concat(bowling[1].bowling);
+    return allBowling.slice().sort((a, b) => {
+        const wicketsA = Number(a.wickets);
+        const wicketsB = Number(b.wickets);
+        const runsA = Number(a.runs);
+        const runsB = Number(b.runs);
+        const ballsA = parseOvers(a.overs);
+        const ballsB = parseOvers(b.overs);
+
+    if (wicketsA !== wicketsB) {
+      return wicketsB - wicketsA; // Descending wickets
+    }
+    if (runsA !== runsB) {
+      return runsA - runsB; // Ascending runs
+    }
+    return ballsA - ballsB; // Ascending balls
+  });
+}
+
 function fetchAndRender(showSpinner = false) {
     if (showSpinner) {
         liveContainer.innerHTML = `<div id="loadingSpinner" style="text-align:center; padding:40px 0;">
@@ -62,12 +103,12 @@ window.addEventListener('statsReady', () => {
     } else {
     fc = 'text-danger';
     }
-    let liveHTML = `<div class="live_2 rounded_10 border mt-2" style="background: linear-gradient(145deg, #0056d2, #003c8a)">`;
+    let liveHTML = `<div class="live_2 rounded_10 box-shadow-4 mt-2" style="background-color: #25478A;">`;
     liveHTML += `<div class="live_2_inner row px-3 pt-2 pb-2">
 		     <div class="col-md-8">
 			  <div class="live_2_inner_left">
 			    <b class="text-white" style="font-size: 20px">${dt1[0].Team_A} vs ${dt1[0].Team_B}</b>
-				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}, TATA Indian Premier League 2025</span>
+				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}</span>
 			  </div>
 			 </div>
              </div>`;
@@ -136,10 +177,11 @@ window.addEventListener('statsReady', () => {
             }
             // Insert partnershipHTML into your page as needed
             }
+    const ended = ['won','abandoned','no result'].some(s => dt3.info.toLowerCase().includes(s));
     liveHTML += `
         <ul class="mb-0 bg-tab rounded_bottom score_tab d-flex justify-content-evenly flex-wrap">
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/matchInfo?source=${source}&fteam=${fteam}">Info</a></li>
-        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">Live</a></li>
+        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">${!ended ? 'Live' : 'Commentary'}</a></li>
         <li class="d-inline-block"><a class="active d-block" href="/match-${match}/scoreCard?source=${source}&fteam=${fteam}">Scorecard</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/Overs?source=${source}&fteam=${fteam}">Overs</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveSquad?source=${source}&fteam=${fteam}">Squad</a></li>
@@ -164,20 +206,22 @@ window.addEventListener('statsReady', () => {
             c1 = clr2[team].c2; c2 = clr2[team].c1;
         } else if (team === 'KKR') {
             c1 = clr2[team].c2; c2 = clr2[team].c3;
+	    } else if (team === 'NA') {
+            c1 = "#fff"; c2 = "#fff"; 
         } else {
             c1 = clr2[team].c1; c2 = clr2[team].c2;
         }
 
         liveHTML += `
-        <div class="score_2_inner border rounded_10 bg-white mt-3">
+        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3">
             <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Match</b>
             <div class="potm-content">
-                <a href="/squad_details?team=${team}&name=${name}">
+                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
                 <div class="potm-image" style="--c1: ${c1}; --c2: ${c2};">
                     <img src="${dt3.player_of_match.player_slug !== "" ? dt3.player_images[dt3.player_of_match.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_match.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
                 </div></a>
                 <div class="potm-details">
-                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}">${name}</a></div>
+                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
                     <div class="potm-team fw-bold">
                         <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
                         ${fn[team]}
@@ -199,6 +243,99 @@ window.addEventListener('statsReady', () => {
        }
     }
 
+    // Player of the Series section
+    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
+    if (dt3.player_of_series.player_name !== '') {
+        let name = dt3.player_of_series.player_name;
+        let team = dt3.player_of_series.team_name;
+        let c1, c2;
+        if (team === 'RCB') {
+            c1 = clr2[team].c3; c2 = clr2[team].c1;
+        } else if (team === 'GT') {
+            c1 = clr2[team].c3; c2 = clr2[team].c2;
+        } else if (team === 'MI') {
+            c1 = clr2[team].c3; c2 = clr2[team].c2;
+        } else if (team === 'PBKS') {
+            c1 = clr2[team].c2; c2 = clr2[team].c1;
+        } else if (team === 'KKR') {
+            c1 = clr2[team].c2; c2 = clr2[team].c3;
+	    } else if (team === 'NA') {
+            c1 = "#fff"; c2 = "#fff"; 
+        } else {
+            c1 = clr2[team].c1; c2 = clr2[team].c2;
+        }
+
+        liveHTML += `
+        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 mb-3">
+            <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Series</b>
+            <div class="potm-content">
+                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
+                <div class="potm-image text-blue" style="--c1: ${c1}; --c2: ${c2};">
+                    <img src="${dt3.player_of_series.player_slug !== "" ? dt3.player_images[dt3.player_of_series.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_series.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
+                </div></a>
+                <div class="potm-details">
+                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
+                    <div class="potm-team fw-bold">
+                        <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
+                        ${fn[team]}
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+       }
+    }
+
+    //Top performers section
+    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
+        let topBatters = getTopBatters(dt3.innings).slice(0, 2);
+        let topBowlers = getTopBowlers(dt3.innings).slice(0, 2);
+
+        liveHTML += `
+        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 mb-3">
+        <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Top Performers</b>
+            <div class="tp-innings-info">
+                <div class="tp-player-details batter">
+                    <div class="tp-head">Batters</div>
+                    <div class="tp-body">
+                        <div class="tp-player-data">
+                            ${topBatters.map(b => `
+                                <div class="tp-player-info">
+                                    <div class="tp-player-thumbnail">
+                                        <img src="/static/images/squads/${b.team}/${b.name.replace(/ /g, "-")}.png" alt="${b.name}" class="image">
+                                    </div>
+                                    <div class="tp-player-info-content">
+                                        <div class="tp-player-name"><a href="/team-${encodeURIComponent(b.team)}/squad_details/${encodeURIComponent(b.name)}">${b.name}</a></div>
+                                        <div class="tp-player-score"><span class="runs">${b.runs}${b.out_str === 'Not out' ? '*' : ''}</span><span>&nbsp;(${b.balls})</span></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="tp-player-details bowler">
+                    <div class="tp-head">Bowlers</div>
+                    <div class="tp-body">
+                        <div class="tp-player-data">
+                            ${topBowlers.map(b => `
+                                <div class="tp-player-info">
+                                    <div class="tp-player-thumbnail">
+                                        <img src="/static/images/squads/${b.team}/${b.name.replace(/ /g, "-")}.png" alt="${b.name}" class="image">
+                                    </div>
+                                    <div class="tp-player-info-content">
+                                        <div class="tp-player-name"><a href="/team-${encodeURIComponent(b.team)}/squad_details/${encodeURIComponent(b.name)}">${b.name}</a></div>
+                                        <div class="tp-player-score"><span class="runs">${b.wickets}/${b.runs}</span><span>&nbsp;(${b.overs})</span></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+
     //Innings Tabs Buttons
     liveHTML += `<div class="score_1 mt-3">
     <ul class="d-flex flex-wrap font_12 fw-bold nav nav-tabs border-0" id="inningsTabs">`;
@@ -207,7 +344,7 @@ window.addEventListener('statsReady', () => {
         const is_active = dt3.score_strip[idx].currently_batting;
         liveHTML += `
         <li class="me-2 mt-1 mb-1">
-            <a class="border_orange d-block p-1 px-3 rounded-pill${is_active ? ' active' : ''}" 
+            <a class="d-block p-1 px-3 rounded-pill${is_active ? ' active' : ''}" 
             data-bs-toggle="tab" aria-expanded="true" 
             href="#profile${idx + 1}">
             ${tid[i.batting_team_id][1]} Innings <i class="fa fa-chevron-right font_10 ms-1"></i>
@@ -224,7 +361,7 @@ window.addEventListener('statsReady', () => {
         const i = dt3.innings[idx];
         const is_active = dt3.score_strip[idx].currently_batting;
         liveHTML += `<div class="tab-pane${is_active ? ' active' : ''}" id="profile${idx + 1}">`;
-        liveHTML += `<div class="score_2_inner border rounded_10 bg-white mt-3">
+        liveHTML += `<div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3">
             <b class="bg-blue-grad font_14 d-block px-3 text-white pt-2 pb-2 rounded_top">${tid[i.batting_team_id][1]} <span class="font_12">Innings</span></b>
             <div class="table-responsive">
             <table class="table font_12 mb-0">
@@ -245,9 +382,10 @@ window.addEventListener('statsReady', () => {
             const bgcolor = batsmen.out_str === "Not out" ? '#2E7D32db' : '#666666b0';
             const team = batsmen.team;
             const name = batsmen.name;
+            let imagePath = dt3.player_images[batsmen.slug];
             liveHTML += `<tr class="border-0">
                 <td class="pb-0 text-blue" style="text-wrap: nowrap;">
-                    <b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}">${name}${batsmen.is_captain ? '&nbsp;<span class="text-muted">(C)</span>' : ''}</a></b>
+                    <b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>${batsmen.is_captain ? '&nbsp;<span class="text-muted">(C)</span>' : ''}</b>
                 </td>
                 <td class="px-0 pb-0"><b>${batsmen.runs}</b></td>
                 <td class="px-0 pb-0">${batsmen.balls}</td>
@@ -271,9 +409,9 @@ window.addEventListener('statsReady', () => {
         // Sort not batted by order
         liveHTML += `<tr class="border-bottom"><td class="pt-0 fw-bold" colspan="6">`;
         i.not_batted.forEach((nb, nbIdx) => {
-            const team = nb.team;
             const name = nb.name;
-            liveHTML += `<a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}">${name}</a>${nbIdx < i.not_batted.length - 1 ? ', ' : ''}`;
+            const team = nb.team;
+            liveHTML += `<a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}"><span class="text-blue">${name}</span></a>${nbIdx < i.not_batted.length - 1 ? ', ' : ''}`;
         });
         liveHTML += `</td></tr>`;
 
@@ -309,7 +447,7 @@ window.addEventListener('statsReady', () => {
             const team = bowler.team;
             const name = bowler.name;
             liveHTML += `<tr class="border-top">
-                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}">${name}</a></b></td>
+                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
                 <td class="px-2">${bowler.overs}</td>
                 <td class="px-2">${bowler.maiden_overs}</td>
                 <td class="px-2">${bowler.runs}</td>
@@ -321,7 +459,7 @@ window.addEventListener('statsReady', () => {
         liveHTML += `</tbody></table></div>`;
 
         // Fall of wickets
-        liveHTML += `<div class="table-responsive pt-2"><table class="table font_12 mb-0">
+        liveHTML += `<div class="table-responsive"><table class="table font_12 mb-0">
             <thead class="border-0">
                 <tr class="bg-bluelight">
                     <th class="text-muted" style="width: 55%;">Fall of Wickets</th>
@@ -336,7 +474,7 @@ window.addEventListener('statsReady', () => {
             const score = wicket.score;
             const over = wicket.over;
             liveHTML += `<tr class="border-top">
-                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}">${name}</a></b></td>
+                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
                 <td class="px-0 fw-bold">${score}</td>
                 <td class="px-0">${over}</td>
             </tr>`;

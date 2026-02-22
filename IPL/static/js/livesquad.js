@@ -8,7 +8,7 @@ function Capitalize(str) {
 }
 
 function checkCaptain(player) {
-    return player.captain ? '<span class="text-muted">(C)</span>' : '';
+    return player.position === 'captain' ? '<span class="text-muted">(C)</span>' : '';
 }
 
 function checkOverseas(player, pos) {
@@ -69,7 +69,6 @@ window.addEventListener('statsReady', () => {
     const spinner = document.getElementById('loadingSpinner');
     if (spinner) spinner.remove();
 
-    console.log(dt3.squad[0]);
     let fc = '';
     if (dt3.info === "") {
     fc = 'text-orange';
@@ -78,12 +77,12 @@ window.addEventListener('statsReady', () => {
     } else {
     fc = 'text-danger';
     }
-    let liveHTML = `<div class="live_2 rounded_10 border mt-2" style="background: linear-gradient(145deg, #0056d2, #003c8a)">`;
+    let liveHTML = `<div class="live_2 rounded_10 box-shadow-4 mt-2" style="background-color: #25478A">`;
     liveHTML += `<div class="live_2_inner row px-3 pt-2 pb-2">
 		     <div class="col-md-8">
 			  <div class="live_2_inner_left">
 			    <b class="text-white" style="font-size: 20px">${dt1[0].Team_A} vs ${dt1[0].Team_B}</b>
-				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}, TATA Indian Premier League 2025</span>
+				<span class="d-block font_14 text-white">${dt2[0]}, ${dt2[1]}, ${dt2[2]}</span>
 			  </div>
 			 </div>
              </div>`;
@@ -152,10 +151,11 @@ window.addEventListener('statsReady', () => {
             }
             // Insert partnershipHTML into your page as needed
             }
+    const ended = ['won','abandoned','no result'].some(s => dt3.info.toLowerCase().includes(s));
     liveHTML += `
         <ul class="mb-0 bg-tab rounded_bottom score_tab d-flex justify-content-evenly flex-wrap">
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/matchInfo?source=${source}&fteam=${fteam}">Info</a></li>
-        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">Live</a></li>
+        <li class="d-inline-block"><a class="d-block" href="/match-${match}/liveScore?source=${source}&fteam=${fteam}">${!ended ? 'Live' : 'Commentary'}</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/scoreCard?source=${source}&fteam=${fteam}">Scorecard</a></li>
         <li class="d-inline-block"><a class="d-block" href="/match-${match}/Overs?source=${source}&fteam=${fteam}">Overs</a></li>
         <li class="d-inline-block"><a class="active d-block" href="/match-${match}/liveSquad?source=${source}&fteam=${fteam}">Squad</a></li>
@@ -164,38 +164,52 @@ window.addEventListener('statsReady', () => {
 
     // Match Info Session
     if (dt3.squad !== null) {
-        liveHTML += `<div class="score_2_inner border rounded_10 bg-white mt-3">
+        liveHTML += `<div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 overflow-hidden">
             <div class="bg-blue-grad font_18 d-block px-4 fw-bold text-white pt-2 pb-2 rounded_top cb-teams-hdr">
                              <span><span class="fi fi-${tid[dt3.squad[0].team_id][0].toLowerCase()} me-1"></span>${tid[dt3.squad[0].team_id][0]}</span>
                              <span class="float-end">${tid[dt3.squad[1].team_id][0]}<span class="fi fi-${tid[dt3.squad[1].team_id][0].toLowerCase()} ms-1"></span></span>
                         </div>`;
-        if (dt3.squad[0].players === null) {
+        if (dt3.squad[0].players === null || dt3.squad[0].players.length === 0) {
             liveHTML += `<div class="bg-bluelight font_14 pt-1 pb-1 text-muted fw-bold" style="text-align: center;">
                             Squad
                         </div>`;
             liveHTML += `<div class="d-flex w-100">
-                            <div class="d-flex w-50 border-right border-1 ms-2 flex-column">`;
+                            <div class="d-flex w-50 border-right border-1 flex-column">`;
             dt3.squad[0].bench_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1">
-                                        <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name}&nbsp;${checkCaptain(player)}</div>
+                                        <div class="d-flex align-items-center ms-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
                                             </a>
-					                        <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
+                                        </div>
+                                        <div class="d-block w-100 p-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}</div>
+					                        </a>
+                                            <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
                                         ${checkOverseas(player, 'L')}
                                     </div>`;
             });
             liveHTML += `</div>`;
-            liveHTML += `<div class="d-flex w-50 border-left border-1 me-2 flex-column text-end">`;
+            liveHTML += `<div class="d-flex w-50 border-left border-1 flex-column text-end">`;
             dt3.squad[1].bench_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1">
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${checkCaptain(player)}&nbsp;${player.name}</div>
-                                            </a>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
+					                        </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
+                                        </div>
+                                        <div class="d-flex align-items-center me-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
                                         </div>
                                     </div>`;
             });
@@ -206,12 +220,19 @@ window.addEventListener('statsReady', () => {
                             Playing XI
                         </div>`;
             liveHTML += `<div class="d-flex w-100">
-                            <div class="d-flex w-50 border-right border-1 ms-2 flex-column">`;
+                            <div class="d-flex w-50 border-right border-1 flex-column">`;
             dt3.squad[0].players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
+                                        <div class="d-flex align-items-center ms-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
+                                        </div>
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[1] ? (player.name === dt3.squad[0].impact_players[1].name ? '<img src="/static/images/out.png" width="8px" height="10px" class="ms-1">' : '') : ''}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[1] ? (player.name === dt3.squad[0].impact_players[1].name ? '<img class="in-out ml-1" src="/static/images/out.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -219,15 +240,22 @@ window.addEventListener('statsReady', () => {
                                     </div>`;
             });
             liveHTML += `</div>`;
-            liveHTML += `<div class="d-flex w-50 border-left border-1 me-2 flex-column text-end">`;
+            liveHTML += `<div class="d-flex w-50 border-left border-1 flex-column text-end">`;
             dt3.squad[1].players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[1] ? (player.name === dt3.squad[1].impact_players[1].name ? '<img src="/static/images/out.png" width="8px" height="10px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[1] ? (player.name === dt3.squad[1].impact_players[1].name ? '<img class="in-out mr-1" src="/static/images/out.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
+                                        </div>
+                                        <div class="d-flex align-items-center me-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
                                         </div>
                                     </div>`;
             });
@@ -237,12 +265,19 @@ window.addEventListener('statsReady', () => {
                             Substitutes
                         </div>`;
             liveHTML += `<div class="d-flex w-100">
-                            <div class="d-flex w-50 border-right border-1 ms-2 flex-column">`;
+                            <div class="d-flex w-50 border-right border-1 flex-column">`;
             dt3.squad[0].substitute_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
+                                        <div class="d-flex align-items-center ms-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
+                                        </div>
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[0] ? (player.name === dt3.squad[0].impact_players[0].name ? '<img src="/static/images/in.png" width="8px" height="10px" class="ms-1">' : '') : ''}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[0] ? (player.name === dt3.squad[0].impact_players[0].name ? '<img class="in-out ml-1" src="/static/images/in.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -250,15 +285,22 @@ window.addEventListener('statsReady', () => {
                                     </div>`;
             });
             liveHTML += `</div>`;
-            liveHTML += `<div class="d-flex w-50 border-left border-1 me-2 flex-column text-end">`;
+            liveHTML += `<div class="d-flex w-50 border-left border-1 flex-column text-end">`;
             dt3.squad[1].substitute_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[0] ? (player.name === dt3.squad[1].impact_players[0].name ? '<img src="/static/images/in.png" width="8px" height="10px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[0] ? (player.name === dt3.squad[1].impact_players[0].name ? '<img class="in-out mr-1" src="/static/images/in.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
+                                        </div>
+                                        <div class="d-flex align-items-center me-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
                                         </div>
                                     </div>`;
             });
@@ -268,12 +310,19 @@ window.addEventListener('statsReady', () => {
                             Bench
                         </div>`;
             liveHTML += `<div class="d-flex w-100">
-                            <div class="d-flex w-50 border-right border-1 ms-2 flex-column">`;
+                            <div class="d-flex w-50 border-right border-1 flex-column">`;
             dt3.squad[0].bench_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
+                                        <div class="d-flex align-items-center ms-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
+                                        </div>
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name}&nbsp;${checkCaptain(player)}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -281,15 +330,22 @@ window.addEventListener('statsReady', () => {
                                     </div>`;
             });
             liveHTML += `</div>`;
-            liveHTML += `<div class="d-flex w-50 border-left border-1 me-2 flex-column text-end">`;
+            liveHTML += `<div class="d-flex w-50 border-left border-1 flex-column text-end">`;
             dt3.squad[1].bench_players.forEach(player => {
                 liveHTML += `<div class="d-flex border-bottom border-1" style="background-color: ${('delta' in player) ? (player.delta === 1 ? '#abf7b1' : '#fcc7c3') : '#ffffff'}">
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
-                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${checkCaptain(player)}&nbsp;${player.name}</div>
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
+                                        </div>
+                                        <div class="d-flex align-items-center me-1">
+                                            <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
+                                            <div class="squad-image">
+                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                            </div>
+                                            </a>
                                         </div>
                                     </div>`;
             });

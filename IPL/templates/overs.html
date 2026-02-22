@@ -20,10 +20,10 @@
     <style>
     body {
     	font-family: 'Exo 2', sans-serif;
-        background: #081033;
-  background-image: url('/static/images/banner_bg.png');
-  background-size: 100%;
-  background-position: center top -48px;
+  background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background-size: 100%, cover;
+  background-position: center, center top;
+  background-repeat: repeat, repeat;
     }
     </style>
 {% endblock %}
@@ -73,6 +73,39 @@
   .floating-back-btn {
     top: 10px;
     left: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+/* Floating Move to Top Button */
+.floating-move-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  background: linear-gradient(90deg, hsl(324 100% 46%), #009fbe);
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.floating-move-top-btn:hover {
+  background: #e6e6e6;
+  color: #25478A;
+}
+@media (max-width: 600px) {
+  .floating-move-top-btn {
+    bottom: 20px;
+    right: 20px;
     width: 40px;
     height: 40px;
     font-size: 20px;
