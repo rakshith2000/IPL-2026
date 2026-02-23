@@ -9,6 +9,9 @@ from datetime import datetime, timedelta
 def add_days(value, days):
     return value + timedelta(days=days)
 
+def eval_str(value):
+    return eval(value)
+
 db = SQLAlchemy()
 
 def create_app():
@@ -18,6 +21,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') #'sqlite:///IPL.sqlite'
 
     app.jinja_env.filters['add_days'] = add_days
+    app.jinja_env.filters['eval_str'] = eval_str
 
     db.init_app(app)
     login_manager = LoginManager()

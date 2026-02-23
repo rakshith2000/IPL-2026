@@ -671,7 +671,9 @@ def index():
                        DOB=(datetime.strptime(i[10],'%d-%m-%Y')).date(), URL_ID=i[3])
             db.session.add(pl)
             db.session.commit()
-    return render_template('index.html', teams=list(full_name.keys()), clr=clr)
+    PT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
+    print(PT)
+    return render_template('index.html', teams=full_name, clr=clr, pt=PT)
 
 @main.route('/pointstable')
 def displayPT():

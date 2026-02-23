@@ -2,6 +2,7 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
 {% endblock %}
 
@@ -210,29 +211,38 @@ h3.section-title {
 <center>
   <div style="padding: 0px 10px 10px 10px;" class="extra-padding">
     
-    <div>
+    <div styke="padding-bottom: 20px;">
       <img src="{{ url_for('static', filename= 'images/IPL-Logo.png') }}" class="logo" style="height: 345px;" alt="TATA IPL Logo">
     </div>
-
-    <div class="team-container">
-      <h3 class="section-title"><span class="section-title-highlight"><span style="color: #d5edff;">🔥 IPL 2026 🔥<br>Teams</span></span></h3>
-      <div class="flex-container">
-        {% for i in teams[:-1] %}
-        <div class="card-wrapper">
-			<a href="{{ url_for('main.squad', team=i) }}">
-			<div class="card-inner">
-				<div class="card-front" style="{% if i == 'RCB' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c1'] }} {% elif i == 'GT' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c2'] }} {% elif i == 'MI' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c2'] }}  {% elif i == 'PBKS' %} --c1: {{ clr[i]['c2'] }}; --c2: {{ clr[i]['c1'] }} {% elif i == 'KKR' %} --c1: {{ clr[i]['c2'] }}; --c2: {{ clr[i]['c3'] }} {% else %} --c1: {{ clr[i]['c1'] }}; --c2: {{ clr[i]['c2'] }} {% endif %};">
-					<img class="card-image" src="/static/images/squad_logos/{{ i }}.png" alt="{{ i }}">
-				</div>
-				<div class="card-back" style="{% if i == 'RCB' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c1'] }}; --fc: white {% elif i == 'GT' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c2'] }}; --fc: white {% elif i == 'MI' %} --c1: {{ clr[i]['c3'] }}; --c2: {{ clr[i]['c2'] }}; --fc: white  {% elif i == 'PBKS' %} --c1: {{ clr[i]['c2'] }}; --c2: {{ clr[i]['c1'] }}; --fc: white {% elif i == 'KKR' %} --c1: {{ clr[i]['c2'] }}; --c2: {{ clr[i]['c3'] }}; --fc: white {% elif i == 'CSK' %} --c1: {{ clr[i]['c1'] }}; --c2: {{ clr[i]['c2'] }}; --fc: black {% else %} --c1: {{ clr[i]['c1'] }}; --c2: {{ clr[i]['c2'] }}; --fc: white {% endif %};">
-				{{ i | upper }}
-				</div>
-			</div>
-			</a>
-		</div>
+    <div class="main-container">
+    <span class="pt-header">Points Table</span>
+    <div class="standings-container">
+      {% for team in pt %}
+        <div class="team-card">
+            <div class="team-rank-logo">
+                <span class="rank">{{ loop.index }}<span class="rank-border">{{ loop.index }}</span></span>
+                {% if team.qed == 'Q' %}<span class="form q">Q</span>{% endif %}
+                <img src="/static/images/squad_logos/{{ team.team_name }}.png" alt="{{ team.team_name }} Logo" class="team-logo" style="{% if team.team_name == 'RCB' %} --c1: {{ clr[team.team_name]['c3'] }}; --c2: {{ clr[team.team_name]['c1'] }} {% elif team.team_name == 'GT' %} --c1: {{ clr[team.team_name]['c3'] }}; --c2: {{ clr[team.team_name]['c2'] }} {% elif team.team_name == 'MI' %} --c1: {{ clr[team.team_name]['c3'] }}; --c2: {{ clr[team.team_name]['c2'] }}  {% elif team.team_name == 'PBKS' %} --c1: {{ clr[team.team_name]['c2'] }}; --c2: {{ clr[team.team_name]['c1'] }} {% elif team.team_name == 'KKR' %} --c1: {{ clr[team.team_name]['c2'] }}; --c2: {{ clr[team.team_name]['c3'] }} {% else %} --c1: {{ clr[team.team_name]['c1'] }}; --c2: {{ clr[team.team_name]['c2'] }} {% endif %};">
+            </div>
+            <div class="team-name">{{ teams[team.team_name] }}</div>
+            <div class="team-stats">
+                <div><span class="stat-value">{{ team.Points }}</span><span class="stat-label">Points</span></div>
+                <div><span class="stat-value">{{ team.P }}</span><span class="stat-label">Played</span></div>
+                <div><span class="stat-value">{{ team.W }}</span><span class="stat-label">Won</span></div>
+                <div><span class="stat-value nrr {{ 'positive' if team.NRR >= 0 else 'negative' }}">{{ team.NRR }}</span><span class="stat-label">NRR</span></div>
+            </div>
+            <div class="recent-form-label">Recent form</div>
+            <div class="recent-form">
+              {% set wl = team.Win_List | eval_str | dictsort(reverse=True) | map(attribute=1) | list %}
+              {% set wl = wl if wl|length < 5 else wl[0:5] %}
+              {% for match in wl %}
+                <span class="form {{ match }}">{{ match if match != 'D' else 'N' }}</span>
+              {% endfor %}
+            </div>
+        </div>
         {% endfor %}
       </div>
-    </div>
+      </div>
   </div>
 </center>
 <nav class="bottom-nav">
