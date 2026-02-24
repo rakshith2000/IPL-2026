@@ -9,6 +9,8 @@
       type="image/x-icon"
       href="{{ url_for('static', filename= 'images/ipl.ico') }}"
     />
+    <link rel="manifest" href="{{ url_for('static', filename= 'manifest.json') }}" />
+    <meta name="theme-color" content="#0d6efd" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
     <link
@@ -82,5 +84,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script src="{{ url_for('static', filename='js/webauthn.js') }}"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}").then(() => console.log("SW Registered"));
+      }
+    </script>
   </body>
 </html>
