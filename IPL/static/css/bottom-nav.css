@@ -3,7 +3,7 @@
       left: 0;
       bottom: 0;
       width: 100vw;
-      height: 55px;
+      height: 60px;
       background: linear-gradient(145deg, #0056d2, #003c8a);
       display: flex;
       justify-content: space-between;
@@ -60,7 +60,7 @@
       width: 70px;
       height: 70px;
       background: linear-gradient(145deg, #003c8a, #0056d2);
-      border-radius: 50%;
+      border-radius: 35%;
       box-shadow: 0 6px 18px rgba(0,0,0,0.18);
       display: flex;
       align-items: center;
