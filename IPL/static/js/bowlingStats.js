@@ -21,9 +21,27 @@ window.addEventListener('statsReady', () => {
     if (document.getElementById('loadingSpinner')) {
         document.getElementById('loadingSpinner').remove();
     }
-    // Initial table render - same approach as battingStat.html
-      const initialData = statsData['Most Wickets']
-  mostWicketsTable(initialData);
+    // Check for option in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const option = urlParams.get('option');
+    if (option && statsData[option]) {
+        // Find dropdown element matching option
+        const dropdownLinks = document.querySelectorAll('.dropdown-menu a');
+        let found = false;
+        dropdownLinks.forEach(link => {
+            if (link.textContent.trim() === option) {
+                selectOption(link, option);
+                found = true;
+            }
+        });
+        if (!found) {
+            // fallback to default
+            mostWicketsTable(statsData['Most Wickets']);
+        }
+    } else {
+        // Initial table render - same approach as battingStat.html
+        mostWicketsTable(statsData['Most Wickets']);
+    }
 });
 
 function selectOption(element, optionTitle) {

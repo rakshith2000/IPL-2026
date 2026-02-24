@@ -21,9 +21,27 @@ window.addEventListener('statsReady', () => {
     if (document.getElementById('loadingSpinner')) {
         document.getElementById('loadingSpinner').remove();
     }
-    // Initial table render - same approach as battingStat.html
-    const initialData = statsData['Most Runs']
-  mostRunsTable(initialData);
+    // Check for option in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const option = urlParams.get('option');
+    if (option && statsData[option]) {
+        // Find dropdown element matching option
+        const dropdownLinks = document.querySelectorAll('.dropdown-menu a');
+        let found = false;
+        dropdownLinks.forEach(link => {
+            if (link.textContent.trim() === option) {
+                selectOption(link, option);
+                found = true;
+            }
+        });
+        if (!found) {
+            // fallback to default
+            mostRunsTable(statsData['Most Runs']);
+        }
+    } else {
+        // Initial table render - same approach as battingStat.html
+        mostRunsTable(statsData['Most Runs']);
+    }
 });
 
 function selectOption(element, optionTitle) {
