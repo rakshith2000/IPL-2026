@@ -61,3 +61,8 @@ class Squad(db.Model):
     Debut = db.Column(db.String)
     URL_ID = db.Column(db.Integer)
     Player_URL = db.Column(db.String)
+
+class Toppers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.String(255))
+    stats = db.Column(db.JSON)

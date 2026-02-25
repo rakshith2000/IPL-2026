@@ -1,5 +1,5 @@
 from . import db
-from .models import User, Pointstable, Fixture, Squad
+from .models import User, Pointstable, Fixture, Squad, Toppers
 import os, csv, re, pytz, requests, time
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, jsonify, render_template, url_for, redirect, request, flash, Response, json, stream_with_context, current_app
@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 import random
 from datetime import datetime, date, time, timedelta
 from collections import defaultdict
-import threading
+import threading, lxml.etree
 
 warnings.filterwarnings("ignore")
 
@@ -35,6 +35,13 @@ liveURL_Prefix = "https://cmc2.sportskeeda.com/live-cricket-score/"
 liveURL_Suffix = "/ajax"
 
 statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9237/"
+
+tp_urls = {
+    "orange": "https://sportskeeda.com/go/ipl/orange-cap",
+    "purple": "https://sportskeeda.com/go/ipl/purple-cap",
+    "sr": "https://www.sportskeeda.com/go/ipl/best-strike-rate",
+    "6s": "https://www.sportskeeda.com/go/ipl/most-sixes"
+}
 
 statsList = {
     "batting": {"Most Runs": "mostRuns", "Highest Scores": "highestScore", "Best Batting Average": "highestAvg", "Best Batting Strike Rate":"highestSr", "Most Hundreds": "mostHundreds", "Most Fifties": "mostFifties", "Most Fours": "mostFours", "Most Sixes": "mostSixes", "Most Nineties": "mostNineties"},
@@ -127,6 +134,34 @@ sqclr = {
     'GT': {'c1': '#0b1c31', 'c2': '#e3ca7c'},   # Navy to Gold
     'LSG': {'c1': '#FF4C00', 'c2': '#0096FF'}     # Light Blue to Gold
 }
+
+def update_toppers():
+    """
+    Fetches the given URL, extracts the first row of the table with class 'keeda-data-table' inside div.left,
+    and returns it as a dictionary with headers as keys. Returns empty dict on failure.
+    """
+    for role, url in tp_urls.items():
+        try:
+            response = requests.get(url, timeout=10, verify=False)
+            response.raise_for_status()
+            html_content = response.text
+            parser = lxml.etree.HTMLParser()
+            tree = lxml.etree.fromstring(html_content, parser)
+            table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
+            if not table:
+                return
+            headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
+            first_row_trs = table[0].xpath('.//tbody//tr[1]')
+            if not headers or not first_row_trs:
+                return
+            first_row = first_row_trs[0]
+            row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
+            tp = Toppers.query.filter_by(category=role).first()
+            if tp:
+                tp.stats = dict(zip(headers, row_data))
+                db.session.commit()
+        except Exception:
+            return
 
 def simulate_score():
     runs = int(random.gauss(MEAN_SCORE, STD_DEV))
@@ -672,8 +707,9 @@ def index():
             db.session.add(pl)
             db.session.commit()
     PT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
-    print(PT)
-    return render_template('index.html', teams=full_name, clr=clr, pt=PT)
+    TP = Toppers.query.order_by(Toppers.id.asc()).all()
+    print(TP)
+    return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP)
 
 @main.route('/pointstable')
 def displayPT():

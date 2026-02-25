@@ -44,7 +44,7 @@ def create_app():
     app.register_blueprint(api_blueprint)
 
     from . import models
-    from .main import refresh_qualification
+    from .main import refresh_qualification, update_toppers
     scheduler = APScheduler()
     scheduler.init_app(app)
     scheduler.start()
@@ -69,5 +69,14 @@ def create_app():
                 print("Qualification percentages updated.")
             except Exception as e:
                 print(f"Error updating qualifications: {e}")
+
+    @scheduler.task('interval', id='toppers_task', minutes=15, misfire_grace_time=120)
+    def update_toppers_task():
+        with app.app_context():
+            try:
+                update_toppers()
+                print("Toppers updated.")
+            except Exception as e:
+                print(f"Error updating toppers: {e}")
 
     return app

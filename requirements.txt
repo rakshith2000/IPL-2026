@@ -18,3 +18,4 @@ python-Levenshtein
 psycopg2-binary
 webauthn
 passlib
+lxml
