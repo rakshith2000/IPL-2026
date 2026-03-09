@@ -60,15 +60,16 @@ body {
 <div style="padding-bottom: 35px;"></div>
 {% for i in FR[1:] %}
 {% if i[1] > current_date %}
-<a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card border">
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
     <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
     <div style="display: block;">
       <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
     </div>
   </div>
-    <div class="match-info">{{ i[2] }}</div>
+    <div class="match-info">{{ i[2] }}</div></a>
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
     <div class="score-container">
       <div class="team-new left-team">
         <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
@@ -95,15 +96,16 @@ body {
           {{ fn[i[4]] }}
         </div>
       </div>
-    </div>
+    </div></a>
       <!-- Result -->
+       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
        {% if current_date.date() == i[1].date() %}
       <div class="result" style="color: #dc6604">Starts Today &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
        {% elif i[1].date() == (current_date | add_days(1)).date() %}
        <div class="result" style="color: #dc6604">Starts Tomorrow &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
        {% else %}
       <div class="result" style="color: #dc6604">Starts {{ i[1].strftime('%a, %d %b') }} &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
-      {% endif %}
+      {% endif %}</a>
     </div>
 
   <div class="timer-card border">
@@ -134,12 +136,14 @@ body {
     <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card border">
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
     <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
     <div style="display: block;">
       <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
     </div>
   </div>
-    <div class="match-info">{{ i[2] }}</div>
+    <div class="match-info">{{ i[2] }}</div></a>
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
      <div class="score-container">
       <div class="team-new left-team">
         <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
@@ -166,9 +170,10 @@ body {
           {{ fn[i[4]] }}
         </div>
       </div>
-    </div>
+    </div></a>
       <!-- Result -->
-      <div class="result" style="color: #c11616"><span class="result-span blink">Match is In-Progress</span></div>
+       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
+      <div class="result" style="color: #c11616"><span class="result-span blink">Match is In-Progress</span></div></a>
   </div>
   <div class="timer-card">
     <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">Match is In-Progress</div>
@@ -181,15 +186,15 @@ body {
 </div></a>
 
 {% elif i[7] != 'TBA' %}
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card border">
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
     <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
     <div style="display: block;">
       <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
   </div>
   </div>
-    <div class="match-info">{{ i[2] }}</div>
+    <div class="match-info">{{ i[2] }}</div></a>
     {% if 'Super over' not in i[10] %}
       {% if i[7] == i[3] and i[8] == "runs" %}
       {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
@@ -212,6 +217,7 @@ body {
       {% endif %}
     {% endif %}
 
+    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
     <div class="score-container">
       <div class="team-new left-team">
         {% if "Super over" not in i[10] %}
@@ -266,13 +272,14 @@ body {
         </div>
         {% endif %}
       </div>
-    </div>
+    </div></a>
       <!-- Result -->
+       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
       {% if i[7] == "NA" %}
       <div class="result">{{ i[10] }}</div>
       {% else %}
       <div class="result"><span class="team-name" full="{{ fn[i[7]] }}" short="{{ i[7] }}">{{ fn[i[7]] }}</span> {{ i[10] if '1' not in i[10].split(' ') else (i[10].replace('runs', 'run') if 'runs' in i[10] else i[10].replace('wickets', 'wicket')) }}</div>
-      {% endif %}
+      {% endif %}</a>
       </div>
   <div class="timer-card">
     {% if i[7] == "NA" or i[11][0] == "NA" %}
@@ -285,11 +292,14 @@ body {
     {% else %}
     <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">Player of the match</div>
     <div class="potm-content">
+                <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }}">
                 <div class="potm-image text-blue" style="{% if i[11][1] == 'RCB' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'GT' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'MI' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'PBKS' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'KKR' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c3'] }}; {% else %} --c1: {{ clr[i[11][1]]['c1'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% endif %}">
                     <img src="/static/images/squads/{{ i[11][1] }}/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
-                </div>
+                </div></a>
                 <div class="potm-details">
+                  <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }} plain-link">
                     <div class="potm-name">{{ i[11][0] }}</div>
+                  </a>
                     <div class="potm-team fw-bold">
                         <img src="/static/images/squad_logos/{{ i[11][1] }}.png" alt="Team Logo" class="team-logo2">
                         {{ fn[i[11][1]] }}
@@ -299,7 +309,7 @@ body {
             </div>
     {% endif %}
   </div>
-</div></a>
+</div>
 {% endif %}
 {% endfor %}
 </center>

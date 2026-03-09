@@ -53,7 +53,7 @@ def create_app():
     def ping():
         try:
             # Replace with your app's URL
-            response = requests.get('https://tataipl2026.onrender.com/login')
+            response = requests.get('https://tataipl2026.onrender.com/login', verify=False)
             print(f"Ping successful, status code: {response.status_code}")
         except Exception as e:
             print(f"Error pinging app: {e}")

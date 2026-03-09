@@ -374,6 +374,68 @@ h3.section-title {
         </div>
         <a href="/battingstats?option=Most%20Sixes" class="leaderboard-btn s6">View Full Leaderboard</a>
     </div>
+
+    <div class="tp-card-container hs">
+      {% set hs = tp[4].stats %}
+        <div class="player-card">
+            <div class="player-image">
+                <img src="/static/images/squads/{{ hs['Team'] }}/{{ hs['Player'] | replace(' ', '-') }}.png" alt="Player" />
+            </div>
+            <div class="player-info">
+                <div class="card-name hs-text">Highest Scores</div>
+                <div class="player-primary">
+                <div class="player-rank">#1</div>
+                <div class="player-name-block">
+                        <span class="player-name firstname">{{ hs['Player'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ hs['Player'].split(' ')[1:] | join(' ') }}</span>
+                </div>
+                <div class="player-runs">
+                    <span class="runs hs-text">{{ hs['HS'] }}</span>
+                    <span class="runs-label">HS</span>
+                </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat"><span>HS</span><span>{{ hs['HS'] }}</span></div>
+                    <div class="stat"><span>BF</span><span>{{ hs['BF'] }}</span></div>
+                    <div class="stat"><span>SR</span><span>{{ hs['SR'] }}</span></div>
+                    <div class="stat"><span>4s</span><span>{{ hs['4s'] }}</span></div>
+                    <div class="stat"><span>6s</span><span>{{ hs['6s'] }}</span></div>
+                </div>
+            </div>
+        </div>
+        <a href="/battingstats?option=Highest%20Scores" class="leaderboard-btn hs">View Full Leaderboard</a>
+    </div>
+
+    <div class="tp-card-container bbi">
+      {% set bbi = tp[5].stats %}
+        <div class="player-card">
+            <div class="player-image">
+                <img src="/static/images/squads/{{ bbi['Team'] }}/{{ bbi['Player'] | replace(' ', '-') }}.png" alt="Player" />
+            </div>
+            <div class="player-info">
+                <div class="card-name bbi-text">Best Bowling</div>
+                <div class="player-primary">
+                <div class="player-rank">#1</div>
+                <div class="player-name-block">
+                        <span class="player-name firstname">{{ bbi['Player'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ bbi['Player'].split(' ')[1:] | join(' ') }}</span>
+                </div>
+                <div class="player-runs">
+                    <span class="runs bbi-text">{{ bbi['BBI'] }}</span>
+                    <span class="runs-label">BBI</span>
+                </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat"><span>M</span><span>{{ bbi['Mat'] }}</span></div>
+                    <div class="stat"><span>Wkts</span><span>{{ bbi['Wkts'] }}</span></div>
+                    <div class="stat"><span>Econ</span><span>{{ bbi['Eco'] }}</span></div>
+                    <div class="stat"><span>Avg.</span><span>{{ bbi['Avg'] }}</span></div>
+                    <div class="stat"><span>4W/5W</span><span>{{ bbi['4W'] }} / {{ bbi['5W'] }}</span></div>
+                </div>
+            </div>
+        </div>
+        <a href="/bowlingstats?option=Best%20Bowling" class="leaderboard-btn bbi">View Full Leaderboard</a>
+    </div>
     </div>
     </div>
   </div>

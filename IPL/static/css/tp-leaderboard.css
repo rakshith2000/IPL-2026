@@ -56,6 +56,12 @@
 .s6 {
     background: #064a97;
 }
+.hs {
+    background: #199b02;
+}
+.bbi {
+    background: #d30000;
+}
 .orange-text {
     color: #ff6a00;
 }
@@ -67,6 +73,12 @@
 }
 .s6-text {
     color: #064a97;
+}
+.hs-text {
+    color: #199b02;
+}
+.bbi-text {
+    color: #d30000;
 }
 .tp-header {
     display: flex;
@@ -102,6 +114,7 @@
     text-transform: uppercase;
     font-weight: 600;
     margin-bottom: 10px;
+    text-wrap: nowrap;
 }
 .player-image img {
     position: relative;

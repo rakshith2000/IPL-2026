@@ -40,7 +40,9 @@ tp_urls = {
     "orange": "https://sportskeeda.com/go/ipl/orange-cap",
     "purple": "https://sportskeeda.com/go/ipl/purple-cap",
     "sr": "https://www.sportskeeda.com/go/ipl/best-strike-rate",
-    "6s": "https://www.sportskeeda.com/go/ipl/most-sixes"
+    "6s": "https://www.sportskeeda.com/go/ipl/most-sixes",
+    "hs": "https://www.sportskeeda.com/go/ipl/highest-scores",
+    "bbi": "https://www.sportskeeda.com/go/ipl/best-bowling-average"
 }
 
 statsList = {
@@ -103,7 +105,7 @@ clr = {'CSK':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},  #fdcd05 f15c19,
         'DC':{'c1':'#d71921', 'c2':'#2561ae', 'c3':'#282968'},
         'GT':{'c1':'#dbbe6e', 'c2':'#242b64', 'c3':'#1b2133'},
         'KKR':{'c1':'#F9E278', 'c2':'#64517C', 'c3':'#3a225d'},
-        'LSG':{'c1':'#39A9E0', 'c2':'#4CAD47', 'c3':'#3A5FAC'},
+        'LSG':{'c1':'#002554', 'c2':'#aa003b', 'c3':'#3A5FAC'},
         'MI':{'c1':'#d1ab3e', 'c2':'#0077b6', 'c3':'#004ba0'},
         'PBKS':{'c1':'#ed1d24', 'c2':'#f2d1a0', 'c3':'#4960b6'},
         'RR':{'c1':'#ff69b4', 'c2':'#074ea2', 'c3':'#cba92b'},
@@ -115,7 +117,7 @@ ptclr = {'CSK':'#f9cd05',
         'DC':'#282968',
         'GT':"#1d2247",
         'KKR':'#3a225d',
-        'LSG':'#3a5fac',
+        'LSG':'#aa003b',
         'MI':'#004ba0',
         'PBKS':'#ed1b24',
         'RR':'#e60693',
@@ -132,7 +134,7 @@ sqclr = {
     'PBKS': {'c1': '#eb222d', 'c2': '#ffdead'},    # Red to Gold
     'RR': {'c1': '#df238f', 'c2': '#294096'},   # Pink to Blue
     'GT': {'c1': '#0b1c31', 'c2': '#e3ca7c'},   # Navy to Gold
-    'LSG': {'c1': '#FF4C00', 'c2': '#0096FF'}     # Light Blue to Gold
+    'LSG': {'c1': '#aa003b', 'c2': '#002554'}     # Light Blue to Gold
 }
 
 def update_toppers():
@@ -708,7 +710,6 @@ def index():
             db.session.commit()
     PT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
     TP = Toppers.query.order_by(Toppers.id.asc()).all()
-    print(TP)
     return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP)
 
 @main.route('/pointstable')
