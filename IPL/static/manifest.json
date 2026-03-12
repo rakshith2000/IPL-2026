@@ -4,8 +4,7 @@
     "description": "A web application to display IPL 2026 stats and information.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#71B280",
-    "theme_color": "#0d6efd",
+    "background_color": "#ffffff",
     "icons": [
         {
             "src": "/static/images/icons/ipl.png",
