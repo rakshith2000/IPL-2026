@@ -197,7 +197,10 @@ def get_top4_playoffs(teams, remaining_matches):
                 sim[t2]["points"] += 1
         table = []
         for team, v in sim.items():
-            nrr = (v["runs_for"] / v["overs_faced"]) - (v["runs_against"] / v["overs_bowled"])
+            if v["overs_faced"] == 0 or v["overs_bowled"] == 0:
+                nrr = 0.0
+            else:
+                nrr = (v["runs_for"] / v["overs_faced"]) - (v["runs_against"] / v["overs_bowled"])
             table.append((team, v["points"], nrr))
         table.sort(key=lambda x: (x[1], x[2]), reverse=True)
         for i, (team, _, _) in enumerate(table):
@@ -642,26 +645,12 @@ def num_suffix(num):
 def render_live_URL(tA, tB, mn, dt):
     teamAB = full_name[tA].replace(" ", "-").lower() + "-vs-" + full_name[tB].replace(" ", "-").lower()
     if mn.isdigit():
-        if int(mn) == 37:
-            matchNo = "match-36"
-        elif int(mn) == 49:
-            matchNo = "match49"
-        elif int(mn) == 21:
-            matchNo = "match-19"
-        elif int(mn) == 19:
-            matchNo = "match-20"
-        elif int(mn) == 20:
-            matchNo = "match-21"
-        else:
-            matchNo = "match-" + mn
+        matchNo = "match-" + mn
     elif tA != "TBA" and tB != "TBA":
         matchNo = mn.lower().replace(' ','-')
     else:
         matchNo = mn.lower().replace(' ','-') + "-ipl-2025"
-    if mn.isdigit() and mn == "21":
-        dt = "06-april-2025"
-    else:
-        dt = dt.strftime("%d-%B-%Y").lower()
+    dt = dt.strftime("%d-%B-%Y").lower()
     URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
     print(URL)
     return URL

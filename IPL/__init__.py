@@ -60,7 +60,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-    
+
     @scheduler.task('interval', id='qualification_task', hours=1, misfire_grace_time=120)
     def update_qualification():
         with app.app_context():
