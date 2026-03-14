@@ -212,7 +212,7 @@ def get_top4_playoffs(teams, remaining_matches):
                 results[team]["top1"] += 1
     top4_predict = {}
     for team in teams:
-        top4_predict[team] = {'top4':round(results[team]['top4'] / SIMULATIONS * 100, 2), 'top2':round(results[team]['top2'] / SIMULATIONS * 100, 2)}
+        top4_predict[team] = {'top4':round(results[team]['top4'] / SIMULATIONS * 100, 1), 'top2':round(results[team]['top2'] / SIMULATIONS * 100, 1)}
 
     return top4_predict
 
