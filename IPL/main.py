@@ -720,7 +720,7 @@ def displayPT():
             nm = j[0] if j[0] != i.team_name else j[1]
             nm = 'vs ' + nm
             break
-        dt[1][index] = dt[1][index] if finalsData.Win_T != i.team_name else 'Champions'
+        dt[1][index] = dt[1][index] if not finalsData else dt[1][index] if finalsData.Win_T != i.team_name else 'Champions'
         dt[2].append(img)
         teams_ABV.append(i.team_name)
         dt[3].append(full_name[i.team_name])
