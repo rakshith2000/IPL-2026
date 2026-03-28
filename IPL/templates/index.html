@@ -10,8 +10,7 @@
 {% block content %}
 <style>
 body {
-        background: linear-gradient(90deg, #134E5E, #71B280)!important;
-        background-image: url('/static/images/banner_bg.png');
+        background: #031945;
         background-size: 100%;
         background-position: center top -48px;
         font-family: 'Exo 2', sans-serif;
@@ -97,6 +96,26 @@ body {
   padding: 1px 0;
   border-radius: 15px;
   animation: slideIn 1.5s ease-out;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.logo-container::before {
+    content: "";
+    background: url('/static/images/headers/sh-tl.png'), url('/static/images/headers/sh-tr.png'), url('/static/images/headers/sh-bl.png'), url('/static/images/headers/sh-br.png'), #031945;
+    background-size: 100px, 100px, 100px, 100px, cover;
+    background-position: left top, right top, left bottom, right bottom, center top;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: .4;
+    z-index: -1;
 }
 
 img.logo {
@@ -210,9 +229,9 @@ h3.section-title {
 </style>
 
 <center>
-  <div style="padding: 0px 10px 10px 10px;" class="extra-padding">
-    
-    <div styke="padding-bottom: 20px;">
+  <div style="padding: 0px 0px 10px 0px;" class="extra-padding">
+
+    <div class="logo-container" style="padding-bottom: 20px;">
       <img src="{{ url_for('static', filename= 'images/IPL-Logo.png') }}" class="logo" style="height: 345px;" alt="TATA IPL Logo">
     </div>
 

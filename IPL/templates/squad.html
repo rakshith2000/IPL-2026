@@ -12,7 +12,7 @@
 {% block content %}
 <style>
 body {
-  background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
   background-size: 100%, cover;
   background-position: center top -48px, center top;
   background-repeat: repeat, repeat;
@@ -47,12 +47,12 @@ body {
 
 <div style="background-image: url('/static/images/banner_bg.jpg'); background-size: cover; background-attachment: fixed; display: flex; flex-direction: column; align-items: center;">
 
-  <div class="squad-header" style="{% if team in ['CSK', 'MI'] %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c1'] }};{% else %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c2'] }};{% endif %}">
+  <div class="squad-header" style="{% if team in ['CSK', 'RCB', 'PBKS','RR', 'GT', 'LSG', 'KKR', 'SRH'] %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c1'] }};{% else %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c2'] }};{% endif %}">
         <div class="squad-header-content">
-            <div class="team-logo">
-                <img src="/static/images/squad_logos/{{ team }}{{ '1' if team == 'RR' else '' }}.png" alt="{{ team }} Logo">
+            <div class="team-logo" style="{% if team in ['KKR', 'RCB', 'LSG', 'RR', 'GT', 'PBKS', 'SRH'] %}--c: {{ sqclr['c2'] }};{% else %}--c: {{ sqclr['c1'] }};{% endif %}">
+                <img src="/static/images/squad_logos/{{ team }}.png" alt="{{ team }} Logo">
             </div>
-            <div class="team-info">
+            <div class="team-info" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">
                 <div class="team-title">{{ fn }}</div>
                 {% if champions[team] | length > 0 %}
                 <div class="team-meta-row">
@@ -63,57 +63,57 @@ body {
             </div>
             <div class="team-details">
                 <div class="team-details-row">
-                    <div class="team-details-label">Captain</div>
-                    <div class="team-details-sep">-</div>
-                    <div class="team-details-value">{{ team_dt['Captain'] }}</div>
+                    <div class="team-details-label" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">Captain</div>
+                    <div class="team-details-sep" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">-</div>
+                    <div class="team-details-value" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">{{ team_dt['Captain'] }}</div>
                 </div>
                 <div class="team-details-row">
-                    <div class="team-details-label">Coach</div>
-                    <div class="team-details-sep">-</div>
-                    <div class="team-details-value">{{ team_dt['Coach'] }}</div>
+                    <div class="team-details-label" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">Coach</div>
+                    <div class="team-details-sep" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">-</div>
+                    <div class="team-details-value" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">{{ team_dt['Coach'] }}</div>
                 </div>
                 <div class="team-details-row">
-                    <div class="team-details-label">Owner</div>
-                    <div class="team-details-sep">-</div>
-                    <div class="team-details-value">{{ team_dt['Owner'] }}</div>
+                    <div class="team-details-label" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">Owner</div>
+                    <div class="team-details-sep" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">-</div>
+                    <div class="team-details-value" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">{{ team_dt['Owner'] }}</div>
                 </div>
                 <div class="team-details-row">
-                    <div class="team-details-label">Venue</div>
-                    <div class="team-details-sep">-</div>
-                    <div class="team-details-value">{{ team_dt['Venue'] }}</div>
+                    <div class="team-details-label" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">Venue</div>
+                    <div class="team-details-sep" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">-</div>
+                    <div class="team-details-value" style="color: {% if team in ['CSK'] %}black !important;{% endif %}">{{ team_dt['Venue'] }}</div>
                 </div>
             </div>
         </div>
     </div>
   
   {% macro display(player) %}
-    <div class="player-card" style="{% if player.Team in ['KKR', 'GT', 'PBKS', 'SRH'] %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c1'] }};{% else %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c2'] }};{% endif %}">
+    <div class="player-card" style="{% if player.Team in ['MI', 'DC'] %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c2'] }};{% else %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c1'] }};{% endif %}">
       <a style="text-decoration: none" href="{{ url_for('main.squad_details', team=player.Team, name=player.Name) }}">
-                    <div class="player-image">
+                    <div class="player-image" style="background: url('/static/images/headers/{{ player.Team }}.png') center / cover no-repeat;">
                         {% set name = player.Name %}
                         <img class="player-img" src="/static/images/squads/{{ player.Team }}/{{ name.replace(' ', '-') }}.png" alt="{{ player.Name }}">
                     </div>
-                    <div class="player-info">
+                    <div class="player-info" style="{% if player.Team in ['CSK'] %}color: black !important;{% endif %}">
                         <span class="player-name">{{ player.Name.split(' ')[0] | upper }}<span>{{ player.Name.split(' ')[1:] | join(' ') | upper }}</span></span>
                         <span class="player-role">{{ player.Role }}</span>
                         {% if player.Keeper == 'Y' %}
                         <span class="player-role-icon"><img src="/static/images/keeper.png"></span>
                         {% endif %}
                         {% if player.Role == 'Batter' %}
-                        <span class="player-role-icon"><img src="/static/images/Batter.svg"></span>
+                        <span class="player-role-icon"><img src="/static/images/Batter{{ '-CSK' if player.Team == 'CSK' else '' }}.svg"></span>
                         {% endif %}
                         {% if player.Role == 'Bowler' %}
-                        <span class="player-role-icon"><img src="/static/images/Bowler.svg"></span>
+                        <span class="player-role-icon"><img src="/static/images/Bowler{{ '-CSK' if player.Team == 'CSK' else '' }}.svg"></span>
                         {% endif %}
                         {% if player.Role == 'All Rounder' %}
-                        <span class="player-role-icon"><img src="/static/images/All-rounder.svg"></span>
+                        <span class="player-role-icon"><img src="/static/images/All-rounder{{ '-CSK' if player.Team == 'CSK' else '' }}.svg"></span>
                         {% endif %}
                         <div class="player-right-icons">
                             {% if player.Captain == 'Y' %}
                             <span class="player-captain">C</span>
                             {% endif %}
                             {% if player.Overseas == 'Y' %}
-                            <span class="player-overseas"><img src="/static/images/overseas.png"></span>
+                            <span class="player-overseas"><img src="/static/images/overseas{{ '-CSK' if player.Team == 'CSK' else '' }}.png"></span>
                             {% endif %}
                         </div>
                     </div>

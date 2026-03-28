@@ -1,4 +1,4 @@
-      /* Global Styles */
+/* Global Styles */
       body {
         font-family: 'Exo 2', sans-serif;
         background: linear-gradient(145deg, #e0f7ff, #f1faff);
@@ -26,17 +26,39 @@
 
       /* Navbar */
       nav.navbar {
-        background: linear-gradient(145deg, #0056d2, #003c8a);
+        background: url("/static/images/rounded_spiral.png"), linear-gradient(145deg, #0056d2, #003c8a);
+        background-size: 170px 150px, cover;
+        background-position: center left -15px, center;
+        background-repeat: no-repeat;
         color: white;
-        padding: 10px 20px;
+        padding: 10px 20px 10px 40px;
         position: fixed;
         width: 100%;
         top: 0;
         left: 0;
-  overflow: visible; /* allow dropdowns to overflow instead of being clipped */
+        overflow: visible; /* allow dropdowns to overflow instead of being clipped */
         z-index: 1000;
       }
-
+      @media (max-width: 991px) {
+  nav.navbar {
+    background-size: 170px 150px, cover !important; /* 60px = fixed image height */
+    background-repeat: no-repeat, no-repeat !important;
+    background-position: left -15px top -40px, center;
+  }
+  .navbar-collapse {
+    width: 100vw !important;
+    margin-left: calc(-1 * (40px)); /* negate navbar left padding */
+    margin-right: calc(-1 * (20px)); /* negate navbar right padding */
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 0;
+  }
+}
+.navbar-collapse {
+  background: linear-gradient(145deg, #0056d2, #003c8a);
+}
       nav a.navbar-brand {
         font-family: 'Exo 2', sans-serif;
         font-weight: 700;

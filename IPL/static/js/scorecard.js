@@ -218,7 +218,7 @@ window.addEventListener('statsReady', () => {
             <div class="potm-content">
                 <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
                 <div class="potm-image" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="${dt3.player_of_match.player_slug !== "" ? dt3.player_images[dt3.player_of_match.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_match.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
+                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_match.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
                 </div></a>
                 <div class="potm-details">
                     <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
@@ -271,7 +271,7 @@ window.addEventListener('statsReady', () => {
             <div class="potm-content">
                 <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
                 <div class="potm-image text-blue" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="${dt3.player_of_series.player_slug !== "" ? dt3.player_images[dt3.player_of_series.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_series.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
+                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_series.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
                 </div></a>
                 <div class="potm-details">
                     <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>

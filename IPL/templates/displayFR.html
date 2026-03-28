@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fixtures.css') }}">
 <style>
 body {
-    background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+    background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
   background-size: 100%, cover;
   background-position: center top -48px, center top;
   background-repeat: repeat, repeat;
@@ -130,10 +130,9 @@ body {
     </div>
 </div>
   </div>
-</div></a>
+</div>
 
 {% elif i[1] <= current_date and i[7] == 'TBA' %}
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card border">
     <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
@@ -183,7 +182,7 @@ body {
 		<img class="team-image" style="{% if i[4] == 'RCB' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'GT' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'MI' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'PBKS' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'KKR' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c3'] }}; {% else %} --c1: {{ clr[i[4]]['c1'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% endif %}" src="\static\images\squad_logos\{{ i[4] }}.png" alt="Team Logo" />
 </div>
   </div>
-</div></a>
+</div>
 
 {% elif i[7] != 'TBA' %}
 <div class="main-container">
@@ -294,7 +293,7 @@ body {
     <div class="potm-content">
                 <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }}">
                 <div class="potm-image text-blue" style="{% if i[11][1] == 'RCB' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'GT' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'MI' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'PBKS' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'KKR' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c3'] }}; {% else %} --c1: {{ clr[i[11][1]]['c1'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% endif %}">
-                    <img src="/static/images/squads/{{ i[11][1] }}/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
+                    <img src="/static/images/squads/{{ i[11][1] }}-MICRO/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
                 </div></a>
                 <div class="potm-details">
                   <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }} plain-link">

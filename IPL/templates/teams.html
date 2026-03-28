@@ -17,7 +17,7 @@
 }
 
 body {
-  background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
   background-size: 100%, cover;
   background-position: center top -48px, center top;
   background-repeat: repeat, repeat;
@@ -155,9 +155,10 @@ body::-webkit-scrollbar-thumb:hover { background-color: #f7b733; }
 }
 
 .card-footer {
-  background: url('/static/images/white-full-circle.svg') center / cover no-repeat;
-  background-color: rgb(255, 255, 255);
-  background-size: 150%;
+  background: url('/static/images/headers/sh-tl.png'), url('/static/images/headers/sh-tr.png'), url('/static/images/headers/sh-bl.png'), url('/static/images/headers/sh-br.png'), #fff;
+  background-position: left top, right top, left bottom, right bottom, center;
+  background-size: 35%, 35%, 35%, 22%, cover;
+  background-repeat: no-repeat;
   padding: 10px;
   border-radius: 15px;
   text-align: center;

@@ -350,7 +350,7 @@ window.addEventListener('statsReady', () => {
             <div class="potm-content">
                 <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
                 <div class="potm-image" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="${dt3.player_of_match.player_slug !== "" ? dt3.player_images[dt3.player_of_match.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_match.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
+                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_match.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
                 </div></a>
                 <div class="potm-details">
                     <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
@@ -403,7 +403,7 @@ window.addEventListener('statsReady', () => {
             <div class="potm-content">
                 <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
                 <div class="potm-image text-blue" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="${dt3.player_of_series.player_slug !== "" ? dt3.player_images[dt3.player_of_series.player_slug] : 'https://staticg.sportskeeda.com/skm/assets/player-images/cricket/'+dt3.player_of_series.player_name.toLowerCase().replace(/ /g, '-')+'.png'}" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
+                    <img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
                 </div></a>
                 <div class="potm-details">
                     <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
@@ -443,7 +443,7 @@ window.addEventListener('statsReady', () => {
             let name = dt3.now_batting.b1.name;
             let team = dt3.now_batting.b1.team;
             liveHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="${dt3.player_images[dt3.now_batting.b1.slug]}" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Bat.svg" width="18px" height="18px"></b></td>
+                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Bat.svg" width="18px" height="18px"></b></td>
                 <td class="px-2 fw-bold">${dt3.now_batting.b1.stats.runs}</td>
                 <td class="px-2">${dt3.now_batting.b1.stats.balls}</td>
                 <td class="px-2">${dt3.now_batting.b1.stats.fours}</td>
@@ -455,7 +455,7 @@ window.addEventListener('statsReady', () => {
             let name = dt3.now_batting.b2.name;
             let team = dt3.now_batting.b2.team;
             liveHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="${dt3.player_images[dt3.now_batting.b2.slug]}" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
+                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
                 <td class="px-2 fw-bold">${dt3.now_batting.b2.stats.runs}</td>
                 <td class="px-2">${dt3.now_batting.b2.stats.balls}</td>
                 <td class="px-2">${dt3.now_batting.b2.stats.fours}</td>
@@ -475,7 +475,7 @@ window.addEventListener('statsReady', () => {
             let name = dt3.now_bowling.b1.name;
             let team = dt3.now_bowling.b1.team;
             liveHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="${dt3.player_images[dt3.now_bowling.b1.slug]}" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Ball.svg" width="14px" height="14px" onerror="this.onerror=null; this.src='/static/images/ball.svg'"></b></td>
+                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Ball.svg" width="14px" height="14px" onerror="this.onerror=null; this.src='/static/images/ball.svg'"></b></td>
                 <td class="px-2">${dt3.now_bowling.b1.stats.overs}</td>
                 <td class="px-2">${dt3.now_bowling.b1.stats.maiden_overs}</td>
                 <td class="px-2">${dt3.now_bowling.b1.stats.runs}</td>
@@ -487,7 +487,7 @@ window.addEventListener('statsReady', () => {
             let name = dt3.now_bowling.b2.name;
             let team = dt3.now_bowling.b2.team;
             liveHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="${dt3.player_images[dt3.now_bowling.b2.slug]}" width="20px" height="20px" alt="${name}" onerror="this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
+                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
                 <td class="px-2">${dt3.now_bowling.b2.stats.overs}</td>
                 <td class="px-2">${dt3.now_bowling.b2.stats.maiden_overs}</td>
                 <td class="px-2">${dt3.now_bowling.b2.stats.runs}</td>

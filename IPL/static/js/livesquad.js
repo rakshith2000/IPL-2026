@@ -180,7 +180,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center ms-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -207,7 +207,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center me-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -226,7 +226,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center ms-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -253,7 +253,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center me-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -271,7 +271,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center ms-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name.length}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -298,7 +298,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center me-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -316,7 +316,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center ms-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>
@@ -343,7 +343,7 @@ window.addEventListener('statsReady', () => {
                                         <div class="d-flex align-items-center me-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
                                             <div class="squad-image">
-                                                <img src="${dt3.player_images[player.sk_slug]}" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
+                                                <img src="/static/images/squads/${player.team}-MICRO/${player.name.replace(/ /g, '-')}.png" alt="${player.name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">
                                             </div>
                                             </a>
                                         </div>

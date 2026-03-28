@@ -10,7 +10,7 @@
 {% block content %}
 <style>
 body {
-  background: url('/static/images/white-full-circle.svg'), linear-gradient(90deg, #134E5E, #71B280);
+  background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
   background-size: 100%, cover;
   background-position: center top -48px, center top;
   background-repeat: repeat, repeat;
@@ -44,34 +44,34 @@ body {
 </style>
 <div style="background-image: url('/static/images/banner_bg.jpg'); background-size: cover;
             background-attachment: fixed;">
-<div class="profile-container" style="{% if sq.Team in ['CSK'] %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c1'] }};{% else %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c2'] }};{% endif %}">
-    <div class="profile-image">
+<div class="profile-container" style="{% if sq.Team in ['DC', 'MI'] %}--c1: {{ sqclr['c2'] }}; --c2: {{ sqclr['c2'] }};{% else %}--c1: {{ sqclr['c1'] }}; --c2: {{ sqclr['c1'] }};{% endif %}">
+    <div class="profile-image" style="background: url('/static/images/headers/{{ sq.Team }}.png'), {% if sq.Team in ['MI', 'DC'] %}{{ sqclr['c2'] }};{% else %}{{ sqclr['c1'] }};{% endif %}">
       <img src="/static/images/squads/{{ sq.Team }}/{{ sq.Name.replace(' ','-') }}.png" alt="Player Photo">
     </div>
-    <div class="profile-details">
+    <div class="profile-details" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">
       <div class="player-name">{{ sq.Name.split(' ')[0] | upper }}&nbsp;<span>{{ sq.Name.split(' ')[1:] | join(' ') | upper }}</span></div>
-      <div class="player-sub">
+      <div class="player-sub" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">
         <img src="/static/images/country_flags/{{ sq.Nationality }}.png" alt="India" style="width:22px;vertical-align:middle;margin-right:6px;border-radius:2px;">
         {{ sq.Nationality }} &nbsp;|&nbsp; {{ sq.Role }}
       </div>
       <div class="player-meta">
         <div class="meta-item">
-          <span class="material-icons icon">cake</span>
+          <span class="material-icons icon" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">cake</span>
           <span><strong>Born:</strong> &nbsp;{{ (sq.DOB).strftime('%B %d, %Y') }}</span>
         </div>
         <div class="meta-item">
-          <span class="material-icons icon">event</span>
+          <span class="material-icons icon" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">event</span>
           <span><strong>WPL Debut:</strong> &nbsp;{{ sq.Debut }}</span>
         </div>
         <div class="meta-item">
           <span class="icon" role="img" aria-label="bat">
-            <img src="/static/images/Batter.svg" alt="Batting" style="width:22px;height:22px;vertical-align:middle;">
+            <img src="/static/images/Batter{{ '-CSK' if sq.Team == 'CSK' else '' }}.svg" alt="Batting" style="width:22px;height:22px;vertical-align:middle;">
           </span>
           <span><strong>Batting Style:</strong> &nbsp;{{ sq.Batting }}</span>
         </div>
         <div class="meta-item">
           <span class="icon" role="img" aria-label="ball">
-            <img src="/static/images/Bowler.svg" alt="Bowling" style="width:22px;height:22px;vertical-align:middle;">
+            <img src="/static/images/Bowler{{ '-CSK' if sq.Team == 'CSK' else '' }}.svg" alt="Bowling" style="width:22px;height:22px;vertical-align:middle;">
           </span>
           <span><strong>Bowling Style:</strong> &nbsp;{{ sq.Bowling }}</span>
         </div>

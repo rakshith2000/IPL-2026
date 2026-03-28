@@ -12,19 +12,20 @@
       position: relative;
     }
     .profile-image {
-      width: 220px;
+      width: 240px;
       height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: url("/static/images/white-full-circle.svg") center / cover no-repeat;
+      background-position: top center, center !important;
+      background-size: cover, cover!important;
+      background-repeat: no-repeat!important;
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
     }
     .profile-image img {
-      width: 220px;
+      width: auto;
       height: 320px;
-      object-fit: cover;
-      border-radius: 16px;
       border: 0px solid #fff2;
     }
     .profile-details {
@@ -120,7 +121,7 @@
         justify-content: center;
       }
       .profile-image img {
-        width: 180px;
+        width: auto;
         height: 260px;
       }
       .profile-details {
