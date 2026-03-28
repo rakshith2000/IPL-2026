@@ -221,7 +221,7 @@ window.addEventListener('statsReady', () => {
       const secondsSpan = clockElement.querySelector(".seconds");
       if (!daysSpan || !hoursSpan || !minutesSpan || !secondsSpan) return; // or handle gracefully
 
-      const interval = setInterval(function () {
+      function updateTimer() {
         const Tnow = new Date();
         const timeZone = 'Asia/Kolkata';
         const dateInTimeZone = new Date(Tnow.toLocaleString('en-US', { timeZone }));
@@ -229,7 +229,6 @@ window.addEventListener('statsReady', () => {
         const t = deadline - now;
 
         if (t < 0) {
-          clearInterval(interval);
           daysSpan.textContent = "0";
           hoursSpan.textContent = "0";
           minutesSpan.textContent = "0";
@@ -246,7 +245,10 @@ window.addEventListener('statsReady', () => {
         hoursSpan.textContent = hours;
         minutesSpan.textContent = minutes;
         secondsSpan.textContent = seconds;
-      }, 1000);
+      }
+
+      updateTimer(); // Show timer instantly
+      const interval = setInterval(updateTimer, 1000);
     }
 
     // Initialize timers for all clock elements

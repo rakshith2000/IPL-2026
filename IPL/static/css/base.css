@@ -54,10 +54,8 @@
     border-radius: 0;
     padding-left: 10px;
     padding-right: 0;
+    background: linear-gradient(145deg, #0056d2, #003c8a);
   }
-}
-.navbar-collapse {
-  background: linear-gradient(145deg, #0056d2, #003c8a);
 }
       nav a.navbar-brand {
         font-family: 'Exo 2', sans-serif;
