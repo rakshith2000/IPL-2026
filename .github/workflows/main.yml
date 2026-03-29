@@ -3,8 +3,8 @@ name: Background Jobs for TATA IPL 2026
 on:
   workflow_dispatch:
   schedule:
-    # Runs every 5 minutes
-    - cron: '*/3 * * * *'
+    # Runs every 8 minutes
+    - cron: '*/8 * * * *'
 
 jobs:
   run-bg-tasks:
