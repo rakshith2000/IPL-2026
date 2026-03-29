@@ -37,8 +37,8 @@ liveURL_Suffix = "/ajax"
 statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9237/"
 
 tp_urls = {
-    "orange": "https://sportskeeda.com/go/ipl/orange-cap",
-    "purple": "https://sportskeeda.com/go/ipl/purple-cap",
+    "orange": "https://www.sportskeeda.com/go/ipl/orange-cap",
+    "purple": "https://www.sportskeeda.com/go/ipl/purple-cap",
     "sr": "https://www.sportskeeda.com/go/ipl/best-strike-rate",
     "6s": "https://www.sportskeeda.com/go/ipl/most-sixes",
     "hs": "https://www.sportskeeda.com/go/ipl/highest-scores",
@@ -142,12 +142,16 @@ def update_toppers():
     Fetches the given URL, extracts the first row of the table with class 'keeda-data-table' inside div.left,
     and returns it as a dictionary with headers as keys. Returns empty dict on failure.
     """
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Referer": "https://www.google.com/",
+        "Connection": "keep-alive",
+    }
     for role, url in tp_urls.items():
         try:
-            print(url)
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            }
+            print(url, flush=True)
             response = requests.get(url, headers=headers, timeout=10, verify=False)
             response.raise_for_status()
             html_content = response.text
@@ -155,22 +159,22 @@ def update_toppers():
             tree = lxml.etree.fromstring(html_content, parser)
             table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
             if not table:
-                print(f"No table found for {role} at {url}")
+                print(f"No table found for {role} at {url}", flush=True)
                 return
-            headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
+            headers_row = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
             first_row_trs = table[0].xpath('.//tbody//tr[1]')
-            if not headers or not first_row_trs:
-                print(f"No headers or data rows found for {role} at {url}")
+            if not headers_row or not first_row_trs:
+                print(f"No data rows found for {role} at {url}", flush=True)
                 return
             first_row = first_row_trs[0]
             row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
             tp = Toppers.query.filter_by(category=role).first()
             if tp:
                 print(f"Updating {role} topper: {row_data}")
-                tp.stats = dict(zip(headers, row_data))
+                tp.stats = dict(zip(headers_row, row_data))
                 db.session.commit()
         except Exception as e:
-            print(f"Error updating {role} topper: {e}")
+            print(f"Error updating {role} topper: {e} for url: {url}", flush=True)
             return
 
 def simulate_score():
@@ -1068,11 +1072,7 @@ def todayMatch():
             dt.append(dtt)
         current_date = datetime.now(tz)
         current_date = current_date.replace(tzinfo=None)
-        return render_template('liveMatches.html', FR=dt, fn=full_name, current_date=current_date, clr=clr)
-
-def get_battingstats():
-    stats = {}
-    for key, value in statsList['batting'].items():
+        return render_template('liveMatches.html', FR=dt
         url = statsBaseURL + value
         if key == 'Highest Scores':
             highest_scores = get_data_from_url(url)
