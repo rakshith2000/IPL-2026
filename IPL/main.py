@@ -166,7 +166,8 @@ def update_toppers():
                 print(f"Updating {role} topper: {row_data}")
                 tp.stats = dict(zip(headers, row_data))
                 db.session.commit()
-        except Exception:
+        except Exception as e:
+            print(f"Error updating {role} topper: {e}")
             return
 
 def simulate_score():
