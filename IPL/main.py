@@ -10,12 +10,14 @@ import requests, warnings
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz, process
 from urllib.request import Request, urlopen
-import random
+import random, cloudscraper, cloudscraper.exceptions
 from datetime import datetime, date, time, timedelta
 from collections import defaultdict
 import threading, lxml.etree
 
 warnings.filterwarnings("ignore")
+
+scraper = cloudscraper.create_scraper()
 
 main = Blueprint('main', __name__)
 
@@ -152,7 +154,7 @@ def update_toppers():
                 "Referer": "https://www.google.com/",
                 "Connection": "keep-alive",
             }
-            response = requests.get(url, headers=headers, timeout=10, verify=False)
+            response = scraper.get(url, timeout=10)
             response.raise_for_status()
             html_content = response.text
             parser = lxml.etree.HTMLParser()
