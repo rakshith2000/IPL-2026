@@ -36,7 +36,7 @@ pofs = {'Q1':'Qualifier 1', 'E':'Eliminator', 'Q2':'Qualifier 2', 'F':'Final'}
 liveURL_Prefix = "https://cmc2.sportskeeda.com/live-cricket-score/"
 liveURL_Suffix = "/ajax"
 
-statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9237/"
+statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9241/"
 
 tp_urls = {
     "orange": "https://www.sportskeeda.com/go/ipl/orange-cap",
@@ -138,46 +138,6 @@ sqclr = {
     'GT': {'c1': '#0b1c31', 'c2': '#e3ca7c'},   # Navy to Gold
     'LSG': {'c1': '#aa003b', 'c2': '#002554'}     # Light Blue to Gold
 }
-
-def update_toppers():
-    """
-    Fetches the given URL, extracts the first row of the table with class 'keeda-data-table' inside div.left,
-    and returns it as a dictionary with headers as keys. Returns empty dict on failure.
-    """
-    for role, url in tp_urls.items():
-        try:
-            print(url)
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Referer": "https://www.google.com/",
-                "Connection": "keep-alive",
-            }
-            response = scraper.get(url, timeout=10)
-            response.raise_for_status()
-            html_content = response.text
-            parser = lxml.etree.HTMLParser()
-            tree = lxml.etree.fromstring(html_content, parser)
-            table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
-            if not table:
-                print(f"No table found for {role} at {url}")
-                return
-            headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
-            first_row_trs = table[0].xpath('.//tbody//tr[1]')
-            if not headers or not first_row_trs:
-                print(f"No headers or data rows found for {role} at {url}")
-                return
-            first_row = first_row_trs[0]
-            row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
-            tp = Toppers.query.filter_by(category=role).first()
-            if tp:
-                print(f"Updating {role} topper: {row_data}")
-                tp.stats = dict(zip(headers, row_data))
-                db.session.commit()
-        except Exception as e:
-            print(f"Error updating {role} topper: {e}")
-            return
 
 def simulate_score():
     runs = int(random.gauss(MEAN_SCORE, STD_DEV))
@@ -343,6 +303,49 @@ def get_data_from_url(url):
             return None
     else:
         return None
+    
+def update_toppers():
+    """
+    Fetches the given URL, extracts the first row of the table with class 'keeda-data-table' inside div.left,
+    and returns it as a dictionary with headers as keys. Returns empty dict on failure.
+    """
+    SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
+
+    for role, url in tp_urls.items():
+        try:
+            """
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Referer": "https://www.google.com/",
+                "Connection": "keep-alive",
+            }
+            """
+            response = scraper.get(url, timeout=10)
+            response.raise_for_status()
+            html_content = response.text
+            parser = lxml.etree.HTMLParser()
+            tree = lxml.etree.fromstring(html_content, parser)
+            table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
+            if not table:
+                return
+            headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
+            first_row_trs = table[0].xpath('.//tbody//tr[1]')
+            if not headers or not first_row_trs:
+                return
+            first_row = first_row_trs[0]
+            row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
+            tp = Toppers.query.filter_by(category=role).first()
+            if tp:
+                tp.stats = dict(zip(headers, row_data))
+                player = find_player(tp.stats['Player'], SquadFull)
+                tp.stats['Player'] = player[2] if player is not None else tp.stats['Player']
+                tp.stats['Team'] = player[3] if player is not None else tp.stats['Team']
+                db.session.commit()
+        except Exception as e:
+            print(f"Error updating toppers for {role}: {e}")
+            return
     
 def get_innings_data(matID):
     inn1 = requests.get(f"https://apiv2.cricket.com.au/web/views/comments?fixtureId={matID}&inningNumber=1&commentType=&overLimit=21&jsconfig=eccn%3Atrue&format=json", verify=False).json()
