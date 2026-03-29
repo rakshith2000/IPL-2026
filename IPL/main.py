@@ -144,6 +144,7 @@ def update_toppers():
     """
     for role, url in tp_urls.items():
         try:
+            print(url)
             response = requests.get(url, timeout=10, verify=False)
             response.raise_for_status()
             html_content = response.text
@@ -151,15 +152,18 @@ def update_toppers():
             tree = lxml.etree.fromstring(html_content, parser)
             table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
             if not table:
+                print(f"No table found for {role} at {url}")
                 return
             headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
             first_row_trs = table[0].xpath('.//tbody//tr[1]')
             if not headers or not first_row_trs:
+                print(f"No headers or data rows found for {role} at {url}")
                 return
             first_row = first_row_trs[0]
             row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
             tp = Toppers.query.filter_by(category=role).first()
             if tp:
+                print(f"Updating {role} topper: {row_data}")
                 tp.stats = dict(zip(headers, row_data))
                 db.session.commit()
         except Exception:
