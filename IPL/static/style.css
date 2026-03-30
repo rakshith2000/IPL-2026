@@ -111,12 +111,13 @@ main.table {
 
 table {
     width: 100%;
-    border-collapse: collapse; /* Change to separate to allow spacing */
+    border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
 td img {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     margin-right: 0rem;
     border-radius: 0px;
     object-fit: cover;
@@ -125,8 +126,8 @@ td img {
 }
 
 .form-img {
-    width: 17px;
-    height: 17px;
+    width: 13px;
+    height: 13px;
     margin-right: .1rem;
     border-radius: 50%;
     object-fit: cover;
@@ -162,6 +163,10 @@ td:not(:nth-child(2)) {
     line-height: normal;
 }
 
+th:nth-child(3), td:nth-child(3) {
+    padding-left: .85rem!important;
+}
+
 
 thead th {
     position: sticky;
@@ -182,7 +187,7 @@ th:first-child, td:first-child {
 /* Freeze the second column */
 th:nth-child(2), td:nth-child(2) {
   position: sticky;
-  left: 40px; /* Adjust based on column width */
+  left: 43px; /* Adjust based on column width */
   /*background-color: #444444;*/
   z-index: 3;
 }
@@ -311,7 +316,9 @@ thead th:hover span.icon-arrow{
     font-weight: bold;
 }
 
-
+.table th, .table td {
+    padding: 0.50rem;
+}
 
 thead th:hover {
     color: #6c00bd;
@@ -335,10 +342,10 @@ thead th.active,tbody td.active {
             display: none; /* Change this to make it visible */
             top: 0;
             left: 0;
-            width: 3rem; /* Adjust the size */
-            height: 3rem;
+            width: 2.4rem; /* Adjust the size */
+            height: 2.4rem;
             padding: 0px;
-            transform: translate(-1.5rem, -1.5rem);
+            transform: translate(-1.2rem, -1.2rem);
             z-index: 1;
             background-color: #006400; /* You can modify color */
             color: white;
@@ -347,13 +354,13 @@ thead th.active,tbody td.active {
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
 			clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
         }
 .position-indicatorQ span {
     position: relative;
-    bottom: -0.5rem; /* Adjust this to move Q vertically */
-    right: -0.5rem; /* Adjust this to move Q horizontally */
+    bottom: -0.4rem; /* Adjust this to move Q vertically */
+    right: -0.4rem; /* Adjust this to move Q horizontally */
 }
 
 .position-indicatorE {
@@ -361,10 +368,10 @@ thead th.active,tbody td.active {
             display: none; /* Change this to make it visible */
             top: 0;
             left: 0;
-            width: 3rem; /* Adjust the size */
-            height: 3rem;
+            width: 2.4rem; /* Adjust the size */
+            height: 2.4rem;
             padding: 0px;
-            transform: translate(-1.5rem, -1.5rem);
+            transform: translate(-1.2rem, -1.2rem);
             z-index: 1;
             background-color: #7d0000; /* You can modify color */
             color: white;
@@ -373,13 +380,13 @@ thead th.active,tbody td.active {
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
 			clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%);
         }
 .position-indicatorE span {
     position: relative;
-    bottom: -0.6rem; /* Adjust this to move Q vertically */
-    right: -0.5rem; /* Adjust this to move Q horizontally */
+    bottom: -0.4rem; /* Adjust this to move Q vertically */
+    right: -0.4rem; /* Adjust this to move Q horizontally */
 }
 
 .export__file {
@@ -456,4 +463,52 @@ thead th.active,tbody td.active {
 .export__file .export__file-options img{
     width: 2rem;
     height: auto;
+}
+
+.position-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+}
+.pos-rank {
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 0.1em;
+    width: 0.4rem;
+}
+.rank-indicator-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15em;
+    font-size: 0.95em;
+}
+.rank-arrow.up {
+    color: #2ecc40;
+    font-size: 0.9em;
+}
+.rank-arrow.down {
+    color: #ff4136;
+    font-size: 0.9em;
+}
+.rank-arrow.same {
+    color: #888;
+    font-size: 0.9em;
+}
+.rank-diff.up {
+    color: #2ecc40;
+    font-size: 0.9em;
+}
+.rank-diff.down {
+    color: #ff4136;
+    font-size: 0.9em;
+}
+.rank-diff.same {
+    color: #888;
+    font-size: 0.9em;
+}
+.rank-diff.invisible {
+    visibility: hidden;
 }

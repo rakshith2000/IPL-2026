@@ -672,6 +672,38 @@ def render_live_URL(tA, tB, mn, dt):
     print(URL)
     return URL
 
+def update_rank_for_fixture(match):
+    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
+    rank_json = {team.team_name: index for index, team in enumerate(dataPT, start=1)}
+    FR = Fixture.query.filter_by(Match_No=str(match)).first()
+    if FR and match.isdigit():
+        FR.Rank = rank_json
+    db.session.commit()
+
+def delete_rank_for_fixture(match):
+    FR = Fixture.query.filter_by(Match_No=str(match)).first()
+    if FR and match.isdigit():
+        FR.Rank = None
+    db.session.commit()
+
+def getRanksForPT():
+    teams = {'CSK': 1, 'DC': 2, 'GT': 3, 'KKR': 4, 'LSG': 5, 'MI': 6, 'PBKS': 7, 'RR': 8, 'RCB': 9, 'SRH': 10}
+    matches = Fixture.query.filter(Fixture.Win_T != None).order_by(Fixture.id.desc()).limit(2).all()
+    if len(matches) == 0:
+        return {team: 0 for team in teams.keys()}
+    elif len(matches) == 1:
+        rankdiff = {}
+        for team, rank in matches[0].Rank.items():
+            prev = teams[team]
+            rankdiff[team] = prev - rank
+        return rankdiff
+    else:
+        rankdiff = {}
+        for team, rank in matches[0].Rank.items():
+            prev = matches[1].Rank[team]
+            rankdiff[team] = prev - rank
+        return rankdiff
+
 @main.route('/')
 def index():
     if db.session.execute(text('select count(*) from user')).scalar() == 0:
@@ -722,8 +754,9 @@ def index():
 def displayPT():
     dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
     dt = [['#', '', 'Teams', 'P', 'W', 'L', 'NR', 'Pts', 'NRR', 'Last 5', 'Next', 'Win %', 'Qual %', 'Top 2'], [i for i in range(1,11)],\
-         [], [], [], [], [], [], [], [], [], [], [], [], []]
+         [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     teams_ABV = []
+    rankChanges = getRanksForPT()
     finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
     for index, i in enumerate(dataPT):
         img = "/static/images/{}.png".format(i.team_name)
@@ -757,6 +790,7 @@ def displayPT():
         dt[12].append(i.qed)
         dt[13].append(i.Qual)
         dt[14].append(i.Top2)
+        dt[15].append(rankChanges[i.team_name] if i.P != 0 else 0)
     return render_template('displayPT.html', PT=dt, TABV=teams_ABV, clr=clr)
 
 @main.route('/fixtures')
@@ -1178,7 +1212,8 @@ def updatematch():
             data['match'] = request.form['match']
             data['result'] = {'win_team': request.form['wt'], 'win_type': request.form['win_type'], 'win_by': request.form['win_by'], 'dls_target': int(request.form['dls_target']), 'dls_overs': float(request.form['dls_overs'])}
             upMatchDLS(data)
-        
+
+        update_rank_for_fixture(data['match'])
         flash('Match {} result updated successfully'.format(data['match']), category='success')
         from run import app as flask_app
         threading.Thread(target=run_refresh_qualification_bg, args=(flask_app,)).start()
@@ -1223,6 +1258,7 @@ def deletematch():
             data['match'] = dmatch
             delMatchDLS(data)
 
+        delete_rank_for_fixture(dmatch)
         flash('Match {} result deleted successfully'.format(dmatch), category='success')
         from run import app as flask_app
         threading.Thread(target=run_refresh_qualification_bg, args=(flask_app,)).start()
