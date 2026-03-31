@@ -753,7 +753,7 @@ def index():
 @main.route('/pointstable')
 def displayPT():
     dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
-    dt = [['#', '', 'Teams', 'P', 'W', 'L', 'NR', 'Pts', 'NRR', 'Last 5', 'Next', 'Win %', 'Qual %', 'Top 2'], [i for i in range(1,11)],\
+    dt = [['#', '', 'Team', 'P', 'W', 'L', 'NR', 'Pts', 'NRR', 'Last 5', 'Next', 'Win %', 'Qual %', 'Top 2'], [i for i in range(1,11)],\
          [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     teams_ABV = []
     rankChanges = getRanksForPT()

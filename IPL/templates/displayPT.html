@@ -175,6 +175,14 @@
     .rank-arrow.same {
         color: #888;
     }
+
+    .table__body {
+        transition: opacity 0.3s ease;
+    }
+
+    .table__body.scrolled {
+        opacity: 1;
+    }
 </style>
 
 {% endblock %}
@@ -197,9 +205,10 @@
             <table>
                 <thead>
                     <tr>
-                         {% for cols in PT[0][:2] %}
-                        <th class="text-center" style="color: #fff;"> {{ cols }} </th>
+                         {% for cols in PT[0][:1] %}
+                        <th class="text-center fade-right" style="color: #fff;"> {{ cols }} </th>
                         {% endfor %}
+                        <th class="text-center" style="color: #fff;"> {{ cols }} </th>
                         <th style="color: #fff;"> {{ PT[0][2] }} </th>
                         {% for cols in PT[0][3:] %}
                         <th class="text-center" style="color: #fff;"> {{ cols }} </th>
@@ -212,10 +221,13 @@
                     {% if i >= 3 %}{% set bgclr1 = '#ee7171' %}{% set bgclr2 = '#ee2929' %}{% else %}{% set bgclr1 = '#80ee76' %}{% set bgclr2 = '#39b329' %}{% endif %}
                     <tr style="--c1: #2b2a29; --c2: #444444">
                         
-                        <td class="text-center" style="background-color: #444444;">
+                        <td class="text-center fade-right" style="background-color: #444444;">
                     {% if PT[1][i] != "Champions" %}
                         {% if PT[15][i] == 0 %}
+                        <span class="position-flex">
                         <span class="pos-rank">{{ PT[1][i] }}</span>
+                        <span class="rank-arrow same">&#8212;</span>
+                        </span>
                         {% else %}
                             <span class="position-flex">
                             <span class="pos-rank">{{ PT[1][i] }}</span>
@@ -350,7 +362,21 @@
     // Update team names on load and window resize
     window.addEventListener('resize', updateTeamNames);
     window.addEventListener('load', updateTeamNames);
-  </script>
+
+    // Fading effect for table scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.querySelector('.table__body');
+      if (tableBody) {
+        tableBody.addEventListener('scroll', function() {
+          if (tableBody.scrollLeft > 0) {
+            tableBody.classList.add('scrolled');
+          } else {
+            tableBody.classList.remove('scrolled');
+          }
+        });
+      }
+    });
+</script>
 
 <script>
 VanillaTilt.init(document.querySelector(".jumbotron"), {
