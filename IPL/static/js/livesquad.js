@@ -232,7 +232,7 @@ window.addEventListener('statsReady', () => {
                                         </div>
                                         <div class="d-block w-100 p-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[1] ? (player.name === dt3.squad[0].impact_players[1].name ? '<img class="in-out ml-1" src="/static/images/out.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players ? (player.name === dt3.squad[0].impact_players[1].name ? '<img class="in-out ml-1" src="/static/images/out.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -246,7 +246,7 @@ window.addEventListener('statsReady', () => {
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[1] ? (player.name === dt3.squad[1].impact_players[1].name ? '<img class="in-out mr-1" src="/static/images/out.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players ? (player.name === dt3.squad[1].impact_players[1].name ? '<img class="in-out mr-1" src="/static/images/out.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -277,7 +277,7 @@ window.addEventListener('statsReady', () => {
                                         </div>
                                         <div class="d-block w-100 p-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players[0] ? (player.name === dt3.squad[0].impact_players[0].name ? '<img class="in-out ml-1" src="/static/images/in.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}&nbsp;${checkCaptain(player)}${dt3.squad[0].impact_players ? (player.name === dt3.squad[0].impact_players[0].name ? '<img class="in-out ml-1" src="/static/images/in.png" width="15px" height="15px" class="ms-1">' : '') : ''}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
@@ -291,7 +291,7 @@ window.addEventListener('statsReady', () => {
                                         ${checkOverseas(player, 'R')}
                                         <div class="d-block w-100 p-1">
                                             <a href="/team-${encodeURIComponent(player.team)}/squad_details/${encodeURIComponent(player.name)}" class="${player.team === 'NA' ? 'disabled' : ''}">
-                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players[0] ? (player.name === dt3.squad[1].impact_players[0].name ? '<img class="in-out mr-1" src="/static/images/in.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
+                                            <div class="font_12 text-blue fw-bold p-0 m-0">${dt3.squad[1].impact_players ? (player.name === dt3.squad[1].impact_players[0].name ? '<img class="in-out mr-1" src="/static/images/in.png" width="15px" height="15px" class="me-1">' : '') : ''}${checkCaptain(player)}&nbsp;${player.name.length > 20 ? player.name.split(' ')[0][0] + " " + player.name.split(' ').slice(1).join(' ') : player.name}</div>
                                             </a>
                                             <div class="font_11 m-0 p-0">${Capitalize(player.role.replace('-', ' '))}</div>
                                         </div>
