@@ -271,123 +271,125 @@ h3.section-title {
     <span class="tp-headline">Season Toppers</span>
     <div class="tp-container">
     <div class="tp-card-container orange">
-      {% set oc = tp[0].stats %}
+      {% set oc = tp['Most Runs'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ oc['Team'] }}/{{ oc['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ oc['TeamCode'] }}/{{ oc['StrikerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name orange-text">Orange Cap</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ oc['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ oc['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ oc['StrikerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ oc['StrikerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs orange-text">{{ oc['Runs'] }}</span>
+                    <span class="runs orange-text">{{ oc['TotalRuns'] }}</span>
                     <span class="runs-label">Runs</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>M</span><span>{{ oc['Mat'] }}</span></div>
-                    <div class="stat"><span>HS</span><span>{{ oc['HS'] }}</span></div>
-                    <div class="stat"><span>Avg.</span><span>{{ oc['Avg'] }}</span></div>
-                    <div class="stat"><span>SR</span><span>{{ oc['SR'] }}</span></div>
-                    <div class="stat"><span>50/100’s</span><span>{{ oc['50s'] }} / {{ oc['100s'] }}</span></div>
+                    <div class="stat"><span>M</span><span>{{ oc['Matches'] }}</span></div>
+                    <div class="stat"><span>HS</span><span>{{ oc['HighestScore'] }}</span></div>
+                    <div class="stat"><span>Avg.</span><span>{{ oc['BattingAverage'] }}</span></div>
+                    <div class="stat"><span>SR</span><span>{{ oc['StrikeRate'] }}</span></div>
+                    <div class="stat"><span>50/100’s</span><span>{{ oc['FiftyPlusRuns'] }} / {{ oc['Centuries'] }}</span></div>
                 </div>
             </div>
         </div>
         <a href="/battingstats?option=Most%20Runs" class="leaderboard-btn orange">View Full Leaderboard</a>
     </div>
-
+    
     <div class="tp-card-container purple">
-      {% set pc = tp[1].stats %}
+      {% set pc = tp['Most Wickets'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ pc['Team'] }}/{{ pc['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ pc['TeamCode'] }}/{{ pc['BowlerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name purple-text">Purple Cap</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ pc['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ pc['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ pc['BowlerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ pc['BowlerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs purple-text">{{ pc['Wkts'] }}</span>
+                    <span class="runs purple-text">{{ pc['Wickets'] }}</span>
                     <span class="runs-label">Wkts</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>M</span><span>{{ pc['Mat'] }}</span></div>
-                    <div class="stat"><span>Avg.</span><span>{{ pc['Avg'] }}</span></div>
-                    <div class="stat"><span>Econ</span><span>{{ pc['Eco'] }}</span></div>
-                    <div class="stat"><span>4W/5W</span><span>{{ pc['4W'] }} / {{ pc['5W'] }}</span></div>
-                    <div class="stat"><span>BBI</span><span>{{ pc['BBI'] }}</span></div>
+                    <div class="stat"><span>M</span><span>{{ pc['Matches'] }}</span></div>
+                    <div class="stat"><span>Avg.</span><span>{{ pc['BowlingAverage'] }}</span></div>
+                    <div class="stat"><span>Econ</span><span>{{ pc['EconomyRate'] }}</span></div>
+                    <div class="stat"><span>4W/5W</span><span>{{ pc['FourWickets'] }} / {{ pc['FiveWickets'] }}</span></div>
+                    <div class="stat"><span>BBI</span><span>{{ pc['BBIW'] }}</span></div>
                 </div>
             </div>
         </div>
         <a href="/bowlingstats?option=Most%20Wickets" class="leaderboard-btn purple">View Full Leaderboard</a>
     </div>
 
+    {% if tp['Best Strike Rate'] %}
     <div class="tp-card-container sr">
-      {% set sr = tp[2].stats %}
+      {% set sr = tp['Best Strike Rate'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ sr['Team'] }}/{{ sr['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ sr['TeamCode'] }}/{{ sr['StrikerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name sr-text">Super Striker</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ sr['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ sr['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ sr['StrikerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ sr['StrikerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs sr-text" style="font-size: 20px; padding-block: 4.5px;">{{ sr['SR'] }}</span>
+                    <span class="runs sr-text" style="font-size: 20px; padding-block: 4.5px;">{{ sr['StrikeRate'] }}</span>
                     <span class="runs-label">SR</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>M</span><span>{{ sr['Mat'] }}</span></div>
-                    <div class="stat"><span>Avg.</span><span>{{ sr['Avg'] }}</span></div>
-                    <div class="stat"><span>HS</span><span>{{ sr['HS'] }}</span></div>
-                    <div class="stat"><span>Runs</span><span>{{ sr['Runs'] }}</span></div>
-                    <div class="stat"><span>50s/100s</span><span>{{ sr['50s'] }} / {{ sr['100s'] }}</span></div>
+                    <div class="stat"><span>M</span><span>{{ sr['Matches'] }}</span></div>
+                    <div class="stat"><span>Avg.</span><span>{{ sr['BattingAverage'] }}</span></div>
+                    <div class="stat"><span>HS</span><span>{{ sr['HighestScore'] }}</span></div>
+                    <div class="stat"><span>Runs</span><span>{{ sr['TotalRuns'] }}</span></div>
+                    <div class="stat"><span>50s/100s</span><span>{{ sr['FiftyPlusRuns'] }} / {{ sr['Centuries'] }}</span></div>
                 </div>
             </div>
         </div>
-        <a href="/battingstats?option=Best%20Batting%20Strike%20Rate" class="leaderboard-btn sr">View Full Leaderboard</a>
+        <a href="/battingstats?option=Best%20Strike%20Rate" class="leaderboard-btn sr">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
     <div class="tp-card-container s6">
-      {% set s6 = tp[3].stats %}
+      {% set s6 = tp['Most Sixes'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ s6['Team'] }}/{{ s6['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ s6['TeamCode'] }}/{{ s6['StrikerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name s6-text">Super Sixes</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ s6['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ s6['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ s6['StrikerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ s6['StrikerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs s6-text">{{ s6['6s'] }}</span>
+                    <span class="runs s6-text">{{ s6['Sixes'] }}</span>
                     <span class="runs-label">Sixes</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>M</span><span>{{ s6['Mat'] }}</span></div>
-                    <div class="stat"><span>Avg.</span><span>{{ s6['Avg'] }}</span></div>
-                    <div class="stat"><span>HS</span><span>{{ s6['HS'] }}</span></div>
-                    <div class="stat"><span>SR</span><span>{{ s6['SR'] }}</span></div>
-                    <div class="stat"><span>50s/100s</span><span>{{ s6['50s'] }} / {{ s6['100s'] }}</span></div>
+                    <div class="stat"><span>M</span><span>{{ s6['Matches'] }}</span></div>
+                    <div class="stat"><span>Avg.</span><span>{{ s6['BattingAverage'] }}</span></div>
+                    <div class="stat"><span>HS</span><span>{{ s6['HighestScore'] }}</span></div>
+                    <div class="stat"><span>SR</span><span>{{ s6['StrikeRate'] }}</span></div>
+                    <div class="stat"><span>50s/100s</span><span>{{ s6['FiftyPlusRuns'] }} / {{ s6['Centuries'] }}</span></div>
                 </div>
             </div>
         </div>
@@ -395,30 +397,30 @@ h3.section-title {
     </div>
 
     <div class="tp-card-container hs">
-      {% set hs = tp[4].stats %}
+      {% set hs = tp['Highest Scores'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ hs['Team'] }}/{{ hs['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ hs['TeamCode'] }}/{{ hs['StrikerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name hs-text">Highest Scores</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ hs['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ hs['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ hs['StrikerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ hs['StrikerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs hs-text">{{ hs['HS'] }}</span>
+                    <span class="runs hs-text">{{ hs['TotalRuns'] }}</span>
                     <span class="runs-label">HS</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>HS</span><span>{{ hs['HS'] }}</span></div>
-                    <div class="stat"><span>BF</span><span>{{ hs['BF'] }}</span></div>
-                    <div class="stat"><span>SR</span><span>{{ hs['SR'] }}</span></div>
-                    <div class="stat"><span>4s</span><span>{{ hs['4s'] }}</span></div>
-                    <div class="stat"><span>6s</span><span>{{ hs['6s'] }}</span></div>
+                    <div class="stat"><span>BF</span><span>{{ hs['Balls'] }}</span></div>
+                    <div class="stat"><span>SR</span><span>{{ hs['StrikeRate'] }}</span></div>
+                    <div class="stat"><span>4s</span><span>{{ hs['Fours'] }}</span></div>
+                    <div class="stat"><span>6s</span><span>{{ hs['Sixes'] }}</span></div>
+                    <div class="stat"><span>VS</span><span>{{ hs['AgaintsTeamCode'] }}</span></div>
                 </div>
             </div>
         </div>
@@ -426,35 +428,96 @@ h3.section-title {
     </div>
 
     <div class="tp-card-container bbi">
-      {% set bbi = tp[5].stats %}
+      {% set bbi = tp['Best Bowling Figures'][0] %}
         <div class="player-card">
             <div class="player-image">
-                <img src="/static/images/squads/{{ bbi['Team'] }}/{{ bbi['Player'] | replace(' ', '-') }}.png" alt="Player" />
+                <img src="/static/images/squads/{{ bbi['TeamCode'] }}/{{ bbi['BowlerName'] | replace(' ', '-') }}.png" alt="Player" />
             </div>
             <div class="player-info">
                 <div class="card-name bbi-text">Best Bowling</div>
                 <div class="player-primary">
                 <div class="player-rank">#1</div>
                 <div class="player-name-block">
-                        <span class="player-name firstname">{{ bbi['Player'].split(' ')[0] }}</span>
-                        <span class="player-name lastname">{{ bbi['Player'].split(' ')[1:] | join(' ') }}</span>
+                        <span class="player-name firstname">{{ bbi['BowlerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ bbi['BowlerName'].split(' ')[1:] | join(' ') }}</span>
                 </div>
                 <div class="player-runs">
-                    <span class="runs bbi-text">{{ bbi['BBI'] }}</span>
+                    <span class="runs bbi-text">{{ bbi['BBIW'] }}</span>
                     <span class="runs-label">BBI</span>
                 </div>
                 </div>
                 <div class="player-stats">
-                    <div class="stat"><span>M</span><span>{{ bbi['Mat'] }}</span></div>
-                    <div class="stat"><span>Wkts</span><span>{{ bbi['Wkts'] }}</span></div>
-                    <div class="stat"><span>Econ</span><span>{{ bbi['Eco'] }}</span></div>
-                    <div class="stat"><span>Avg.</span><span>{{ bbi['Avg'] }}</span></div>
-                    <div class="stat"><span>4W/5W</span><span>{{ bbi['4W'] }} / {{ bbi['5W'] }}</span></div>
+                    <div class="stat"><span>Wkts</span><span>{{ bbi['InningsWickets'] }}</span></div>
+                    <div class="stat"><span>Ov</span><span>{{ bbi['OversBowled'] }}</span></div>
+                    <div class="stat"><span>Runs</span><span>{{ bbi['InningsRuns'] }}</span></div>
+                    <div class="stat"><span>SR</span><span>{{ bbi['StrikeRate'] }}</span></div>
+                    <div class="stat"><span>VS</span><span>{{ bbi['AgaintsTeamCode'] }}</span></div>
                 </div>
             </div>
         </div>
-        <a href="/bowlingstats?option=Best%20Bowling" class="leaderboard-btn bbi">View Full Leaderboard</a>
+        <a href="/bowlingstats?option=Best%20Bowling%20Figures" class="leaderboard-btn bbi">View Full Leaderboard</a>
     </div>
+
+    <div class="tp-card-container mvp">
+      {% set mvp = tp['Most Valuable Players'][0] %}
+        <div class="player-card">
+            <div class="player-image">
+                <img src="/static/images/squads/{{ mvp['TeamCode'] }}/{{ mvp['PlayerName'] | replace(' ', '-') }}.png" alt="Player" />
+            </div>
+            <div class="player-info">
+                <div class="card-name mvp-text mvp-extra">MVP</div>
+                <div class="player-primary">
+                <div class="player-rank">#1</div>
+                <div class="player-name-block">
+                        <span class="player-name firstname">{{ mvp['PlayerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ mvp['PlayerName'].split(' ')[1:] | join(' ') }}</span>
+                </div>
+                <div class="player-runs">
+                    <span class="runs mvp-text">{{ mvp['IndexValue'] }}</span>
+                    <span class="runs-label">Pts</span>
+                </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat"><span>M</span><span>{{ mvp['Matches'] }}</span></div>
+                    <div class="stat"><span>Wkts</span><span>{{ mvp['Wickets'] }}</span></div>
+                    <div class="stat"><span>Dots</span><span>{{ mvp['DotBalls'] }}</span></div>
+                    <div class="stat"><span>4s/6s</span><span>{{ mvp['Fours'] }}/{{ mvp['Sixes'] }}</span></div>
+                    <div class="stat"><span>Ct/St</span><span>{{ mvp['caught'] }}/{{ mvp['Stumping'] }}</span></div>
+                </div>
+            </div>
+        </div>
+        <a href="/awards?option=Most%20Valuable%20Players" class="leaderboard-btn mvp">View Full Leaderboard</a>
+    </div>
+
+    <div class="tp-card-container fpa">
+      {% set fpa = tp['Fair Play Award'][0] %}
+        <div class="player-card">
+            <div class="team-image">
+                <img src="/static/images/squad_logos/{{ fpa['TeamName'] }}.png" alt="Player" />
+            </div>
+            <div class="player-info">
+                <div class="card-name fpa-text">Fair Play Award</div>
+                <div class="player-primary">
+                <div class="player-rank">#1</div>
+                <div class="player-name-block">
+                        <span class="player-name firstname">{{ fpa['TeamFullName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ fpa['TeamFullName'].split(' ')[1:] | join(' ') }}</span>
+                </div>
+                <div class="player-runs">
+                    <span class="runs fpa-text">{{ fpa['Points'] }}</span>
+                    <span class="runs-label">Pts</span>
+                </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat"><span>Matches</span><span>{{ fpa['No'] }}</span></div>
+                    <div class="stat"><span>Average</span><span>{{ fpa['AvePoints'] }}</span></div>
+                    <div class="stat"><span>Points</span><span>{{ fpa['Points'] }}</span></div>
+                </div>
+            </div>
+        </div>
+        <a href="/awards?option=Fair%20Play%20Award" class="leaderboard-btn fpa">View Full Leaderboard</a>
+    </div>
+
     </div>
     </div>
   </div>

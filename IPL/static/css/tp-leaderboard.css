@@ -63,6 +63,12 @@
 .bbi {
     background: #d30000;
 }
+.mvp {
+    background: #ce00a1;
+}
+.fpa {
+    background-color: #aa8b00;
+}
 .orange-text {
     color: #ff6a00;
 }
@@ -80,6 +86,15 @@
 }
 .bbi-text {
     color: #d30000;
+}
+.mvp-text {
+    color: #ce00a1;
+}
+.fpa-text {
+    color: #aa8b00;
+}
+.mvp-extra {
+    padding-left: 30px!important;
 }
 .tp-header {
     display: flex;
@@ -116,6 +131,13 @@
     font-weight: 600;
     margin-bottom: 10px;
     text-wrap: nowrap;
+}
+.team-image img {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    z-index: 3;
+    object-fit: cover;
 }
 .player-image img {
     position: relative;

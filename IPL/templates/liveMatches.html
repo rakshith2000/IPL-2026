@@ -280,7 +280,7 @@ body {
     <div class="potm-content">
                 <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }}">
                 <div class="potm-image text-blue" style="{% if i[11][1] == 'RCB' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'GT' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'MI' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'PBKS' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'KKR' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c3'] }}; {% else %} --c1: {{ clr[i[11][1]]['c1'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% endif %}">
-                    <img src="/static/images/squads/{{ i[11][1] }}/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
+                    <img src="/static/images/squads/{{ i[11][1] }}-MICRO/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
                 </div></a>
                 <div class="potm-details">
                   <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }} plain-link">

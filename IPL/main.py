@@ -36,7 +36,9 @@ pofs = {'Q1':'Qualifier 1', 'E':'Eliminator', 'Q2':'Qualifier 2', 'F':'Final'}
 liveURL_Prefix = "https://cmc2.sportskeeda.com/live-cricket-score/"
 liveURL_Suffix = "/ajax"
 
-statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9241/"
+statsURL = "https://ipl-stats-sports-mechanic.s3.ap-south-1.amazonaws.com/ipl/feeds/stats/"
+
+#statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9241/"
 
 tp_urls = {
     "orange": "https://www.sportskeeda.com/go/ipl/orange-cap",
@@ -48,8 +50,9 @@ tp_urls = {
 }
 
 statsList = {
-    "batting": {"Most Runs": "mostRuns", "Highest Scores": "highestScore", "Best Batting Average": "highestAvg", "Best Batting Strike Rate":"highestSr", "Most Hundreds": "mostHundreds", "Most Fifties": "mostFifties", "Most Fours": "mostFours", "Most Sixes": "mostSixes", "Most Nineties": "mostNineties"},
-    "bowling": {"Most Wickets": "mostWickets", "Best Bowling Average": "lowestAvg", "Best Bowling": "bestBowlingInnings", "Most 5 Wickets Haul": "mostFiveWickets", "Best Economy": "lowestEcon", "Best Bowling Strike Rate": "lowestSr"}
+    "batting_stats" : {"Most Runs": "toprunsscorers", "Most Sixes": "mostsixes", "Most Sixes (Innings)": "mostsixesinnings", "Most Fours": "mostfours", "Most Fours (Innings)": "mostfoursinnings", "Most 50s": "mostfifties", "Most 100s": "mostcenturies", "Fastest 50s": "fastestfifties", "Fastest 100s": "fastestcenturies", "Highest Scores": "highestindividualscorers", "Best Strike Rate": "higheststrikeratetournament", "Best Strike Rate (Innings)": "higheststrikerateinnings", "Best Batting Averages": "highestaverages"},
+    "bowling_stats" : {"Most Wickets": "mostwickets", "Most Maidens": "mostmaidenoversbowledtournament", "Most Dot Balls": "mostdotballsbowledtournament", "Most Dot Balls (Innings)": "mostdotballsbowledinnings", "Best Bowling Averages": "bestaverages", "Best Bowling Economy": "besteconomyrates", "Best Bowling Economy (Innings)": "besteconomyratesinnings", "Best Bowling Strike Rate": "beststrikeratestournament", "Best Bowling Strike Rate (Innings)": "beststrikeratesinnings", "Best Bowling Figures": "bestbowlingfigures", "Most Runs Conceded (Innings)": "mostrunsconceededinnings", "Most Hat-tricks": "mosthattricks"},
+    "awards" : {"Most Valuable Players": "mvpPlayersList", "Fair Play Award": "fairplayList"}
 }
 
 champions = {
@@ -310,42 +313,40 @@ def update_toppers():
     and returns it as a dictionary with headers as keys. Returns empty dict on failure.
     """
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
-
-    for role, url in tp_urls.items():
-        try:
-            """
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Referer": "https://www.google.com/",
-                "Connection": "keep-alive",
-            }
-            """
-            response = scraper.get(url, timeout=10)
-            response.raise_for_status()
-            html_content = response.text
-            parser = lxml.etree.HTMLParser()
-            tree = lxml.etree.fromstring(html_content, parser)
-            table = tree.xpath('//div[contains(@class,"left")]//table[contains(@class,"keeda-data-table")]')
-            if not table:
-                return
-            headers = [lxml.etree.tostring(th, method='text', encoding='unicode').strip() for th in table[0].xpath('.//thead//tr[1]//th')]
-            first_row_trs = table[0].xpath('.//tbody//tr[1]')
-            if not headers or not first_row_trs:
-                return
-            first_row = first_row_trs[0]
-            row_data = [lxml.etree.tostring(td, method='text', encoding='unicode').strip() for td in first_row.xpath('.//td')]
-            tp = Toppers.query.filter_by(category=role).first()
-            if tp:
-                tp.stats = dict(zip(headers, row_data))
-                player = find_player(tp.stats['Player'], SquadFull)
-                tp.stats['Player'] = player[2] if player is not None else tp.stats['Player']
-                tp.stats['Team'] = player[3] if player is not None else tp.stats['Team']
+    for stats_type, stats in statsList.items():
+        print(stats_type)
+        for stat_name, token in stats.items():
+            print(stat_name, token)
+            try:
+                """
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Referer": "https://www.google.com/",
+                    "Connection": "keep-alive",
+                }
+                """
+                url = statsURL + f"2026-{token}.js" if stats_type == "awards" else statsURL + f"284-{token}.js"
+                response = requests.get(url, verify=False)
+                data = response.text
+                data = data.split('(', 1)[1].strip(');')
+                data = next(iter((json.loads(data)).values()))
+                tp = Toppers.query.filter_by(category=stat_name).first()
+                if data and isinstance(data, list) and len(data) > 0:
+                    if stat_name not in ["Fair Play Award"]:
+                        for row in data:
+                            playerKey = 'StrikerName' if stats_type == "batting_stats" else 'BowlerName' if stats_type == "bowling_stats" else 'PlayerName'
+                            player = find_player(row[playerKey], SquadFull)
+                            row[playerKey] = player[2] if player is not None else row[playerKey]
+                            row['TeamCode'] = player[3] if player is not None else row['TeamCode']
+                    tp.stats = data
+                else:
+                    tp.stats = None
                 db.session.commit()
-        except Exception as e:
-            print(f"Error updating toppers for {role}: {e}")
-            return
+            except Exception as e:
+                print(f"Error updating toppers for {stat_name}: {e}")
+                return
     
 def get_innings_data(matID):
     inn1 = requests.get(f"https://apiv2.cricket.com.au/web/views/comments?fixtureId={matID}&inningNumber=1&commentType=&overLimit=21&jsconfig=eccn%3Atrue&format=json", verify=False).json()
@@ -747,7 +748,8 @@ def index():
             db.session.add(pl)
             db.session.commit()
     PT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
-    TP = Toppers.query.order_by(Toppers.id.asc()).all()
+    tp = db.session.execute(text('SELECT category, stats FROM Toppers ORDER BY id ASC')).fetchall()
+    TP = {row[0]: row[1] for row in tp}
     return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP)
 
 @main.route('/pointstable')
@@ -1113,31 +1115,10 @@ def todayMatch():
         current_date = current_date.replace(tzinfo=None)
         return render_template('liveMatches.html', FR=dt, fn=full_name, current_date=current_date, clr=clr)
 
-def get_battingstats():
-    stats = {}
-    for key, value in statsList['batting'].items():
-        url = statsBaseURL + value
-        if key == 'Highest Scores':
-            highest_scores = get_data_from_url(url)
-            for hs in highest_scores:
-                hs['Vs'] = next(k for k, v in full_name.items() if v == hs['Vs'])
-            stats["Highest Scores"] = highest_scores
-            continue
-        stats[key] = get_data_from_url(url)
-    return {'stats': stats}
-
-def get_bowlingstats():
-    stats = {}
-    for key, value in statsList['bowling'].items():
-        url = statsBaseURL + value
-        if key == 'Best Bowling':
-            best_bowling = get_data_from_url(url)
-            for bb in best_bowling:
-                bb['Vs'] = next(k for k, v in full_name.items() if v == bb['Vs'])
-            stats["Best Bowling"] = best_bowling
-            continue
-        stats[key] = get_data_from_url(url)
-    return {'stats': stats}
+def get_stats():
+    tp = db.session.execute(text('SELECT category, stats FROM Toppers ORDER BY id ASC')).fetchall()
+    tp = {row[0]: row[1] for row in tp}
+    return serialize({'stats': tp})
 
 @main.route('/battingstats')
 def battingstats():
@@ -1146,6 +1127,10 @@ def battingstats():
 @main.route('/bowlingstats')
 def bowlingstats():
     return render_template('bowlingStat.html')
+
+@main.route('/awards')
+def awards():
+    return render_template('awards.html')
 
 @main.route('/update')
 @login_required
