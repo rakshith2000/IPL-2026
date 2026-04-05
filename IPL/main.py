@@ -313,6 +313,7 @@ def update_toppers():
     and returns it as a dictionary with headers as keys. Returns empty dict on failure.
     """
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
+    print("Debug ON")
     for stats_type, stats in statsList.items():
         print(stats_type)
         for stat_name, token in stats.items():
@@ -328,7 +329,7 @@ def update_toppers():
                 }
                 """
                 url = statsURL + f"2026-{token}.js" if stats_type == "awards" else statsURL + f"284-{token}.js"
-                response = requests.get(url, verify=False)
+                response = scraper.get(url, verify=False)
                 data = response.text
                 data = data.split('(', 1)[1].strip(');')
                 data = next(iter((json.loads(data)).values()))
