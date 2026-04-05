@@ -347,7 +347,7 @@ def update_toppers():
                     tp.stats = data
                     print("Updated Toppers Inside")
                 else:
-                    tp.stats = None
+                    tp.stats = []
                 db.session.commit()
             except Exception as e:
                 print(f"Error updating toppers for {stat_name}: {e}")
