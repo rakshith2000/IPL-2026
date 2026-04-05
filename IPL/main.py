@@ -334,14 +334,18 @@ def update_toppers():
                 data = data.split('(', 1)[1].strip(');')
                 data = next(iter((json.loads(data)).values()))
                 tp = Toppers.query.filter_by(category=stat_name).first()
+                print("Fetched")
                 if data and isinstance(data, list) and len(data) > 0:
+                    print("Data Valid")
                     if stat_name not in ["Fair Play Award"]:
                         for row in data:
+                            print("Not Fair Play Awards")
                             playerKey = 'StrikerName' if stats_type == "batting_stats" else 'BowlerName' if stats_type == "bowling_stats" else 'PlayerName'
                             player = find_player(row[playerKey], SquadFull)
                             row[playerKey] = player[2] if player is not None else row[playerKey]
                             row['TeamCode'] = player[3] if player is not None else row['TeamCode']
                     tp.stats = data
+                    print("Updated Toppers Inside")
                 else:
                     tp.stats = None
                 db.session.commit()
