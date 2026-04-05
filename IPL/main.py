@@ -329,7 +329,7 @@ def update_toppers():
                 }
                 """
                 url = statsURL + f"2026-{token}.js" if stats_type == "awards" else statsURL + f"284-{token}.js"
-                response = scraper.get(url)
+                response = requests.get(url, verify=False)
                 data = response.text
                 data = data.split('(', 1)[1].strip(');')
                 data = next(iter((json.loads(data)).values()))
