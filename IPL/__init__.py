@@ -72,7 +72,7 @@ def create_app():
             except Exception as e:
                 print(f"Error updating qualifications: {e}")
 
-    @scheduler.task('interval', id='update_toppers_task', minutes=2, misfire_grace_time=120)
+    @scheduler.task('interval', id='update_toppers_task', minutes=10, misfire_grace_time=120)
     def update_toppers_task():
         with app.app_context():
             try:
