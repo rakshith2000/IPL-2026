@@ -38,6 +38,8 @@ liveURL_Suffix = "/ajax"
 
 statsURL = "https://ipl-stats-sports-mechanic.s3.ap-south-1.amazonaws.com/ipl/feeds/stats/"
 
+playerStatsURL = "https://ipl-stats-sports-mechanic.s3.ap-south-1.amazonaws.com/ipl/feeds/stats/player/"
+
 #statsBaseURL = "https://www.cricbuzz.com/api/cricket-series/series-stats/9241/"
 
 tp_urls = {
@@ -229,6 +231,37 @@ def normalize_name(name):
     name = name.replace('mohd', 'mohammed').replace('md', 'mohammed')
     return ' '.join(sorted(name.split()))  # Sort name parts for order-independent matching
 
+def get_player_stats(URL_ID):
+    URL = playerStatsURL + f"{URL_ID}-playerstats.js"
+    try:
+        response = requests.get(URL, verify=False)
+        data = response.text
+        data = data.split('(', 1)[1].strip(');')
+        try:
+            data = json.loads(data)
+        except json.JSONDecodeError:
+            data = data.replace("'", '"')
+            data = json.loads(data)
+    except Exception as e:
+        print(f"Error fetching player stats for {URL_ID}: {e}")
+        return None
+    
+    stats = {'Overall': {}}
+    if data and isinstance(data['Batting'], list) and len(data['Batting']) > 0:
+        stats['Overall']['batting'] = data['Batting'][0]
+        stats['Overall']['bowling'] = data['Bowling'][0]
+        stats['years'] = [entry.get('Year') for entry in data['Batting'][1:]]
+    else:
+        stats['Overall']['batting'] = None
+        stats['Overall']['bowling'] = None
+        stats['years'] = None
+
+    if stats['years'] is not None:
+        for year in stats['years']:
+            stats[year] = {}
+            stats[year]['batting'] = next((entry for entry in data['Batting'][1:] if entry.get('Year') == year), None)
+            stats[year]['bowling'] = next((entry for entry in data['Bowling'][1:] if entry.get('Year') == year), None)
+    return stats
 
 def find_player(full_name, player_data, threshold=80):
     """
@@ -862,7 +895,9 @@ def squad_details(team, name):
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     age = calculate_age(sq.DOB, current_date)
-    return render_template('squad_details.html', sq=sq, clr=clr[team], team=team, age=age, sqclr=sqclr[team])
+    stats = get_player_stats(sq.URL_ID)
+    print(json.dumps(stats, indent=4))
+    return render_template('squad_details.html', sq=sq, clr=clr[team], team=team, age=age, sqclr=sqclr[team], stats=stats)
 
 def get_matchInfo(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()

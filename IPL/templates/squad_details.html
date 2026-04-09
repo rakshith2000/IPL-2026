@@ -5,6 +5,9 @@
         xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/squad_details.css') }}">
+<script>
+  const statsData = {{ stats | tojson }};
+</script>
 {% endblock %}
 
 {% block content %}
@@ -54,6 +57,20 @@ body {
         <img src="/static/images/country_flags/{{ sq.Nationality }}.png" alt="India" style="width:22px;vertical-align:middle;margin-right:6px;border-radius:2px;">
         {{ sq.Nationality }} &nbsp;|&nbsp; {{ sq.Role }}
       </div>
+      <div class="player-info-row">
+        <div class="player-info-block">
+          <span class="label">MATCHES</span>
+          <span class="value">{{ stats['Overall']['batting']['Matches'] | default('-', true) }}</span>
+        </div>
+        <div class="player-info-block">
+          <span class="label">RUNS</span>
+          <span class="value">{{ stats['Overall']['batting']['Runs'] | default('-', true) }}</span>
+        </div>
+        <div class="player-info-block">
+          <span class="label">WICKETS</span>
+          <span class="value">{{ stats['Overall']['bowling']['Wickets'] | default('-', true) }}</span>
+        </div>
+      </div>
       <div class="player-meta">
         <div class="meta-item">
           <span class="material-icons icon" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">cake</span>
@@ -61,7 +78,7 @@ body {
         </div>
         <div class="meta-item">
           <span class="material-icons icon" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">event</span>
-          <span><strong>WPL Debut:</strong> &nbsp;{{ sq.Debut }}</span>
+          <span><strong>WPL Debut:</strong> &nbsp;{{ stats['years'][-1] | default('-', true) }}</span>
         </div>
         <div class="meta-item">
           <span class="icon" role="img" aria-label="bat">
@@ -78,5 +95,31 @@ body {
       </div>
     </div>
   </div>
+
+  <div class="stats-container">
+        <div class="stats-title">STATS</div>
+        <!-- Mobile Dropdown Filter -->
+        <div class="stats-dropdown-container">
+            <div class="stats-dropdown" id="yearDropdown">
+                <button class="stats-dropdown-toggle" onclick="toggleDropdown()" id="dropdownBtn">
+                    <span id="dropdownLabel">Overall</span> <i class="fa fa-chevron-down font_10 ms-1" id="dropdownChevron"></i>
+                </button>
+                <div class="stats-dropdown-menu" id="dropdownMenu"></div>
+            </div>
+        </div>
+        <!-- Mobile Vertical Table -->
+        <div class="vertical-table" id="verticalTable">
+            <!-- Content will be injected by JS -->
+        </div>
+        <!-- Mobile Vertical Bowling Table -->
+        <div class="vertical-table" id="verticalBowlingTable">
+            <!-- Content will be injected by JS -->
+        </div>
+        <!-- Desktop Horizontal Table -->
+        <div class="horizontal-table" id="horizontalTable"></div>
+        <!-- Desktop Horizontal Bowling Table -->
+        <div class="horizontal-table" id="horizontalBowlingTable"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/squad-details.js') }}"></script>
 </div>
 {% endblock %}

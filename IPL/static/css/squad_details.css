@@ -193,6 +193,7 @@
     opacity: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    overflow-y: auto;
   }
 
   .stats-dropdown-menu a {
@@ -218,8 +219,9 @@
   }
 
   .stats-dropdown.show .stats-dropdown-menu {
-    max-height: 500px;
+    max-height: 220px; /* Make dropdown scrollable if too many items */
     opacity: 1;
+    overflow-y: auto;
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
   }
 
