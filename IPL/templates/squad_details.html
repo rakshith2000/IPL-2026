@@ -59,16 +59,16 @@ body {
       </div>
       <div class="player-info-row">
         <div class="player-info-block">
-          <span class="label">MATCHES</span>
-          <span class="value">{{ stats['Overall']['batting']['Matches'] | default('-', true) }}</span>
+          <span class="label" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">MATCHES</span>
+          <span class="value" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">{{ stats['Overall']['batting']['Matches'] | default('-', true) }}</span>
         </div>
         <div class="player-info-block">
-          <span class="label">RUNS</span>
-          <span class="value">{{ stats['Overall']['batting']['Runs'] | default('-', true) }}</span>
+          <span class="label" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">RUNS</span>
+          <span class="value" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">{{ stats['Overall']['batting']['Runs'] | default('-', true) }}</span>
         </div>
         <div class="player-info-block">
-          <span class="label">WICKETS</span>
-          <span class="value">{{ stats['Overall']['bowling']['Wickets'] | default('-', true) }}</span>
+          <span class="label" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">WICKETS</span>
+          <span class="value" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">{{ stats['Overall']['bowling']['Wickets'] | default('-', true) }}</span>
         </div>
       </div>
       <div class="player-meta">
@@ -78,7 +78,7 @@ body {
         </div>
         <div class="meta-item">
           <span class="material-icons icon" style="{% if sq.Team in ['CSK'] %}color: black !important;{% endif %}">event</span>
-          <span><strong>WPL Debut:</strong> &nbsp;{{ stats['years'][-1] | default('-', true) }}</span>
+          <span><strong>IPL Debut:</strong> &nbsp;{{ stats['years'][-1] | default('-', true) }}</span>
         </div>
         <div class="meta-item">
           <span class="icon" role="img" aria-label="bat">
