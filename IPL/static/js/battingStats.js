@@ -422,7 +422,7 @@ function selectOption(element, optionTitle) {
     tableHTML += '<th class="position"></th>'; // Position column
     tableHTML += '<th class="logo-col"></th>'; // Logo column
     tableHTML += '<th>Player</th>'; // Player name column
-  tableHTML += '<th>10s</th>'; // 10s column
+  tableHTML += '<th>100s</th>'; // 100s column
 	tableHTML += '<th>R</th>'; // Runs column
 	tableHTML += '<th>M</th>'; // Match column
 	tableHTML += '<th>I</th>'; // Innings column
