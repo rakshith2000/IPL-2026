@@ -311,12 +311,12 @@ window.addEventListener('statsReady', () => {
                     <img src="/static/images/squad_logos/${dt1[0].Team_B}${dt1[0].Team_B === 'RR' ? '1' : ''}.png" width="40px" height="40px">
                 </div>
                 <div class="progress-bar">
-                    <div class="l-bar" style="--c: ${clr[dt1[0].Team_A]}; width: ${Math.round(parseFloat(dt3.team_win_probability[dt1[0].Team_A]))}%"></div>
-                    <div class="r-bar" style="--c: ${clr[dt1[0].Team_B]}; width: ${Math.round(parseFloat(dt3.team_win_probability[dt1[0].Team_B]))}%"></div>
+                    <div class="l-bar" style="--c: ${clr[dt1[0].Team_A]}; width: ${parseFloat(dt3.team_win_probability[dt1[0].Team_A]).toFixed(1)}%"></div>
+                    <div class="r-bar" style="--c: ${clr[dt1[0].Team_B]}; width: ${parseFloat(dt3.team_win_probability[dt1[0].Team_B]).toFixed(1)}%"></div>
                 </div>
                 <div class="text-container">
-                    <span style="color: ${clr[dt1[0].Team_A]};"><b>${Math.round(parseFloat(dt3.team_win_probability[dt1[0].Team_A]))}%</b></span>
-                    <span style="color: ${clr[dt1[0].Team_B]};"><b>${Math.round(parseFloat(dt3.team_win_probability[dt1[0].Team_B]))}%</b></span>
+                    <span style="color: ${clr[dt1[0].Team_A]};"><b>${parseFloat(dt3.team_win_probability[dt1[0].Team_A]).toFixed(1)}%</b></span>
+                    <span style="color: ${clr[dt1[0].Team_B]};"><b>${parseFloat(dt3.team_win_probability[dt1[0].Team_B]).toFixed(1)}%</b></span>
                 </div>
             </div>
         </div>`;
