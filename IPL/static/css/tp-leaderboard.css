@@ -58,6 +58,9 @@
     background: #064a97;
 }
 .hs {
+    background: #6b0123;
+}
+.gdb {
     background: #199b02;
 }
 .bbi {
@@ -82,6 +85,9 @@
     color: #064a97;
 }
 .hs-text {
+    color: #6b0123;
+}
+.gdb-text {
     color: #199b02;
 }
 .bbi-text {

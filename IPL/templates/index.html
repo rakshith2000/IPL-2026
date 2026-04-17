@@ -427,6 +427,37 @@ h3.section-title {
         <a href="/battingstats?option=Highest%20Scores" class="leaderboard-btn hs">View Full Leaderboard</a>
     </div>
 
+    <div class="tp-card-container gdb">
+      {% set gdb = tp['Most Dot Balls'][0] %}
+        <div class="player-card">
+            <div class="player-image">
+                <img src="/static/images/squads/{{ gdb['TeamCode'] }}/{{ gdb['BowlerName'] | replace(' ', '-') }}.png" alt="Player" />
+            </div>
+            <div class="player-info">
+                <div class="card-name gdb-text">Green Dot Balls</div>
+                <div class="player-primary">
+                <div class="player-rank">#1</div>
+                <div class="player-name-block">
+                        <span class="player-name firstname">{{ gdb['BowlerName'].split(' ')[0] }}</span>
+                        <span class="player-name lastname">{{ gdb['BowlerName'].split(' ')[1:] | join(' ') }}</span>
+                </div>
+                <div class="player-runs">
+                    <span class="runs gdb-text">{{ gdb['DotBallsBowled'] }}</span>
+                    <span class="runs-label">Dots</span>
+                </div>
+                </div>
+                <div class="player-stats">
+                    <div class="stat"><span>M</span><span>{{ gdb['Matches'] }}</span></div>
+                    <div class="stat"><span>Ov</span><span>{{ gdb['OversBowled'] }}</span></div>
+                    <div class="stat"><span>Wkts</span><span>{{ gdb['Wickets'] }}</span></div>
+                    <div class="stat"><span>Econ</span><span>{{ gdb['EconomyRate'] }}</span></div>
+                    <div class="stat"><span>4W/5W</span><span>{{ gdb['FourWickets'] }} / {{ gdb['FiveWickets'] }}</span></div>
+                </div>
+            </div>
+        </div>
+        <a href="/bowlingstats?option=Most%20Dot%20Balls" class="leaderboard-btn gdb">View Full Leaderboard</a>
+    </div>
+
     <div class="tp-card-container bbi">
       {% set bbi = tp['Best Bowling Figures'][0] %}
         <div class="player-card">
