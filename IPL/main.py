@@ -914,12 +914,6 @@ def get_matchInfo(match):
     MatchDT = [dict(row._mapping) for row in MatchDT]
     return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm})
 
-@main.route('/match-<match>/matchInfo')
-def matchInfo(match):
-    source = request.args.get('source', None)
-    team = request.args.get('fteam', None)
-    return render_template('info.html', match=match, source=source, fteam=team)
-
 def get_matchOvers(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
     MatchURL = render_live_URL(MatchDT[0][4], MatchDT[0][5], match, MatchDT[0][2])
@@ -935,12 +929,6 @@ def get_matchOvers(match):
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
     return serialize({'match':match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'inn1':Inn1, 'inn2':Inn2, 'clr':clr})
-
-@main.route('/match-<match>/Overs')
-def matchOvers(match):
-    source = request.args.get('source', None)
-    team = request.args.get('fteam', None)
-    return render_template('overs.html', match=match, source=source, fteam=team)
 
 def get_liveScore(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),{'matchno': match}).fetchall()
@@ -976,12 +964,6 @@ def get_liveScore(match):
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
     return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm, 'clr': ptclr, 'clr2': clr, 'inn1': Inn1, 'inn2': Inn2, 'fn': full_name})
-
-@main.route('/match-<match>/liveScore')
-def liveScore(match):
-    source = request.args.get('source', None)
-    team = request.args.get('fteam', None)
-    return render_template('live.html', match=match, source=source, fteam=team)
 
 def get_scoreCard(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
@@ -1036,12 +1018,6 @@ def get_scoreCard(match):
     MatchDT = [dict(row._mapping) for row in MatchDT]
     return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm, 'clr2': clr, 'fn': full_name})
 
-@main.route('/match-<match>/scoreCard')
-def scoreCard(match):
-    source = request.args.get('source', None)
-    team = request.args.get('fteam', None)
-    return render_template('scorecard.html', match=match, source=source, fteam=team)
-
 def get_liveSquad(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
@@ -1082,11 +1058,11 @@ def get_liveSquad(match):
     SquadDT = [dict(row._mapping) for row in SquadDT]
     return serialize({'match': match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'sqd':SquadDT})
 
-@main.route('/match-<match>/liveSquad')
-def liveSquad(match):
+@main.route('/match-<match>')
+def match(match):
     source = request.args.get('source', None)
     team = request.args.get('fteam', None)
-    return render_template('livesquad.html', match=match, source=source, fteam=team)
+    return render_template('match.html', match=match, source=source, fteam=team)
 
 @main.route('/match-<match>/FRScore')
 def FRScore(match):
@@ -1099,11 +1075,11 @@ def FRScore(match):
     source = request.args.get('source', None)
     team = request.args.get('fteam', None)
     if current_date < (matchDT - timedelta(minutes=30)):
-        return redirect(url_for('main.matchInfo', match=match, source=source, fteam=team))
+        return redirect(url_for('main.match', tab='matchInfo', match=match, source=source, fteam=team))
     elif current_date >= (matchDT - timedelta(minutes=30)) and MatchFR[10] is None:
-        return redirect(url_for('main.liveScore', match=match, source=source, fteam=team))
+        return redirect(url_for('main.match', tab='liveScore', match=match, source=source, fteam=team))
     elif MatchFR[10] is not None:
-        return redirect(url_for('main.scoreCard', match=match, source=source, fteam=team))
+        return redirect(url_for('main.match', tab='scoreCard', match=match, source=source, fteam=team))
 
 @main.route('/todayMatch')
 def todayMatch():
