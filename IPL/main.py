@@ -1060,9 +1060,12 @@ def get_liveSquad(match):
 
 @main.route('/match-<match>')
 def match(match):
+    MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),
+                                 {'matchno': match}).fetchall()
+    MatchDT = MatchDT[0]
     source = request.args.get('source', None)
     team = request.args.get('fteam', None)
-    return render_template('match.html', match=match, source=source, fteam=team)
+    return render_template('match.html', match=match, source=source, fteam=team, matchDT=MatchDT)
 
 @main.route('/match-<match>/FRScore')
 def FRScore(match):
