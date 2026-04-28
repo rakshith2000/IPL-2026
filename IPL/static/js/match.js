@@ -166,7 +166,7 @@ function renderScoreboard(data) {
                 <span class="d-block pt-2 pt-2 pb-2 px-3 font_12 bg-light">
                     Target: <b>${parseInt(dt3.score_strip[0].score.split('/')[0], 10) + 1}</b>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
                     Current RR: <b>${dt3.score_strip[1].run_rate.split(' ')[2]}</b>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    Required RR: <b>${dt3.score_strip[0].required_run_rate}</b><br>
+                    Required RR: <b>${dt3.score_strip[0].required_run_rate ?? (m = dt3.info?.match(/need (\d+) runs in (\d+(?:\.\d+)?)/),m && +m[2] ? (+m[1] / +m[2]).toFixed(2) : "-")}</b><br>
                     Current Partnership: <b>${dt3.innings[1].current_partnership.runs} (${dt3.innings[1].current_partnership.balls})</b>
                 </span>
                 `;

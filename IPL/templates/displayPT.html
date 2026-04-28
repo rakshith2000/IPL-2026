@@ -188,6 +188,47 @@
 {% endblock %}
 
 {% block content %}
+{% macro color_class(val) %}
+    {% set v = val|float / 100 if val|float > 1 else val|float %}
+    {% if v >= 0.9 %}box-green
+    {% elif v >= 0.7 %}box-lightgreen
+    {% elif v >= 0.5 %}box-yellowgreen
+    {% elif v >= 0.37 %}box-yellow
+    {% elif v >= 0.14 %}box-orange
+    {% elif v >= 0.01 %}box-lightred
+    {% else %}box-red
+    {% endif %}
+{% endmacro %}
+{% macro gradient_bg(val) -%}
+    {# normalize value: ALWAYS treat input as percentage #}
+    {% set v = (val | float) / 100 %}
+    {% set v = 0 if v < 0 else v %}
+    {% set v = 1 if v > 1 else v %}
+
+    {# HSL interpolation: Green (120°) → Red (0°) #}
+    {% set h = 120 * v %}      {# hue #}
+    {% set s = 65 %}           {# saturation #}
+    {% set l = 28 + 6 * v %}   {# lightness control #}
+
+    {# HSL → RGB conversion #}
+    {% set c = (1 - (2*l/100 - 1)|abs) * (s/100) %}
+    {% set x = c * (1 - ((h / 60) % 2 - 1)|abs) %}
+    {% set m = l/100 - c/2 %}
+
+    {% if h < 60 %}
+        {% set r1, g1, b1 = c, x, 0 %}
+    {% elif h < 120 %}
+        {% set r1, g1, b1 = x, c, 0 %}
+    {% else %}
+        {% set r1, g1, b1 = c, 0, x %}
+    {% endif %}
+
+    {% set r = ((r1 + m) * 255) | round | int %}
+    {% set g = ((g1 + m) * 255) | round | int %}
+    {% set b = ((b1 + m) * 255) | round | int %}
+
+    background-color: rgb({{ r }}, {{ g }}, {{ b }});
+{%- endmacro %}
 
 {% set clr_dict = {
     'Delhi Capitals': ['#2561ae', '#282968'], 
@@ -292,10 +333,8 @@
                         </td>
                         <td class="text-center">{{ PT[11][i] }}</td>
                         <td class="text-center" >{%if PT[4][i] != 0 %}{{ ((PT[5][i] + 0.5 * PT[7][i]) / PT[4][i] * 100 )|round(2) }} %{% else %}0 %{% endif %}</td>
-                        {% if PT[13][i] | int >= 70 %}{% set qualclr = "lightgreen" %}{% elif PT[13][i] | int >= 40 %}{% set qualclr = "orange" %}{% else %}{% set qualclr = "#ff4d4d" %}{% endif %}
-                        <td class="text-center" style="background-color: #444!important; color: {{ qualclr }};"><b>{{ PT[13][i] }} %</b></td>
-                        {% if PT[14][i] | int >= 70 %}{% set qualclr = "lightgreen" %}{% elif PT[14][i] | int >= 40 %}{% set qualclr = "orange" %}{% else %}{% set qualclr = "#ff4d4d" %}{% endif %}
-                        <td class="text-center" style="color: {{ qualclr }};"><b>{{ PT[14][i] }} %</b></td>
+                        <td class="text-center" style="{{ gradient_bg(PT[13][i]) }}"><b>{{ PT[13][i] }} %</b></td>
+                        <td class="text-center" style="{{ gradient_bg(PT[14][i]) }}"><b>{{ PT[14][i] }} %</b></td>
                     </tr>
                     {% endfor %}
                 </tbody>

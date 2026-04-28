@@ -240,7 +240,7 @@ tbody tr td img {
     transition: .2s ease-in-out;
 }
 
-tr td:not(:nth-child(2)) {
+tr td:not(:nth-child(2)):not(:nth-child(13)):not(:nth-child(14)) {
     background: linear-gradient(180deg, var(--c1), var(--c2));
 }
 
@@ -527,3 +527,11 @@ thead th.active,tbody td.active {
     z-index: 10;
     background: linear-gradient(to left, rgba(68,68,68,0.0), rgba(68,68,68,0.40), rgba(68, 68, 68, 0.75), rgba(68,68,68,0));
 }
+
+.box-green        { background-color: #1fa940 !important; color: #fff !important; }
+.box-lightgreen   { background-color: #90ee90 !important; color: #fff !important; }
+.box-yellowgreen  { background-color: #c6e46b !important; color: #fff !important; }
+.box-yellow       { background-color: #ffe066 !important; color: #fff !important; }
+.box-orange       { background-color: #ffb347 !important; color: #fff !important; }
+.box-lightred     { background-color: #ff7f7f !important; color: #fff !important; }
+.box-red          { background-color: #ff4d4d !important; color: #fff !important; }
