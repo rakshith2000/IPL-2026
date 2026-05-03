@@ -98,16 +98,21 @@
     background: linear-gradient(145deg, #c569e6, #a45db5);
 }
 
-.bg-normal {
-    background: linear-gradient(145deg, #34c759, #239a3f);
+.bg-dot {
+    background-color: white;
+    border: #888 solid 1px;
 }
 
-.bg-dot {
-    background: linear-gradient(145deg, #959595, #565656);
+.bg-normal {
+    color: black;
+    background-color: white;
+    border: #888 solid 1px;
 }
 
 .bg-extra {
-    background: linear-gradient(145deg, #bb9762, #946143);
+    color: black;
+    background-color: white;
+    border: #888 solid 1px;
 }
 
 .bg-wicket {
@@ -273,3 +278,10 @@
     white-space: nowrap;
 }
 
+.club-icon {
+          color: green;
+          font-size: 20px;
+          line-height: 1;
+          display: block;
+          transform: translateY(-2px);
+        }

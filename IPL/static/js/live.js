@@ -174,7 +174,7 @@ function renderTabLive(data) {
                     <div class="over-balls">`;
                     over.summary.forEach(ball => {
                         let ballScore = getLiveOversBallScore(ball);
-                        tabHTML += `<div class="over-ball ${getScoreStyle(ballScore)}" style="${ballScore.length >= 3 ? 'width: 30px;' : ''}">${ballScore}</div>`;
+                        tabHTML += `<div class="over-ball ${getScoreStyle(ballScore)}" style="${ballScore.length >= 3 ? 'width: 30px;' : ''}">${ballScore !== '0' ? ballScore : '<span class="club-icon">♣</span>'}</div>`;
                     });
                 tabHTML += `</div>
                 <span class="over-total no-wrap">=&nbsp;${over.runs}</span>
@@ -439,7 +439,7 @@ function renderTabLive(data) {
                 <div class="d-flex flex-column gap-2 align-items-center">
                 <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
                 const score = getBallScore(ball);
-                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score}</div>`;
+                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                 tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
             });
         });
@@ -476,7 +476,7 @@ function renderTabLive(data) {
                 <div class="d-flex flex-column gap-2 align-items-center">
                 <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
                 const score = getBallScore(ball);
-                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score}</div>`;
+                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                 tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
             });
         });

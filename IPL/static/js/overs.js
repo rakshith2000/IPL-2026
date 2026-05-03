@@ -146,7 +146,7 @@ function renderTabOvers(data) {
                         <div class="over-right-item-balls">
                             ${over.balls.slice().reverse().map(ball => {
                                 let score = getBallScore(ball);
-                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score}</div>`;
+                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                             }).join('')}
                         </div>
                     </div>
@@ -198,7 +198,7 @@ function renderTabOvers(data) {
                         <div class="over-right-item-balls">
                             ${over.balls.slice().reverse().map(ball => {
                                 let score = getBallScore(ball);
-                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score}</div>`;
+                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                             }).join('')}
                         </div>
                     </div>
