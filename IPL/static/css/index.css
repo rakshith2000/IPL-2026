@@ -319,8 +319,24 @@ width:40px;
 .form.q {
     background: #b7e3c2;
     border: 2px solid #2e9d4d;
+    border-radius: 20%;
     color: #2e9d4d;
-    font-size: 22px;
+    /*font-family: Inter, Inter Fallback, system-ui, arial;*/
+    font-size: 20px;
+    display: block;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.form.e {
+    background: #f8b5b5;
+    border: 2px solid #ce0707;
+    border-radius: 20%;
+    color: #ce0707;
+    /*font-family: Inter, Inter Fallback, system-ui, arial;*/
+    font-size: 20px;
+    display: block;
+    line-height: 1;
     font-weight: 700;
 }
 
