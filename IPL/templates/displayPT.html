@@ -217,7 +217,7 @@
 
     {% if h < 60 %}
         {% set r1, g1, b1 = c, x, 0 %}
-    {% elif h < 120 %}
+    {% elif h <= 120 %}
         {% set r1, g1, b1 = x, c, 0 %}
     {% else %}
         {% set r1, g1, b1 = c, 0, x %}
