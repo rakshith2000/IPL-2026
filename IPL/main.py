@@ -701,7 +701,7 @@ def render_live_URL(tA, tB, mn, dt):
     elif tA != "TBA" and tB != "TBA":
         matchNo = mn.lower().replace(' ','-')
     else:
-        matchNo = mn.lower().replace(' ','-') + "-ipl-2025"
+        matchNo = mn.lower().replace(' ','-') + "-ipl-2026t20"
     dt = dt.strftime("%d-%B-%Y").lower()
     URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
     print(URL)

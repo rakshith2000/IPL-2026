@@ -301,7 +301,7 @@ body {
                     <div class="potm-name">{{ i[11][0] }}</div>
                   </a>
                     <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/{{ i[11][1] }}.png" alt="Team Logo" class="team-logo2">
+                        <img src="/static/images/squad_logos/{{ i[11][1] }}{{ '1' if i[11][1] == 'RR' else '' }}.png" alt="Team Logo" class="team-logo2">
                         {{ fn[i[11][1]] }}
                     </div>
                 </div>
