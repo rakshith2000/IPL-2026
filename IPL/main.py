@@ -12,7 +12,7 @@ from fuzzywuzzy import fuzz, process
 from urllib.request import Request, urlopen
 import random, cloudscraper, cloudscraper.exceptions
 from datetime import datetime, date, time, timedelta
-from collections import defaultdict
+from collections import defaultdict, Counter
 import threading, lxml.etree
 
 warnings.filterwarnings("ignore")
@@ -339,18 +339,40 @@ def get_data_from_url(url):
             return None
     else:
         return None
-    
+
+def update_potm():
+    potms = (db.session.execute(text('SELECT "POTM" FROM Fixture WHERE "POTM" IS NOT NULL')).fetchall())
+    counts = Counter([(p[0]['name'], p[0]['team']) for p in potms])
+    potms = [{"name": name, "team": team, "potm": count} for (name, team), count in counts.items()]
+
+    for potm in potms:
+        sq = Squad.query.filter_by(Name=potm['name']).first()
+        stats = get_player_stats(sq.URL_ID) if sq else None
+        if stats and stats['2026']:
+            potm['matches'] = int(stats['2026']['batting']['Matches']) if stats['2026']['batting']['Matches'] else 0
+            potm['innings'] = int(stats['2026']['batting']['Innings']) if stats['2026']['batting']['Innings'] else 0
+            potm['runs'] = int(stats['2026']['batting']['Runs']) if stats['2026']['batting']['Runs'] else 0
+            potm['wickets'] = int(stats['2026']['bowling']['Wickets']) if stats['2026']['bowling']['Wickets'] else 0
+
+    potms = sorted(
+        potms,
+        key=lambda x: (x['potm'], x['runs'], x['wickets']),
+        reverse=True
+    )
+
+    toppers = Toppers.query.filter_by(category="Most POTM").first()
+    toppers.stats = potms
+    db.session.commit()
+
 def update_toppers():
     """
     Fetches the given URL, extracts the first row of the table with class 'keeda-data-table' inside div.left,
     and returns it as a dictionary with headers as keys. Returns empty dict on failure.
     """
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
-    print("Debug ON")
+    update_potm()
     for stats_type, stats in statsList.items():
-        print(stats_type)
         for stat_name, token in stats.items():
-            print(stat_name, token)
             try:
                 """
                 headers = {

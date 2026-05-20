@@ -68,6 +68,9 @@ function selectOption(element, optionTitle) {
         case 'Fair Play Award':
             fairPlayAwardTable(tableData);
             break;
+        case 'Most POTM':
+            mostPOTMTable(tableData);
+            break;
     }
   }
 
@@ -171,6 +174,56 @@ function selectOption(element, optionTitle) {
         tableHTML += `<td>${row['No']}</td>`;
         tableHTML += `<td>${row['AvePoints']}</td>`;
         tableHTML += `<td>${row['Points']}</td>`;
+
+      tableHTML += '</tr>';
+    });
+
+    tableHTML += '</tbody></table>';
+    container.innerHTML = tableHTML;
+  }
+
+  function mostPOTMTable(data) {
+    const container = document.getElementById('tableContainer');
+
+    if (!data || data.length === 0) {
+      container.innerHTML = '<p>No data available.</p>';
+      return;
+    }
+
+    // Extract headers from the first dictionary (excluding Team and Batter which we'll handle specially)
+    const headers = Object.keys(data[0]).filter(key => !['Team'].includes(key));
+
+    // Build HTML table
+    let tableHTML = '<table><thead><tr>';
+
+    // Add custom headers
+    tableHTML += '<th class="position"></th>'; // Position column
+    tableHTML += '<th class="logo-col"></th>'; // Logo column
+    tableHTML += '<th>Player</th>'; // Player name column
+    tableHTML += '<th>POTMs</th>'; // Points column
+	tableHTML += '<th>Mat</th>'; // Match column
+    tableHTML += '<th>Runs</th>'; // Innings column
+	tableHTML += '<th>Wkts</th>'; // Overs column
+    tableHTML += '</tr></thead><tbody>';
+
+    // Add rows
+    data.forEach((row, index) => {
+      tableHTML += '<tr>';
+
+      // Position number (1st column)
+      tableHTML += `<td class="position">${index + 1}</td>`;
+
+      // Team logo (2nd column)
+      const teamCode = row['team'];
+      const logoUrl = `/static/images/squad_logos/${teamCode === 'RR' ? 'RR1' : teamCode}.png`;
+      tableHTML += `<td class="logo-col"><img src="${logoUrl}" class="team-logo" alt="${teamCode}"></td>`;
+
+      // Remaining columns
+        tableHTML += `<td class="fw-bold text-blue"><a href="/team-${encodeURIComponent(row['team'])}/squad_details/${encodeURIComponent(row['name'])}">${row['name']}</a></td>`;
+        tableHTML += `<td class="fw-bold">${row['potm']}</td>`;
+        tableHTML += `<td>${row['matches']}</td>`;
+        tableHTML += `<td>${row['runs']}</td>`;
+        tableHTML += `<td>${row['wickets']}</td>`;
 
       tableHTML += '</tr>';
     });

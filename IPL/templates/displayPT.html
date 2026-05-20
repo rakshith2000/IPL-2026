@@ -259,10 +259,10 @@
                 </thead>
                 <tbody>
                     {% for i in range(10) %}
-                    {% if i >= 3 %}{% set bgclr1 = '#ee7171' %}{% set bgclr2 = '#ee2929' %}{% else %}{% set bgclr1 = '#80ee76' %}{% set bgclr2 = '#39b329' %}{% endif %}
-                    <tr style="--c1: #2b2a29; --c2: #444444">
+                    {% if PT[12][i] == 'Q' and i <= 1 %}{% set bgclr1 = '#6b5a1f' %}{% set bgclr2 = '#8a7a2f' %}{% elif PT[12][i] == 'Q' and i > 1 %}{% set bgclr1 = '#1f5a2a' %}{% set bgclr2 = '#2f7a3f' %}{% elif PT[12][i] == 'E' %}{% set bgclr1 = '#5a1f1f' %}{% set bgclr2 = '#7a2a2a' %}{% else %}{% set bgclr1 = '#2b2a29' %}{% set bgclr2 = '#444444' %}{% endif %}
+                    <tr style="--c1: {{ bgclr1 }}; --c2: {{ bgclr2 }};">
                         
-                        <td class="text-center fade-right" style="background-color: #444444;">
+                        <td class="text-center fade-right">
                     {% if PT[1][i] != "Champions" %}
                         {% if PT[15][i] == 0 %}
                         <span class="position-flex">
@@ -303,12 +303,12 @@
                             {% set gradient_color = clr[TABV[i]]['c1'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
                         {% endif %}
                         <td class="text-center" style="background: linear-gradient(145deg, {{ gradient_color }})">{% if PT[12][i] == "Q" %}<div class="position-indicatorQ"><span>Q</span>{% elif PT[12][i] == "E" %}<div class="position-indicatorE"><span>E</span>{% endif %}</div><img src="/static/images/squad_logos/{{ TABV[i] }}.png" alt=""></td>
-                        <td class="team-name" full="{{ PT[3][i] }}" short="{{ TABV[i] }}" style="background: linear-gradient(180deg, #2b2a29, #444444)"> <b>{{ PT[3][i] }}</b> </td>
+                        <td class="team-name" full="{{ PT[3][i] }}" short="{{ TABV[i] }}"> <b>{{ PT[3][i] }}</b> </td>
                         {% for j in range(4, 8) %}
                             <td class="text-center">{{ PT[j][i] }}</td>
                         {% endfor %}
                         <td class="text-center" ><b>{{ PT[8][i] }}</b></td>
-                        <td class="text-center" ><b>{{ PT[9][i] }}</b></td>
+                        <td class="text-center" ><b>{{ "%+.3f"|format(PT[9][i]|float) }}</b></td>
                         <td class="text-center" >
                             {% for result in PT[10][i] %}
                             {% if loop.last %}
