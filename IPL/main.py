@@ -754,6 +754,9 @@ def getRanksForPT():
             prev = teams[team]
             rankdiff[team] = prev - rank
         return rankdiff
+    elif len(matches) == 2 and matches[0].Rank is None:
+         rankdiff = {'CSK': 0, 'DC': 0, 'GT': 0, 'KKR': 0, 'LSG': 0, 'MI': 0, 'PBKS': 0, 'RR': 0, 'RCB': 0, 'SRH': 0}
+         return rankdiff
     else:
         rankdiff = {}
         for team, rank in matches[0].Rank.items():

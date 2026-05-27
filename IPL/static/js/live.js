@@ -54,7 +54,7 @@ function getBallScore(ball) {
 }
 
 function getScoreStyle(score) {
-    if (score.startsWith('W')) {
+    if (score.includes('W')) {
         return 'filled wicket';
     } else if (score.includes('4')) {
         return 'filled four';
