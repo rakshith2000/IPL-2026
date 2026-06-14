@@ -953,7 +953,7 @@ def get_matchOvers(match):
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
-    return serialize({'match':match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'inn1':Inn1, 'inn2':Inn2, 'clr':clr})
+    return serialize({'match':match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'inn1':Inn1, 'inn2':Inn2, 'clr':ptclr})
 
 def get_liveScore(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),{'matchno': match}).fetchall()

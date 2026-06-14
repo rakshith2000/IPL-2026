@@ -1,20 +1,20 @@
 function getBallScore(ball) {
     if (ball.isWicket) {
-        if (ball.isByes) return `W${ball.runsByes || 0}`;
-        else if (ball.isLegByes) return `W${ball.runsLegByes || 0}`;
-        else if (ball.isWide) return `W${ball.runsWide || 0}`;
-        else if ((ball.teamRuns || 0) > 0) return `W${ball.teamRuns || 0}`;
+        if (ball.isByes) return `${ball.runsByes || 0}b+W`;
+        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+W`;
+        else if (ball.isWide) return `${ball.runsWide || 0}wd+W`;
+        else if ((ball.teamRuns || 0) > 0) return `${ball.teamRuns || 0}W`;
         else return "W";
     } else if (ball.isWide) {
-        return (ball.runsWide || 0) > 1 ? `Wd${ball.runsWide || 0}` : "Wd";
+        return (ball.runsWide || 0) > 1 ? `${ball.runsWide - 1 || 0}wd` : "wd";
     } else if (ball.isNoBall) {
-        if (ball.isByes) return `NB${ball.runsByes || 0}`;
-        else if (ball.isLegByes) return `NL${ball.runsLegByes || 0}`;
-        else return `N${(ball.runsScored || 0) > 0 ? ball.runsScored : ""}`;
+        if (ball.isByes) return `${ball.runsByes || 0}b+nb`;
+        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+nb`;
+        else return `${(ball.runsScored || 0) > 0 ? ball.runsScored : ""}nb`;
     } else if (ball.isLegByes) {
-        return `L${(ball.runsLegByes || 0) > 0 ? ball.runsLegByes : ""}`;
+        return `${(ball.runsLegByes || 0) > 0 ? ball.runsLegByes : ""}lb`;
     } else if (ball.isByes) {
-        return `B${(ball.runsByes || 0) > 0 ? ball.runsByes : ""}`;
+        return `${(ball.runsByes || 0) > 0 ? ball.runsByes : ""}b`;
     } else if (ball.teamRuns === 0) {
         return "0";
     } else {
@@ -24,17 +24,17 @@ function getBallScore(ball) {
 
 function getBallBgColor(score) {
     score = String(score);
-    if (score.startsWith('Wd') || score.startsWith('B') || score.startsWith('L') || score.startsWith('N')) {
-        return 'bg-extra';
-    } else if (score.includes('4')) {
+    if (score.includes('4')) {
         return 'bg-four';
     } else if (score.includes('6')) {
         return 'bg-six';
+    } else if (score.includes('wd') || score.includes('b') || score.includes('lb') || score.includes('nb')) {
+        return 'bg-extra';
     } else if (score === '0') {
         return 'bg-dot';
     } else if (['1', '2', '3'].includes(score)) {
         return 'bg-normal';
-    } else if (score.startsWith('W')) {
+    } else if (score.includes('W')) {
         return 'bg-wicket';
     } else {
         return 'bg-normal';
@@ -107,49 +107,32 @@ function renderTabOvers(data) {
             let i = tid[dt3.score_strip[1].team_id][0];
             inn2.inning.overs.forEach(function(over) {
                 if (over.overNumber === 0) return;
-                let style = '';
-                if (i === 'RCB') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1}; --fc: white;`;
-                } else if (i === 'GT') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'MI') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'PBKS') {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'KKR') {
-                    style = `--c1: ${clr[i].c2}; --c2: ${clr[i].c3}; --fc: white;`;
-                } else if (i === 'CSK') {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: black;`;
-                } else {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: white;`;
-                }
+                let style = `--c: ${clr[i]}; --fc: white;`;
 
                 tabHTML += `
                 <div class="over-container">
                     <div class="over-left" style="${style}">
-                        <div class="over-left-items">
+                            <img class="over-left-team" src="/static/images/squad_logos/${tid[dt3.score_strip[1].team_id][0] == 'RR' ? 'RR1' : tid[dt3.score_strip[1].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
                             <div class="over-left-over">Ov ${over.overNumber}</div>
-                            <div class="over-left-run">${getRuns(over)} Runs</div>
-                        </div>
-                        <div class="over-left-items">
-                            <div class="over-left-score">${tid[dt3.score_strip[1].team_id][0]}</div>
-                            <div class="over-left-score">${over.totalInningRuns}/${over.totalInningWickets}</div>
-                        </div>
+                            <div class="over-left-score">${over.totalInningRuns}-${over.totalInningWickets}</div>
                     </div>
-                    <div class="over-right">
-                        <div class="over-right-info">
+                    <div class="over-center">
+                        <div class="over-center-info">
                             ${
                                 over.balls[0].comments[0].commentTypeId === "EndOfOver"
                                 ? `<b>${over.balls[0].comments[0].message.split('Bowler: ')[1].split('.')[0]}</b> to ${getBatsmen(over)}`
                                 : `<b>${over.balls[0].comments[over.balls[0].comments.length-1].message.split(' to ')[0].split(' ').slice(-2).join(' ')}</b> to ${getBatsmen(over)}`
                             }
                         </div>
-                        <div class="over-right-item-balls">
+                        <div class="over-center-item-balls">
                             ${over.balls.slice().reverse().map(ball => {
                                 let score = getBallScore(ball);
-                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
+                                return `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (score.toString().length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                             }).join('')}
                         </div>
+                    </div>
+                    <div class="over-right">
+                        <div class="over-right-runs">${over.totalRuns}</div>
                     </div>
                 </div>
                 `;
@@ -160,49 +143,32 @@ function renderTabOvers(data) {
             let i = tid[dt3.score_strip[0].team_id][0];
             inn1.inning.overs.forEach(function(over) {
                 if (over.overNumber === 0) return;
-                let style = '';
-                if (i === 'RCB') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1}; --fc: white;`;
-                } else if (i === 'GT') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'MI') {
-                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'PBKS') {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: white;`;
-                } else if (i === 'KKR') {
-                    style = `--c1: ${clr[i].c2}; --c2: ${clr[i].c3}; --fc: white;`;
-                } else if (i === 'CSK') {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: black;`;
-                } else {
-                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2}; --fc: white;`;
-                }
+                let style = `--c: ${clr[i]}; --fc: white;`;
 
                 tabHTML += `
                 <div class="over-container">
                     <div class="over-left" style="${style}">
-                        <div class="over-left-items">
+                            <img class="over-left-team" src="/static/images/squad_logos/${tid[dt3.score_strip[0].team_id][0] == 'RR' ? 'RR1' : tid[dt3.score_strip[0].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
                             <div class="over-left-over">Ov ${over.overNumber}</div>
-                            <div class="over-left-run">${getRuns(over)} Runs</div>
-                        </div>
-                        <div class="over-left-items">
-                            <div class="over-left-score">${tid[dt3.score_strip[0].team_id][0]}</div>
-                            <div class="over-left-score">${over.totalInningRuns}/${over.totalInningWickets}</div>
-                        </div>
+                            <div class="over-left-score">${over.totalInningRuns}-${over.totalInningWickets}</div>
                     </div>
-                    <div class="over-right">
-                        <div class="over-right-info">
+                    <div class="over-center">
+                        <div class="over-center-info">
                             ${
                                 over.balls[0].comments[0].commentTypeId === "EndOfOver"
                                 ? `<b>${over.balls[0].comments[0].message.split('Bowler: ')[1].split('.')[0]}</b> to ${getBatsmen(over)}`
                                 : `<b>${over.balls[0].comments[over.balls[0].comments.length-1].message.split(' to ')[0].split(' ').slice(-2).join(' ')}</b> to ${getBatsmen(over)}`
                             }
                         </div>
-                        <div class="over-right-item-balls">
+                        <div class="over-center-item-balls">
                             ${over.balls.slice().reverse().map(ball => {
                                 let score = getBallScore(ball);
-                                return `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (score.length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
+                                return `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (score.toString().length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                             }).join('')}
                         </div>
+                    </div>
+                    <div class="over-right">
+                        <div class="over-right-runs">${over.totalRuns}</div>
                     </div>
                 </div>
                 `;

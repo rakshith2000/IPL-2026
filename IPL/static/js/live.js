@@ -31,21 +31,21 @@ function updateOversBarFade() {
 
 function getBallScore(ball) {
     if (ball.isWicket) {
-        if (ball.isByes) return `W${ball.runsByes || 0}`;
-        else if (ball.isLegByes) return `W${ball.runsLegByes || 0}`;
-        else if (ball.isWide) return `W${ball.runsWide || 0}`;
-        else if ((ball.teamRuns || 0) > 0) return `W${ball.teamRuns || 0}`;
+        if (ball.isByes) return `${ball.runsByes || 0}b+W`;
+        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+W`;
+        else if (ball.isWide) return `${ball.runsWide || 0}wd+W`;
+        else if ((ball.teamRuns || 0) > 0) return `${ball.teamRuns || 0}W`;
         else return "W";
     } else if (ball.isWide) {
-        return (ball.runsWide || 0) > 1 ? `Wd${ball.runsWide || 0}` : "Wd";
+        return (ball.runsWide || 0) > 1 ? `${ball.runsWide - 1 || 0}wd` : "wd";
     } else if (ball.isNoBall) {
-        if (ball.isByes) return `NB${ball.runsByes || 0}`;
-        else if (ball.isLegByes) return `NL${ball.runsLegByes || 0}`;
-        else return `N${(ball.runsScored || 0) > 0 ? ball.runsScored : ""}`;
+        if (ball.isByes) return `${ball.runsByes || 0}b+nb`;
+        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+nb`;
+        else return `${(ball.runsScored || 0) > 0 ? ball.runsScored : ""}nb`;
     } else if (ball.isLegByes) {
-        return `L${(ball.runsLegByes || 0) > 0 ? ball.runsLegByes : ""}`;
+        return `${(ball.runsLegByes || 0) > 0 ? ball.runsLegByes : ""}lb`;
     } else if (ball.isByes) {
-        return `B${(ball.runsByes || 0) > 0 ? ball.runsByes : ""}`;
+        return `${(ball.runsByes || 0) > 0 ? ball.runsByes : ""}b`;
     } else if (ball.teamRuns === 0) {
         return "0";
     } else {
@@ -67,6 +67,18 @@ function getScoreStyle(score) {
     }
 }
 
+function getScoreWithCol(score) {
+    if (score.includes('W')) {
+        return `<span class="ball-wicket">${score}</span>`;
+    } else if (score.includes('4')) {
+        return `<span class="ball-four">${score}</span>`;
+    } else if (score.includes('6')) {
+        return `<span class="ball-six">${score}</span>`;
+    } else {
+        return score;
+    }
+}
+
 function getLiveOversBallScore(score) {
         if (score.includes('wd') || score.includes('nb')) {
             const match = score.match(/^(\d+)([a-zA-Z]+)$/);
@@ -83,17 +95,17 @@ function getLiveOversBallScore(score) {
 
 function getBallBgColor(score) {
     score = String(score);
-    if (score.startsWith('Wd') || score.startsWith('B') || score.startsWith('L') || score.startsWith('N')) {
-        return 'bg-extra';
-    } else if (score.includes('4')) {
+    if (score.includes('4')) {
         return 'bg-four';
     } else if (score.includes('6')) {
         return 'bg-six';
+    } else if (score.includes('wd') || score.includes('b') || score.includes('lb') || score.includes('nb')) {
+        return 'bg-extra';
     } else if (score === '0') {
         return 'bg-dot';
     } else if (['1', '2', '3'].includes(score)) {
         return 'bg-normal';
-    } else if (score.startsWith('W')) {
+    } else if (score.includes('W')) {
         return 'bg-wicket';
     } else {
         return 'bg-normal';
@@ -174,7 +186,7 @@ function renderTabLive(data) {
                     <div class="over-balls">`;
                     over.summary.forEach(ball => {
                         let ballScore = getLiveOversBallScore(ball);
-                        tabHTML += `<div class="over-ball ${getScoreStyle(ballScore)}" style="${ballScore.length >= 3 ? 'width: 30px;' : ''}">${ballScore !== '0' ? ballScore : '<span class="club-icon">♣</span>'}</div>`;
+                        tabHTML += `<div class="over-ball ${getScoreStyle(ballScore)}" style="width: ${22 + (String(ballScore).length * 4)}px">${ballScore !== '0' ? ballScore : '<span class="club-icon">♣</span>'}</div>`;
                     });
                 tabHTML += `</div>
                 <span class="over-total no-wrap">=&nbsp;${over.runs}</span>
@@ -424,10 +436,11 @@ function renderTabLive(data) {
                     <div class="font_13 text-center">${tid[dt3.score_strip[1].team_id][0]}<br>${over.totalInningRuns}/${over.totalInningWickets}</div>
                     </div>
                     <div class="d-flex flex-column gap-1" style="width: 80%;">
-                    <div class="font_13 border-bottom pb-1">`;
+                    <div class="font_13 border-bottom pb-1 fw-bold">`;
                     over.balls.slice().reverse().forEach(bl => {
-                        const score = getBallScore(bl);
-                        tabHTML += `${score}&nbsp;`;
+                        var score = getBallScore(bl);
+                        var scoreWithColor = getScoreWithCol(score.toString());
+                        tabHTML += `${scoreWithColor}&nbsp;`;
                     });
                     tabHTML += `&nbsp;=>&nbsp;<b>${getRuns(over)} Runs</b></div>`;
                     const bowlerMsg = ball.comments[0].message;
@@ -440,7 +453,7 @@ function renderTabLive(data) {
                 <div class="d-flex flex-column gap-2 align-items-center">
                 <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
                 const score = getBallScore(ball);
-                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
+                tabHTML += `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                 tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
             });
         });
@@ -462,10 +475,11 @@ function renderTabLive(data) {
                     <div class="font_13 text-center">${tid[dt3.score_strip[0].team_id][0]}<br>${over.totalInningRuns}/${over.totalInningWickets}</div>
                     </div>
                     <div class="d-flex flex-column gap-1" style="width: 80%;">
-                    <div class="font_13 border-bottom pb-1">`;
+                    <div class="font_13 border-bottom pb-1 fw-bold">`;
                     over.balls.slice().reverse().forEach(bl => {
-                        const score = getBallScore(bl);
-                        tabHTML += `${score}&nbsp;`;
+                        var score = getBallScore(bl);
+                        var scoreWithColor = getScoreWithCol(score.toString());
+                        tabHTML += `${scoreWithColor}&nbsp;`;
                     });
                     tabHTML += `&nbsp;=>&nbsp;<b>${getRuns(over)} Runs</b></div>`;
                     const bowlerMsg = ball.comments[0].message;
@@ -478,7 +492,7 @@ function renderTabLive(data) {
                 <div class="d-flex flex-column gap-2 align-items-center">
                 <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
                 const score = getBallScore(ball);
-                tabHTML += `<div class="over-right-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 4)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
+                tabHTML += `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
                 tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
             });
         });
