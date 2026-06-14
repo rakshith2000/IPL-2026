@@ -414,7 +414,8 @@ function renderTabLive(data) {
     tabHTML += `<div class="tab-pane ${is_active2 ? 'active' : ''}" id="profile2">
 	<div class="live_4 box-shadow-4 rounded_10 overflow-hidden bg-white mt-3">`;
     if (inn2 && inn2.inning) {
-        inn2.inning.overs.slice(0, -1).forEach(over => {
+        inn2.inning.overs.forEach(over => {
+            if (over.overNumber === 0) return;
             over.balls.forEach(ball => {
                 if (ball.comments && ball.comments[0].commentTypeId === 'EndOfOver') {
                     tabHTML += `<div class="d-flex gap-3 px-3 py-2 over-entry">
@@ -451,7 +452,8 @@ function renderTabLive(data) {
     tabHTML += `<div class="tab-pane ${is_active1 ? 'active' : ''}" id="profile1">
     <div class="live_4 box-shadow-4 rounded_10 overflow-hidden bg-white mt-3">`;
     if (inn1 && inn1.inning) {
-        inn1.inning.overs.slice(0, -1).forEach(over => {
+        inn1.inning.overs.forEach(over => {
+            if (over.overNumber === 0) return;
             over.balls.forEach(ball => {
                 if (ball.comments && ball.comments[0].commentTypeId === 'EndOfOver') {
                     tabHTML += `<div class="d-flex gap-3 px-3 py-2 over-entry">

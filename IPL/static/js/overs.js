@@ -105,7 +105,8 @@ function renderTabOvers(data) {
     tabHTML += `<div class="live_5 box-shadow-4 rounded_10 bg-white mt-3 overflow-hidden">`;
         if (inn2 && inn2.inning) {
             let i = tid[dt3.score_strip[1].team_id][0];
-            inn2.inning.overs.slice(0, -1).forEach(function(over) {
+            inn2.inning.overs.forEach(function(over) {
+                if (over.overNumber === 0) return;
                 let style = '';
                 if (i === 'RCB') {
                     style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1}; --fc: white;`;
@@ -157,7 +158,8 @@ function renderTabOvers(data) {
 
         if (inn1 && inn1.inning) {
             let i = tid[dt3.score_strip[0].team_id][0];
-            inn1.inning.overs.slice(0, -1).forEach(function(over) {
+            inn1.inning.overs.forEach(function(over) {
+                if (over.overNumber === 0) return;
                 let style = '';
                 if (i === 'RCB') {
                     style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1}; --fc: white;`;
