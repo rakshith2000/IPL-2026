@@ -8,8 +8,8 @@
 }
 
 .over-left {
-    background: linear-gradient(145deg, var(--c), var(--c));
-    color: var(--fc);
+    /*background: linear-gradient(145deg, var(--c), var(--c));*/
+    color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -32,10 +32,20 @@
 }
 
 .over-left-team {
-    width: 34px;
-    height: 34px;
+    background: linear-gradient(145deg, var(--c1) 10%, var(--c2) 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 15%;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
+.over-left-team-img {
+    width: 32px;
+    height: 32px;
+}
 
 .over-left-score {
     font-size: 13px;
@@ -48,7 +58,7 @@
     flex-direction: column;
     gap: .2rem;
     width: 70%;
-    border-right: 1px dashed #d9d9d9;
+    border-inline: 1px dashed #d9d9d9;
 }
 
 .over-center-info {

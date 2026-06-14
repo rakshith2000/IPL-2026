@@ -107,12 +107,29 @@ function renderTabOvers(data) {
             let i = tid[dt3.score_strip[1].team_id][0];
             inn2.inning.overs.forEach(function(over) {
                 if (over.overNumber === 0) return;
-                let style = `--c: ${clr[i]}; --fc: white;`;
+                let style = ``;
+                if (i === 'RCB') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1};`;
+                } else if (i === 'GT') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2};`;
+                } else if (i === 'MI') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2};`;
+                } else if (i === 'PBKS') {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                } else if (i === 'KKR') {
+                    style = `--c1: ${clr[i].c2}; --c2: ${clr[i].c3};`;
+                } else if (i === 'CSK') {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                } else {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                }
 
                 tabHTML += `
                 <div class="over-container">
-                    <div class="over-left" style="${style}">
-                            <img class="over-left-team" src="/static/images/squad_logos/${tid[dt3.score_strip[1].team_id][0] == 'RR' ? 'RR1' : tid[dt3.score_strip[1].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
+                    <div class="over-left">
+                            <div class="over-left-team" style="${style}">
+                            <img class="over-left-team-img" src="/static/images/squad_logos/${tid[dt3.score_strip[1].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
+                            </div>
                             <div class="over-left-over">Ov ${over.overNumber}</div>
                             <div class="over-left-score">${over.totalInningRuns}-${over.totalInningWickets}</div>
                     </div>
@@ -143,12 +160,30 @@ function renderTabOvers(data) {
             let i = tid[dt3.score_strip[0].team_id][0];
             inn1.inning.overs.forEach(function(over) {
                 if (over.overNumber === 0) return;
-                let style = `--c: ${clr[i]}; --fc: white;`;
+                let style = '';
+                if (i === 'RCB') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c1};`;
+                } else if (i === 'GT') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2};`;
+                } else if (i === 'MI') {
+                    style = `--c1: ${clr[i].c3}; --c2: ${clr[i].c2};`;
+                } else if (i === 'PBKS') {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                } else if (i === 'KKR') {
+                    style = `--c1: ${clr[i].c2}; --c2: ${clr[i].c3};`;
+                } else if (i === 'CSK') {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                } else {
+                    style = `--c1: ${clr[i].c1}; --c2: ${clr[i].c2};`;
+                }
+
 
                 tabHTML += `
                 <div class="over-container">
-                    <div class="over-left" style="${style}">
-                            <img class="over-left-team" src="/static/images/squad_logos/${tid[dt3.score_strip[0].team_id][0] == 'RR' ? 'RR1' : tid[dt3.score_strip[0].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
+                    <div class="over-left">
+                            <div class="over-left-team" style="${style}">
+                            <img class="over-left-team-img" src="/static/images/squad_logos/${tid[dt3.score_strip[0].team_id][0]}.png" alt="${tid[dt3.score_strip[1].team_id][0]}">
+                            </div>
                             <div class="over-left-over">Ov ${over.overNumber}</div>
                             <div class="over-left-score">${over.totalInningRuns}-${over.totalInningWickets}</div>
                     </div>
