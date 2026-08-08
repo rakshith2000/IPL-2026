@@ -2,7 +2,7 @@ Match No,Date,Time,Team A,Team B,Venue,Match_ID
 1,28 March 2026,19.30.00,RCB,SRH,"M Chinnaswamy Stadium, Bengaluru",40089
 2,29 March 2026,19.30.00,MI,KKR,"Wankhede Stadium, Mumbai",40090
 3,30 March 2026,19.30.00,RR,CSK,"Barsapara Cricket Stadium, Guwahati",40091
-4,31 March 2026,19.30.00,PBKS,GT,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40092
+4,31 March 2026,19.30.00,PBKS,GT,"Maharaja Yadavindra Singh Std, New Chandigarh",40092
 5,01 April 2026,19.30.00,LSG,DC,"Ekana Cricket Stadium, Lucknow",40093
 6,02 April 2026,19.30.00,KKR,SRH,"Eden Gardens, Kolkata",40094
 7,03 April 2026,19.30.00,CSK,PBKS,"MA Chidambaram Stadium, Chennai",40095
@@ -15,7 +15,7 @@ Match No,Date,Time,Team A,Team B,Venue,Match_ID
 14,08 April 2026,19.30.00,DC,GT,"Arun Jaitley Stadium, Delhi",40102
 15,09 April 2026,19.30.00,KKR,LSG,"Eden Gardens, Kolkata",40103
 16,10 April 2026,19.30.00,RR,RCB,"Barsapara Cricket Stadium, Guwahati",40104
-17,11 April 2026,15.30.00,PBKS,SRH,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40105
+17,11 April 2026,15.30.00,PBKS,SRH,"Maharaja Yadavindra Singh Std, New Chandigarh",40105
 18,11 April 2026,19.30.00,CSK,DC,"MA Chidambaram Stadium, Chennai",40106
 19,12 April 2026,15.30.00,LSG,GT,"Ekana Cricket Stadium, Lucknow",40107
 20,12 April 2026,19.30.00,MI,RCB,"Wankhede Stadium, Mumbai",40108
@@ -27,7 +27,7 @@ Match No,Date,Time,Team A,Team B,Venue,Match_ID
 26,18 April 2026,15.30.00,RCB,DC,"M Chinnaswamy Stadium, Bengaluru",40234
 27,18 April 2026,19.30.00,SRH,CSK,"Rajiv Gandhi International Stadium, Hyderabad",40235
 28,19 April 2026,15.30.00,KKR,RR,"Eden Gardens, Kolkata",40236
-29,19 April 2026,19.30.00,PBKS,LSG,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40237
+29,19 April 2026,19.30.00,PBKS,LSG,"Maharaja Yadavindra Singh Std, New Chandigarh",40237
 30,20 April 2026,19.30.00,GT,MI,"Narendra Modi Stadium, Ahmedabad",40238
 31,21 April 2026,19.30.00,SRH,DC,"Rajiv Gandhi International Stadium, Hyderabad",40239
 32,22 April 2026,19.30.00,LSG,RR,"Ekana Cricket Stadium, Lucknow",40240
@@ -38,7 +38,7 @@ Match No,Date,Time,Team A,Team B,Venue,Match_ID
 37,26 April 2026,15.30.00,GT,CSK,"MA Chidambaram Stadium, Chennai",40245
 38,26 April 2026,19.30.00,LSG,KKR,"Ekana Cricket Stadium, Lucknow",40246
 39,27 April 2026,19.30.00,DC,RCB,"Arun Jaitley Stadium, Delhi",40247
-40,28 April 2026,19.30.00,PBKS,RR,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40248
+40,28 April 2026,19.30.00,PBKS,RR,"Maharaja Yadavindra Singh Std, New Chandigarh",40248
 41,29 April 2026,19.30.00,MI,SRH,"Wankhede Stadium, Mumbai",40249
 42,30 April 2026,19.30.00,GT,RCB,"Narendra Modi Stadium, Ahmedabad",40250
 43,01 May 2026,19.30.00,RR,DC,"Sawai Mansingh Stadium, Jaipur",40251
@@ -70,6 +70,6 @@ Match No,Date,Time,Team A,Team B,Venue,Match_ID
 69,24 May 2026,15.30.00,MI,RR,"Wankhede Stadium, Mumbai",40277
 70,24 May 2026,19.30.00,KKR,DC,"Eden Gardens, Kolkata",40278
 Qualifier 1,26 May 2026,19.30.00,TBA,TBA,"HPCA Stadium, Dharamsala",40386
-Eliminator,27 May 2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40387
-Qualifier 2,29 May 2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40388
+Eliminator,27 May 2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Std, New Chandigarh",40387
+Qualifier 2,29 May 2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Std, New Chandigarh",40388
 Final,31 May 2026,19.30.00,TBA,TBA,"Narendra Modi Stadium, Ahmedabad",40389
