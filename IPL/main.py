@@ -766,49 +766,9 @@ def getRanksForPT():
 
 @main.route('/')
 def index():
-    if db.session.execute(text('select count(*) from user')).scalar() == 0:
-        users = {'Admin IPL2026 Laptop':{'email':'adminipl2026laptop@gmail.com', 'password':'********'},
-                 'Admin IPL2026 Phone':{'email':'adminipl2026phone@gmail.com', 'password':'********'}}
-        for username, user_info in users.items():
-            user = User(email=user_info['email'], \
-                        password=generate_password_hash(user_info['password'], method='pbkdf2:sha256', salt_length=8), \
-                        name=username)
-            db.session.add(user)
-        db.session.commit()
-    if db.session.execute(text('select count(*) from pointstable')).scalar() == 0:
-        teams = ['CSK', 'DC', 'GT', 'KKR', 'LSG', 'MI', 'PBKS', 'RR', 'RCB', 'SRH']
-        inter = os.getcwd()
-        for i in teams:
-            tm = Pointstable(team_name=i, P=0,W=0,L=0,NR=0,\
-                    Points=0, NRR=0.0, Win_List=str({}),\
-                logo_path='{}/IPL/static/images/{}.png'.format(inter,i),\
-                For={'runs':0, 'overs':0.0}, Against={'runs':0, 'overs':0.0})
-            db.session.add(tm)
-            db.session.commit()
-    if db.session.execute(text('select count(*) from fixture')).scalar() == 0:
-        df = open('IPL/IPL2026.csv', 'r')
-        df = list(csv.reader(df))
-        for i in df[1:]:
-            mt = Fixture(Match_No=i[0], Date=(datetime.strptime(i[1],'%d-%m-%Y')).date(),\
-                                    Time=(datetime.strptime(i[2],'%H.%M.%S')).time(),\
-                                    Team_A=i[3], Team_B=i[4], Venue=i[5],\
-                                    A_info={'runs':0, 'overs':0.0, 'wkts':0},\
-                                    B_info={'runs':0, 'overs':0.0, 'wkts':0},\
-                                    Match_ID=i[6])
-            db.session.add(mt)
-            db.session.commit()
-    if db.session.execute(text('select count(*) from squad')).scalar() == 0:
-        df = open('IPL/all teams squad ipl.csv', 'r')
-        df = list(csv.reader(df))
-        for i in df[1:]:
-            pl = Squad(Player_ID=i[0], Name=i[2], Team=i[1], Captain=i[4], Keeper=i[5], Overseas=i[6],\
-                       Role=i[7], Batting=i[12], Bowling=i[13], Nationality=i[9], Debut=i[11], Player_URL=i[8],\
-                       DOB=(datetime.strptime(i[10],'%d-%m-%Y')).date(), URL_ID=i[3])
-            db.session.add(pl)
-            db.session.commit()
-    PT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
-    tp = db.session.execute(text('SELECT category, stats FROM Toppers ORDER BY id ASC')).fetchall()
-    TP = {row[0]: row[1] for row in tp}
+    PT = Pointstable.query.order_by(Pointstable.Points.desc(), Pointstable.W.desc(),
+                                    Pointstable.NRR.desc(), Pointstable.id.asc()).all()
+    TP = {t.category: t.stats for t in Toppers.query.order_by(Toppers.id.asc())}
     return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP)
 
 @main.route('/pointstable')

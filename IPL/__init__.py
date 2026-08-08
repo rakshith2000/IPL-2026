@@ -59,9 +59,21 @@ def create_app():
             print(f"Ping successful, status code: {response.status_code}")
         except Exception as e:
             print(f"Error pinging app: {e}")
+    
+    from .seed import seed_all, seed_all_locked
+
+    @app.cli.command('seed')
+    def seed_command():
+        """Load reference data into the tables."""
+        seed_all()
 
     with app.app_context():
         db.create_all()
+        if os.environ.get('SEED_ON_STARTUP', '1') == '1':
+            try:
+                seed_all_locked()
+            except Exception:
+                app.logger.exception('seeding failed')   # never block boot
 
     @scheduler.task('interval', id='qualification_task', hours=1, misfire_grace_time=120)
     def update_qualification():
