@@ -1,264 +1,264 @@
 Player_ID,Team,Name,URL_ID,Captain,Wicket Keeper,Overseas,Role,Player URL,Nationality,DOB,Debut,Batting Style,Bowling Style
-1,CSK,MS Dhoni,1,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/ms-dhoni/1,India,07/07/1981,2008,Right Handed,Right-Arm Medium
-2,CSK,Sanju Samson,258,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/sanju-samson/258,India,11/11/1994,2013,Right Handed,-
-3,CSK,Ruturaj Gaikwad,5443,Y,N,N,Batter,https://www.iplt20.com/players/ruturaj-gaikwad/5443,India,31/01/1997,2020,Right Handed,Right-Arm Offbreak
-4,CSK,Dewald Brevis,20593,N,N,Y,Batter,https://www.iplt20.com/players/dewald-brevis/20593,South Africa,29/04/2003,2022,Right Handed,Legbreak
-5,CSK,Ayush Mhatre,22377,N,N,N,Batter,https://www.iplt20.com/players/ayush-mhatre/22377,India,16/07/2007,2025,Right Handed,Right-Arm Offbreak
-6,CSK,Kartik Sharma,0,N,Y,N,Wicket Keeper,-,India,26/04/2006,-,Right Handed,-
-7,CSK,Sarfaraz Khan,1564,N,N,N,Batter,https://www.iplt20.com/players/sarfaraz-khan/1564,India,22/10/1997,2015,Right Handed,Legbreak
-8,CSK,Urvil Patel,5653,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/urvil-patel/5653,India,17/10/1998,2025,Right Handed,-
-9,CSK,Anshul Kamboj,20702,N,N,N,All Rounder,https://www.iplt20.com/players/anshul-kamboj/20702,India,06/12/2000,2024,Right Handed,Right-Arm Medium
-10,CSK,Jamie Overton,22109,N,N,Y,All Rounder,https://www.iplt20.com/players/jamie-overton/22109,England,10/04/1994,2025,Right Handed,Right-Arm Fast
-11,CSK,Ramakrishna Ghosh,22153,N,N,N,All Rounder,https://www.iplt20.com/players/ramakrishna-ghosh/22153,India,28/08/1997,-,Right Handed,Right-Arm Medium Fast
-12,CSK,Prashant Veer,0,N,N,N,All Rounder,-,India,24/11/2005,-,Right Handed,Slow Left-Arm Orthodox
-13,CSK,Matthew William Short,2032,N,N,Y,All Rounder,https://www.iplt20.com/players/matthew-william-short/2032,Australia,08/11/1995,2023,Right Handed,Right-Arm Offbreak
-14,CSK,Aman Khan,20581,N,N,N,All Rounder,https://www.iplt20.com/players/aman-khan/20581,India,23/11/1996,2022,Right Handed,Right-Arm Medium
-15,CSK,Zak Foulkes,0,N,N,Y,All Rounder,-,New Zealand,05/06/2002,-,Right Handed,Right-Arm Medium
-16,CSK,Shivam Dube,5431,N,N,N,All Rounder,https://www.iplt20.com/players/shivam-dube/5431,India,26/06/1993,2019,Left Handed,Right-Arm Medium
-17,CSK,Khaleel Ahmed,2964,N,N,N,Bowler,https://www.iplt20.com/players/khaleel-ahmed/2964,India,05/12/1997,2018,Right Handed,Left-Arm Fast Medium
-18,CSK,Noor Ahmad,20590,N,N,Y,Bowler,https://www.iplt20.com/players/noor-ahmad/20590,Afghanistan,03/01/2005,2023,Right Handed,Left-Arm Wrist Spin
-19,CSK,Mukesh Choudhary,20575,N,N,N,Bowler,https://www.iplt20.com/players/mukesh-choudhary/20575,India,06/07/1996,2022,Left Handed,Left-Arm Medium
-20,CSK,Spencer Johnson,0,N,N,Y,Bowler,-,Australia,16/12/1995,-,Left Handed,Left-Arm Fast
-21,CSK,Shreyas Gopal,20696,N,N,N,Bowler,https://www.iplt20.com/players/shreyas-gopal/20696,India,04/09/1993,2014,Right Handed,Legbreak
-22,CSK,Gurjapneet Singh,22032,N,N,N,Bowler,https://www.iplt20.com/players/gurjapneet-singh/22032,India,08/11/1998,-,Right Handed,Left-Arm Medium Fast
-23,CSK,Akeal Hosein,5608,N,N,Y,Bowler,https://www.iplt20.com/players/akeal-hosein/5608,West Indies,25/04/1993,-,Left Handed,Slow Left-Arm Orthodox
-24,CSK,Matt Henry,0,N,N,Y,Bowler,-,New Zealand,14/12/1991,-,Right Handed,Right-Arm Fast Medium
-25,CSK,Rahul Chahar,3763,N,N,N,Bowler,https://www.iplt20.com/players/rahul-chahar/3763,India,04/08/1999,2017,Right Handed,Legbreak Googly
-26,CSK,Akash Madhwal,0,N,N,N,Bowler,-,India,25/11/1993,-,Right Handed,Right-Arm Medium Fast
-27,CSK,Dian Forrester,0,N,N,Y,All Rounder,-,South Africa,07/06/2000,-,Left Handed,Right-Arm Fast
-28,CSK,Kuldip Yadav,0,N,N,N,Bowler,-,India,15/10/1996,-,Left Handed,Left-Arm Fast Medium
-29,CSK,Macneil Naronh,0,N,N,N,All Rounder,-,India,23/09/2001,-,Right Handed,Right-Arm Offbreak
-1,DC,KL Rahul,1125,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/kl-rahul/1125,India,18/04/1992,2013,Right Handed,-
-2,DC,Karun Nair,276,N,N,N,Batter,https://www.iplt20.com/players/karun-nair/276,India,06/12/1991,2013,Right Handed,Right-Arm Offbreak
-3,DC,David Miller,187,N,N,Y,Batter,https://www.iplt20.com/players/david-miller/187,South Africa,10/06/1989,2012,Left Handed,Right-Arm Offbreak
-4,DC,Ben Duckett,0,N,Y,Y,Wicket Keeper,-,England,17/10/1994,-,Left Handed,Right-Arm Offbreak
-5,DC,Pathum Nissanka,0,N,N,Y,Batter,-,Sri Lanka,18/05/1998,-,Right Handed,-
-6,DC,Sahil Parakh,0,N,N,N,Batter,-,India,07/06/2007,-,Left Handed,Legbreak
-7,DC,Prithvi Shaw,3764,N,N,N,Batter,https://www.iplt20.com/players/prithvi-shaw/3764,India,09/11/1999,2018,Right Handed,Right-Arm Offbreak
-8,DC,Abishek Porel,33333,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/abishek-porel/33333,India,17/10/2002,2023,Left Handed,-
-9,DC,Tristan Stubbs,20631,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/tristan-stubbs/20631,South Africa,14/08/2000,2022,Right Handed,Right-Arm Offbreak
-10,DC,Axar Patel,1113,Y,N,N,All Rounder,https://www.iplt20.com/players/axar-patel/1113,India,20/01/1994,2014,Left Handed,Slow Left-Arm Orthodox
-11,DC,Sameer Rizvi,20689,N,N,N,All Rounder,https://www.iplt20.com/players/sameer-rizvi/20689,India,06/12/2003,2024,Right Handed,Right-Arm Offbreak
-12,DC,Ashutosh Sharma,20703,N,N,N,All Rounder,https://www.iplt20.com/players/ashutosh-sharma/20703,India,15/09/1998,2024,Right Handed,Right-Arm Medium
-13,DC,Vipraj Nigam,22053,N,N,N,All Rounder,https://www.iplt20.com/players/vipraj-nigam/22053,India,28/07/2004,2025,Right Handed,Legbreak
-14,DC,Ajay Mandal,5811,N,N,N,All Rounder,https://www.iplt20.com/players/ajay-mandal/5811,India,25/02/1996,-,Left Handed,Slow Left-Arm Orthodox
-15,DC,Tripurana Vijay,22252,N,N,N,All Rounder,https://www.iplt20.com/players/tripurana-vijay/22252,India,05/09/2001,-,Right Handed,Right-Arm Offbreak
-16,DC,Madhav Tiwari,22259,N,N,N,All Rounder,https://www.iplt20.com/players/madhav-tiwari/22259,India,28/09/2003,2025,Right Handed,Right-Arm Medium Fast
-17,DC,Auqib Dar,0,N,N,N,All Rounder,-,India,04/11/1996,-,Right Handed,Right-Arm Medium
-18,DC,Nitish Rana,2738,N,N,N,All Rounder,https://www.iplt20.com/players/nitish-rana/2738,India,27/12/1993,2016,Left Handed,"Right-Arm Medium, Right-Arm Offbreak, Legbreak"
-19,DC,Mitchell Starc,490,N,N,Y,Bowler,https://www.iplt20.com/players/mitchell-starc/490,Australia,30/01/1990,2014,Left Handed,Left-Arm Fast
-20,DC,T. Natarajan,3831,N,N,N,Bowler,https://www.iplt20.com/players/t-natarajan/3831,India,04/04/1991,2017,Left Handed,Left-Arm Medium
-21,DC,Mukesh Kumar,5622,N,N,N,Bowler,https://www.iplt20.com/players/mukesh-kumar/5622,India,12/10/1993,2023,Right Handed,Right-Arm Medium
-22,DC,Dushmantha Chameera,817,N,N,Y,Bowler,https://www.iplt20.com/players/dushmantha-chameera/817,Sri Lanka,11/01/1992,2022,Right Handed,Right-Arm Fast
-23,DC,Lungisani Ngidi,3746,N,N,Y,Bowler,https://www.iplt20.com/players/lungisani-ngidi/3746,South Africa,29/03/1996,2018,Right Handed,Right-Arm Fast Medium
-24,DC,Kyle Jamieson,1616,N,N,Y,Bowler,https://www.iplt20.com/players/kyle-jamieson/1616,New Zealand,30/12/1994,2021,Right Handed,Right-Arm Fast Medium
-25,DC,Kuldeep Yadav,261,N,N,N,Bowler,https://www.iplt20.com/players/kuldeep-yadav/261,India,14/12/1994,2016,Left Handed,Left-Arm Wrist Spin
-26,DC,Rehan Ahmed,0,N,N,N,Batter,-,India,07/06/2007,-,Left Handed,Legbreak
-1,GT,Shubman Gill,3761,Y,N,N,Batter,https://www.iplt20.com/players/shubman-gill/3761,India,08/09/1999,2018,Right Handed,Right-Arm Offbreak
-2,GT,Jos Buttler,509,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/jos-buttler/509,England,08/09/1990,2016,Right Handed,-
-3,GT,Kumar Kushagra,20694,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/kumar-kushagra/20694,India,23/10/2004,2024,Right Handed,-
-4,GT,Anuj Rawat,10788,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/anuj-rawat/10788,India,17/10/1999,2021,Left Handed,-
-5,GT,Tom Banton,0,N,Y,Y,Wicket Keeper,-,England,11/11/1998,-,Right Handed,-
-6,GT,Glenn Phillips,3027,N,N,Y,Batter,https://www.iplt20.com/players/glenn-phillips/3027,New Zealand,06/12/1996,2021,Right Handed,Right-Arm Offbreak
-7,GT,Nishant Sindhu,5615,N,N,N,All Rounder,https://www.iplt20.com/players/nishant-sindhu/5615,India,09/04/2004,-,Left Handed,Slow Left-Arm Orthodox
-8,GT,Washington Sundar,2973,N,N,N,All Rounder,https://www.iplt20.com/players/washington-sundar/2973,India,05/10/1999,2017,Left Handed,Right-Arm Offbreak
-9,GT,Mohd. Arshad Khan,20599,N,N,N,All Rounder,https://www.iplt20.com/players/mohd-arshad-khan/20599,India,20/12/1997,2023,Left Handed,Left-Arm Fast Medium
-10,GT,Sai Kishore,7123,N,N,N,All Rounder,https://www.iplt20.com/players/sai-kishore/7123,India,06/11/1996,2022,Left Handed,Slow Left-Arm Orthodox
-11,GT,Jayant Yadav,1740,N,N,N,All Rounder,https://www.iplt20.com/players/jayant-yadav/1740,India,22/01/1990,2015,Right Handed,Right-Arm Offbreak
-12,GT,Jason Holder,1075,N,N,Y,All Rounder,https://www.iplt20.com/players/jason-holder/1075,West Indies,05/11/1991,2013,Right Handed,Right-Arm Medium Fast
-13,GT,Sai Sudharsan,20592,N,N,N,All Rounder,https://www.iplt20.com/players/sai-sudharsan/20592,India,15/10/2001,2022,Left Handed,Legbreak
-14,GT,Shahrukh Khan,7779,N,N,N,All Rounder,https://www.iplt20.com/players/shahrukh-khan/7779,India,27/05/1995,2021,Right Handed,Right-Arm Offbreak
-15,GT,Kagiso Rabada,1664,N,N,Y,Bowler,https://www.iplt20.com/players/kagiso-rabada/1664,South Africa,25/05/1995,2017,Left Handed,Right-Arm Fast
-16,GT,Mohammed Siraj,3840,N,N,N,Bowler,https://www.iplt20.com/players/mohammed-siraj/3840,India,13/03/1994,2017,Right Handed,Right-Arm Fast
-17,GT,Prasidh Krishna,5105,N,N,N,Bowler,https://www.iplt20.com/players/prasidh-krishna/5105,India,19/02/1996,2018,Right Handed,Right-Arm Fast Medium
-18,GT,Manav Suthar,20692,N,N,N,Bowler,https://www.iplt20.com/players/manav-suthar/20692,India,03/08/2002,2024,Left Handed,Slow Left-Arm Orthodox
-19,GT,Gurnoor Singh Brar,1094,N,N,N,Bowler,https://www.iplt20.com/players/gurnoor-singh-brar/1094,India,25/05/2000,2023,Left Handed,Right-Arm Fast
-20,GT,Ishant Sharma,38,N,N,N,Bowler,https://www.iplt20.com/players/ishant-sharma/38,India,02/09/1988,2008,Right Handed,Right-Arm Fast Medium
-21,GT,Ashok Sharma,20584,N,N,N,Bowler,https://www.iplt20.com/players/ashok-sharma/20584,India,17/06/2002,-,Right Handed,Right-Arm Medium
-22,GT,Kulwant Khejroliya,0,N,N,N,Bowler,-,India,13/03/1992,-,Left Handed,Left-Arm Medium Fast
-23,GT,Luke Wood,20721,N,N,Y,Bowler,https://www.iplt20.com/players/luke-wood/20721,England,02/08/1995,2024,Left Handed,Left-Arm Fast Medium
-24,GT,Rahul Tewatia,1749,N,N,N,Bowler,https://www.iplt20.com/players/rahul-tewatia/1749,India,20/05/1993,2014,Left Handed,Legbreak
-25,GT,Rashid Khan,2885,N,N,Y,Bowler,https://www.iplt20.com/players/rashid-khan/2885,Afghanistan,20/09/1998,2017,Right Handed,Legbreak Googly
-26,GT,Connor Esterhuizen,0,N,N,Y,Batter,-,South Africa,31/05/2001,-,Right Handed,-
-1,KKR,Ajinkya Rahane,135,Y,N,N,Batter,https://www.iplt20.com/players/ajinkya-rahane/135,India,06/06/1988,2008,Right Handed,Right-Arm Medium
-2,KKR,Rinku Singh,3830,N,N,N,Batter,https://www.iplt20.com/players/rinku-singh/3830,India,12/10/1997,2018,Left Handed,Right-Arm Offbreak
-3,KKR,Angkrish Raghuvanshi,20690,N,N,N,Batter,https://www.iplt20.com/players/angkrish-raghuvanshi/20690,India,05/06/2004,2024,Right Handed,Slow Left-Arm Orthodox
-4,KKR,Manish Pandey,123,N,N,N,Batter,https://www.iplt20.com/players/manish-pandey/123,India,10/09/1989,2008,Right Handed,Right-Arm Medium
-5,KKR,Cameron Green,5602,N,N,Y,Batter,https://www.iplt20.com/players/cameron-green/5602,Australia,03/06/1999,2023,Right Handed,Right-Arm Fast Medium
-6,KKR,Finn Allen,3020,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/finn-allen/3020,New Zealand,22/04/1999,-,Right Handed,-
-7,KKR,Tejasvi Dahiya Singh,0,N,Y,N,Wicket Keeper,-,India,18/04/2002,-,Right Handed,-
-8,KKR,Rahul Tripathi,3838,N,N,N,Batter,https://www.iplt20.com/players/rahul-tripathi/3838,India,02/03/1991,2017,Right Handed,Right-Arm Medium
-9,KKR,Tim Seifert,1619,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/tim-seifert/1619,New Zealand,14/12/1994,2021,Right Handed,-
-10,KKR,Rovman Powell,3333,N,N,Y,Batter,https://www.iplt20.com/players/rovman-powell/3333,West Indies,23/07/1993,2022,Right Handed,Right-Arm Medium Fast
-11,KKR,Anukul Roy,3774,N,N,N,All Rounder,https://www.iplt20.com/players/anukul-roy/3774,India,30/11/1998,2019,Left Handed,Slow Left-Arm Orthodox
-12,KKR,Sarthak Ranjan,0,N,N,N,All Rounder,-,India,25/09/1996,-,Right Handed,Legbreak
-13,KKR,Daksh Kamra,0,N,N,N,All Rounder,-,India,09/01/2003,-,Right Handed,Legbreak Googly
-14,KKR,Rachin Ravindra,20684,N,N,Y,All Rounder,https://www.iplt20.com/players/rachin-ravindra/20684,New Zealand,18/11/1999,2024,Left Handed,Slow Left-Arm Orthodox
-15,KKR,Ramandeep Singh,20595,N,N,N,All Rounder,https://www.iplt20.com/players/ramandeep-singh/20595,India,13/04/1997,2022,Right Handed,Right-Arm Medium
-16,KKR,Vaibhav Arora,14859,N,N,N,Bowler,https://www.iplt20.com/players/vaibhav-arora/14859,India,14/12/1997,2022,Right Handed,Right-Arm Fast Medium
-17,KKR,Matheesha Pathirana,20627,N,N,Y,Bowler,https://www.iplt20.com/players/matheesha-pathirana/20627,Sri Lanka,18/12/2002,2022,Right Handed,Right-Arm Fast
-18,KKR,Kartik Tyagi,10059,N,N,N,Bowler,https://www.iplt20.com/players/kartik-tyagi/10059,India,08/11/2000,2020,Right Handed,Right-Arm Fast
-19,KKR,Prashant Solanki,20576,N,N,N,Bowler,https://www.iplt20.com/players/prashant-solanki/20576,India,22/02/2000,2022,Right Handed,Legbreak
-20,KKR,Blessing Muzarabani,0,N,N,Y,Bowler,-,Zimbabwe,02/10/1996,-,Right Handed,Right-Arm Fast Medium
-21,KKR,Navdeep Saini,0,N,N,N,Bowler,-,India,23/11/1993,-,Right Handed,Right-Arm Fast
-22,KKR,Umran Malik,15154,N,N,N,Bowler,https://www.iplt20.com/players/umran-malik/15154,India,22/11/1999,2021,Right Handed,Right-Arm Fast
-23,KKR,Sunil Narine,203,N,N,Y,Bowler,https://www.iplt20.com/players/sunil-narine/203,West Indies,26/05/1988,2012,Left Handed,Right-Arm Offbreak
-24,KKR,Varun Chakaravarthy,5432,N,N,N,Bowler,https://www.iplt20.com/players/varun-chakaravarthy/5432,India,29/08/1991,2019,Right Handed,Legbreak Googly
-25,KKR,Saurabh Dubey,0,N,N,N,Bowler,-,India,23/01/1998,-,Right Handed,Left-Arm Medium Fast
-1,LSG,Rishabh Pant,2972,Y,Y,N,Wicket Keeper,https://www.iplt20.com/players/rishabh-pant/2972,India,04/10/1997,2016,Left Handed,-
-2,LSG,Aiden Markram,1667,N,N,Y,Batter,https://www.iplt20.com/players/aiden-markram/1667,South Africa,04/10/1994,2021,Right Handed,Right-Arm Offbreak
-3,LSG,Himmat Singh,5434,N,N,N,Batter,https://www.iplt20.com/players/himmat-singh/5434,India,08/11/1996,2025,Right Handed,Right-Arm Offbreak
-4,LSG,Matthew Breetzke,22375,N,N,Y,Batter,https://www.iplt20.com/players/matthew-breetzke/22375,South Africa,03/11/1998,2025,Right Handed,-
-5,LSG,Mukul Choudhary,0,N,Y,N,Wicket Keeper,-,India,06/08/2004,-,Right Handed,-
-6,LSG,Akshat Raghuwanshi,0,N,N,N,Batter,-,India,15/09/2003,-,Right Handed,Right-Arm Offbreak
-7,LSG,Josh Inglis,22372,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/josh-inglis/22372,Australia,04/03/1995,2025,Right Handed,-
-8,LSG,Nicholas Pooran,1703,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/nicholas-pooran/1703,West Indies,02/10/1995,2019,Left Handed,Right-Arm Offbreak
-9,LSG,Mitchell Marsh,221,N,N,Y,All Rounder,https://www.iplt20.com/players/mitchell-marsh/221,Australia,20/10/1991,2010,Right Handed,Right-Arm Medium
-10,LSG,Abdul Samad,19352,N,N,N,All Rounder,https://www.iplt20.com/players/abdul-samad/19352,India,28/10/2001,2020,Right Handed,Legbreak
-11,LSG,Shahbaz Ahamad,13803,N,N,N,All Rounder,https://www.iplt20.com/players/shahbaz-ahamad/13803,India,11/12/1994,2020,Left Handed,Slow Left-Arm Orthodox
-12,LSG,Arshin Kulkarni,20691,N,N,N,All Rounder,https://www.iplt20.com/players/arshin-kulkarni/20691,India,15/02/2005,2024,Right Handed,Right-Arm Medium
-13,LSG,Wanindu Hasaranga,3082,N,N,Y,All Rounder,https://www.iplt20.com/players/wanindu-hasaranga/3082,Sri Lanka,29/07/1997,2021,Right Handed,Legbreak
-14,LSG,Ayush Badoni,20586,N,N,N,All Rounder,https://www.iplt20.com/players/ayush-badoni/20586,India,03/12/1999,2022,Right Handed,Right-Arm Offbreak
-15,LSG,Mohammad Shami,94,N,N,N,Bowler,https://www.iplt20.com/players/mohammad-shami/94,India,03/09/1990,2013,Right Handed,Right-Arm Fast
-16,LSG,Avesh Khan,1561,N,N,N,Bowler,https://www.iplt20.com/players/avesh-khan/1561,India,13/12/1996,2017,Right Handed,Right-Arm Fast Medium
-17,LSG,M. Siddharth,7119,N,N,N,Bowler,https://www.iplt20.com/players/m-siddharth/7119,India,03/07/1998,2024,Right Handed,Slow Left-Arm Orthodox
-18,LSG,Digvesh Singh,5847,N,N,N,Bowler,https://www.iplt20.com/players/digvesh-singh/5847,India,15/12/1999,2025,Right Handed,Legbreak
-19,LSG,Akash Singh,12585,N,N,N,Bowler,https://www.iplt20.com/players/akash-singh/12585,India,26/04/2002,2021,Right Handed,Left-Arm Medium Fast
-20,LSG,Prince Yadav,22097,N,N,N,Bowler,https://www.iplt20.com/players/prince-yadav/22097,India,12/12/2001,2025,Right Handed,Right-Arm Fast
-21,LSG,Arjun Tendulkar,10244,N,N,N,Bowler,https://www.iplt20.com/players/arjun-tendulkar/10244,India,24/09/1999,2023,Left Handed,Left-Arm Medium Fast
-22,LSG,Anrich Nortje,5433,N,N,Y,Bowler,https://www.iplt20.com/players/anrich-nortje/5433,South Africa,16/11/1993,2020,Right Handed,Right-Arm Fast
-23,LSG,Naman Tiwari,0,N,N,N,Bowler,-,India,08/11/2005,-,Left Handed,Left-Arm Medium Fast
-24,LSG,Mayank Yadav,20585,N,N,N,Bowler,https://www.iplt20.com/players/mayank-yadav/20585,India,17/06/2002,2024,Right Handed,Right-Arm Fast
-25,LSG,Mohsin Khan,4952,N,N,N,Bowler,https://www.iplt20.com/players/mohsin-khan/4952,India,15/07/1998,2022,Left Handed,Left-Arm Medium Fast
-26,LSG,George Linde,0,N,N,Y,All Rounder,-,South Africa,04/12/1991,-,Left Handed,Slow Left-Arm Orthodox
-1,MI,Rohit Sharma,107,N,N,N,Batter,https://www.iplt20.com/players/rohit-sharma/107,India,30/04/1987,2008,Right Handed,Right-Arm Offbreak
-2,MI,Surya Kumar Yadav,108,N,N,N,Batter,https://www.iplt20.com/players/surya-kumar-yadav/108,India,14/09/1990,2012,Right Handed,"Right-Arm Medium, Right-Arm Offbreak"
-3,MI,Robin Minz,20707,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/robin-minz/20707,India,13/09/2002,2025,Left Handed,Slow Left-Arm Orthodox
-4,MI,Sherfane Rutherford,5396,N,N,Y,Batter,https://www.iplt20.com/players/sherfane-rutherford/5396,West Indies,15/08/1998,2019,Left Handed,Right-Arm Fast Medium
-5,MI,Ryan Rickelton,22003,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/ryan-rickelton/22003,South Africa,11/07/1996,2025,Left Handed,-
-6,MI,Quinton de Kock,834,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/quinton-de-kock/834,South Africa,17/12/1992,2013,Left Handed,-
-7,MI,Danish Malewar,0,N,N,N,Batter,-,India,08/10/2003,-,Right Handed,Legbreak
-8,MI,N. Tilak Varma,20594,N,N,N,Batter,https://www.iplt20.com/players/n-tilak-varma/20594,India,08/11/2002,2022,Left Handed,Right-Arm Offbreak
-9,MI,Hardik Pandya,2740,Y,N,N,All Rounder,https://www.iplt20.com/players/hardik-pandya/2740,India,11/10/1993,2015,Right Handed,Right-Arm Medium Fast
-10,MI,Naman Dhir,20701,N,N,N,All Rounder,https://www.iplt20.com/players/naman-dhir/20701,India,31/12/1999,2024,Right Handed,Right-Arm Offbreak
-11,MI,Mitchell Santner,1903,N,N,Y,All Rounder,https://www.iplt20.com/players/mitchell-santner/1903,New Zealand,05/02/1992,2019,Left Handed,Slow Left-Arm Orthodox
-12,MI,Raj Angad Bawa,20601,N,N,N,All Rounder,https://www.iplt20.com/players/raj-angad-bawa/20601,India,12/11/2002,2022,Left Handed,Right-Arm Medium Fast
-13,MI,Atharva Ankolekar,0,N,N,N,All Rounder,-,India,26/09/2000,-,Left Handed,Slow Left-Arm Orthodox
-14,MI,Mayank Rawat,0,N,N,N,All Rounder,-,India,04/12/1999,-,Right Handed,Right-Arm Offbreak
-15,MI,Corbin Bosch,20680,N,N,Y,All Rounder,https://www.iplt20.com/players/corbin-bosch/20680,South Africa,10/09/1994,2025,Right Handed,Right-Arm Fast Medium
-16,MI,Will Jacks,5629,N,N,Y,All Rounder,https://www.iplt20.com/players/will-jacks/5629,England,21/11/1998,2024,Right Handed,Right-Arm offbreak
-17,MI,Shardul Thakur,1745,N,N,N,All Rounder,https://www.iplt20.com/players/shardul-thakur/1745,India,16/10/1991,2015,Right Handed,Right-Arm Medium
-18,MI,Trent Boult,969,N,N,Y,Bowler,https://www.iplt20.com/players/trent-boult/969,New Zealand,22/07/1989,2015,Right Handed,Left-Arm Fast Medium
-19,MI,Mayank Markande,4951,N,N,N,Bowler,https://www.iplt20.com/players/mayank-markande/4951,India,11/11/1997,2018,Right Handed,Legbreak
-20,MI,Deepak Chahar,140,N,N,N,Bowler,https://www.iplt20.com/players/deepak-chahar/140,India,07/08/1992,2016,Right Handed,Right-Arm Medium
-21,MI,Ashwani Kumar,22030,N,N,N,Bowler,https://www.iplt20.com/players/ashwani-kumar/22030,India,29/08/2001,2025,Left Handed,Left-Arm Medium
-22,MI,Raghu Sharma,22379,N,N,N,Bowler,https://www.iplt20.com/players/raghu-sharma/22379,India,11/03/1993,-,Right Handed,Legbreak
-23,MI,Mohammad Salahuddin Izhar,0,N,N,N,Bowler,-,India,01/01/2004,-,Right Handed,Left-Arm Medium
-24,MI,Allah Mohammad Ghazanfar,20725,N,N,Y,Bowler,https://www.iplt20.com/players/allah-ghazanfar/20725,Afghanistan,20/03/2006,2024,Right Handed,"Right-Arm Offbreak, Legbreak"
-25,MI,Jasprit Bumrah,1124,N,N,N,Bowler,https://www.iplt20.com/players/jasprit-bumrah/1124,India,06/12/1993,2013,Right Handed,Right-Arm Fast
-26,MI,Keshav Maharaj,0,N,N,Y,Bowler,-,South Africa,07/02/1990,-,Right Handed,Slow Left-Arm Orthodox
-27,MI,Krish Bhagat,0,N,N,N,Bowler,-,India,06/11/2004,-,Right Handed,Right-Arm Medium
-1,PBKS,Shreyas Iyer,1563,Y,N,N,Batter,https://www.iplt20.com/players/shreyas-iyer/1563,India,06/12/1994,2015,Right Handed,"Right-Arm Offbreak, Legbreak Googly"
-2,PBKS,Nehal Wadhera,5859,N,N,N,Batter,https://www.iplt20.com/players/nehal-wadhera/5859,India,04/09/2000,2023,Left Handed,Legbreak
-3,PBKS,Vishnu Vinod,4305,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/vishnu-vinod/4305,India,02/12/1993,2017,Right Handed,-
-4,PBKS,Harnoor Pannu,22019,N,N,N,Batter,https://www.iplt20.com/players/harnoor-pannu/22019,India,30/01/2003,-,Left Handed,Legbreak
-5,PBKS,Pyla Avinash,22145,N,N,N,Batter,https://www.iplt20.com/players/pyla-avinash/22145,India,07/07/2000,-,Right Handed,Right-Arm Medium Fast
-6,PBKS,Prabhsimran Singh,5436,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/prabhsimran-singh/5436,India,10/08/2000,2019,Right Handed,-
-7,PBKS,Shashank Singh,3261,N,N,N,Batter,https://www.iplt20.com/players/shashank-singh/3261,India,21/11/1991,2022,Right Handed,"Right-Arm Medium, Right-Arm Offbreak"
-8,PBKS,Marcus Stoinis,964,N,N,Y,All Rounder,https://www.iplt20.com/players/marcus-stoinis/964,Australia,16/08/1989,2016,Right Handed,Right-Arm Medium
-9,PBKS,Harpreet Brar,5441,N,N,N,All Rounder,https://www.iplt20.com/players/harpreet-brar/5441,India,16/09/1995,2019,Left Handed,Slow Left-Arm Orthodox
-10,PBKS,Marco Jansen,17068,N,N,Y,All Rounder,https://www.iplt20.com/players/marco-jansen/17068,South Africa,01/05/2000,2021,Right Handed,Left-Arm Fast
-11,PBKS,Azmatullah Omarzai,20685,N,N,Y,All Rounder,https://www.iplt20.com/players/azmatullah-omarzai/20685,Afghanistan,24/03/2000,2024,Right Handed,Right-Arm Medium Fast
-12,PBKS,Priyansh Arya,22052,N,N,N,All Rounder,https://www.iplt20.com/players/priyansh-arya/22052,India,18/09/2001,2025,Left Handed,Right-Arm Offbreak
-13,PBKS,Musheer Khan,22085,N,N,N,All Rounder,https://www.iplt20.com/players/musheer-khan/22085,India,27/02/2005,2025,Right Handed,Slow Left-Arm Orthodox
-14,PBKS,Suryansh Shedge,20683,N,N,N,All Rounder,https://www.iplt20.com/players/suryansh-shedge/20683,India,29/01/2003,2025,Right Handed,Right-Arm Medium Fast
-15,PBKS,Mitch Owen,22380,N,Y,Y,Batter,https://www.iplt20.com/players/mitch-owen/22380,Australia,16/09/2001,2025,Right Handed,Right-Arm Medium
-16,PBKS,Cooper Connolly,0,N,N,Y,All Rounder,-,Australia,22/08/2003,-,Left Handed,Slow Left-Arm Orthodox
-17,PBKS,Ben Dwarshuis,0,N,N,Y,All Rounder,-,Australia,23/06/1994,-,Left Handed,Left-Arm Fast Medium
-18,PBKS,Arshdeep Singh,4698,N,N,N,Bowler,https://www.iplt20.com/players/arshdeep-singh/4698,India,05/02/1999,2019,Left Handed,Left-Arm Medium Fast
-19,PBKS,Yuzvendra Chahal,111,N,N,N,Bowler,https://www.iplt20.com/players/yuzvendra-chahal/111,India,23/07/1990,2013,Right Handed,Legbreak Googly
-20,PBKS,Vyshak Vijaykumar,1097,N,N,N,Bowler,https://www.iplt20.com/players/vyshak-vijaykumar/1097,India,31/01/1997,2023,Right Handed,Right-Arm Medium
-21,PBKS,Yash Thakur,5624,N,N,N,Bowler,https://www.iplt20.com/players/yash-thakur/5624,India,28/12/1998,2023,Right Handed,Right-Arm Fast Medium
-22,PBKS,Xavier Bartlett,22112,N,N,Y,Bowler,https://www.iplt20.com/players/xavier-bartlett/22112,Australia,17/12/1998,2025,Right Handed,Right-Arm Fast Medium
-23,PBKS,Pravin Dubey,3188,N,N,N,Bowler,https://www.iplt20.com/players/pravin-dubey/3188,India,01/07/1993,2020,Right Handed,Legbreak Googly
-24,PBKS,Vishal Nishad,0,N,N,N,Bowler,-,India,01/04/2005,-,Right Handed,Legbreak
-25,PBKS,Lockie Ferguson,3729,N,N,Y,Bowler,https://www.iplt20.com/players/lockie-ferguson/3729,New Zealand,13/06/1991,2017,Right Handed,Right-Arm Fast
-1,RR,Shubham Dubey,20688,N,N,N,Batter,https://www.iplt20.com/players/shubham-dubey/20688,India,27/08/1994,2024,Left Handed,Right-Arm Offbreak
-2,RR,Vaibhav Suryavanshi,22203,N,N,N,Batter,https://www.iplt20.com/players/vaibhav-suryavanshi/22203,India,27/03/2011,2025,Left Handed,Slow Left-Arm Orthodox
-3,RR,Donovan Ferreira,5652,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/donovan-ferreira/5652,South Africa,21/07/1998,2024,Right Handed,Right-Arm Offbreak
-4,RR,Lhuan-dre Pretorius,22383,N,N,Y,Batter,https://www.iplt20.com/players/lhuan-dre-pretorius/22383,South Africa,27/03/2006,2025,Left Handed,-
-5,RR,Ravi Singh,0,N,Y,N,Wicket Keeper,-,India,25/05/2001,-,Left Handed,Legbreak
-6,RR,Aman Rao Perala,0,N,N,N,Batter,-,India,02/06/2004,-,Right Handed,-
-7,RR,Shimron Hetmyer,1705,N,N,Y,Batter,https://www.iplt20.com/players/shimron-hetmyer/1705,West Indies,26/12/1996,2019,Left Handed,-
-8,RR,Yashasvi Jaiswal,13538,N,N,N,Batter,https://www.iplt20.com/players/yashasvi-jaiswal/13538,India,28/12/2001,2020,Left Handed,Legbreak
-9,RR,Dhruv Jurel,20620,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/dhruv-jurel/20620,India,21/01/2001,2023,Right Handed,-
-10,RR,Riyan Parag,4445,N,N,N,Batter,https://www.iplt20.com/players/riyan-parag/4445,India,10/11/2001,2019,Right Handed,"Right-Arm Offbreak, Legbreak"
-11,RR,Yudhvir Singh Charak,10842,N,N,N,All Rounder,https://www.iplt20.com/players/yudhvir-singh-charak/10842,India,13/09/1997,2023,Right Handed,Right-Arm Medium Fast
-12,RR,Ravindra Jadeja,9,N,N,N,All Rounder,https://www.iplt20.com/players/ravindra-jadeja/9,India,06/12/1988,2008,Left Handed,Slow Left-Arm Orthodox
-13,RR,Dasun Shanaka,0,N,N,Y,All Rounder,-,Sri Lanka,09/09/1991,-,Right Handed,Right-Arm Fast Medium
-14,RR,Jofra Archer,3502,N,N,Y,Bowler,https://www.iplt20.com/players/jofra-archer/3502,England,01/04/1995,2018,Right Handed,Right-Arm Fast
-15,RR,Tushar Deshpande,3257,N,N,N,Bowler,https://www.iplt20.com/players/tushar-deshpande/3257,India,15/05/1995,2020,Left Handed,Right-Arm Medium
-16,RR,Kwena Maphaka,20724,N,N,Y,Bowler,https://www.iplt20.com/players/kwena-maphaka/20724,South Africa,08/04/2006,2024,Left Handed,Left-Arm Fast
-17,RR,Ravi Bishnoi,19351,N,N,N,Bowler,https://www.iplt20.com/players/ravi-bishnoi/19351,India,05/09/2000,2020,Right Handed,Legbreak Googly
-18,RR,Sushant Mishra,20695,N,N,N,Bowler,https://www.iplt20.com/players/sushant-mishra/20695,India,23/12/2000,-,Left Handed,Left-Arm Medium Fast
-19,RR,Yash Raj Punja,0,N,N,N,Bowler,-,India,26/06/2006,-,Right Handed,Legbreak Googly
-20,RR,Vignesh Puthur,22266,N,N,N,Bowler,https://www.iplt20.com/players/vignesh-puthur/22266,India,02/03/2001,2025,Right Handed,Left-Arm Wrist Spin
-21,RR,Brijesh Sharma,0,N,N,N,Bowler,-,India,16/12/1998,-,Right Handed,Right-Arm Medium
-22,RR,Adam Milne,434,N,N,Y,Bowler,https://www.iplt20.com/players/adam-milne/434,New Zealand,13/04/1992,-,Right Handed,Right-Arm Fast
-23,RR,Kuldeep Sen,20616,N,N,N,Bowler,https://www.iplt20.com/players/kuldeep-sen/20616,India,22/10/1996,2022,Right Handed,Right-Arm Fast
-24,RR,Sandeep Sharma,1112,N,N,N,Bowler,https://www.iplt20.com/players/sandeep-sharma/1112,India,18/05/1993,2013,Right Handed,Right-Arm Medium
-25,RR,Nandre Burger,20716,N,N,Y,Bowler,https://www.iplt20.com/players/nandre-burger/20716,South Africa,11/08/1995,2024,Left Handed,Left-Arm Fast Medium
-1,RCB,Rajat Patidar,5471,Y,N,N,Batter,https://www.iplt20.com/players/rajat-patidar/5471,India,01/06/1993,2021,Right Handed,Right-Arm offbreak
-2,RCB,Devdutt Padikkal,5430,N,N,N,Batter,https://www.iplt20.com/players/devdutt-padikkal/5430,India,07/07/2000,2020,Left Handed,Right-Arm Offbreak
-3,RCB,Virat Kohli,164,N,N,N,Batter,https://www.iplt20.com/players/virat-kohli/164,India,05/11/1988,2008,Right Handed,Right-Arm Medium
-4,RCB,Phil Salt,5606,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/phil-salt/5606,England,28/08/1996,2023,Right Handed,Right-Arm Offbreak
-5,RCB,Jitesh Sharma,3185,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/jitesh-sharma/3185,India,22/10/1993,2022,Right Handed,-
-6,RCB,Jordan Cox,0,N,Y,Y,Wicket Keeper,-,England,21/10/2000,-,Right Handed,-
-7,RCB,Krunal Pandya,3183,N,N,N,All Rounder,https://www.iplt20.com/players/krunal-pandya/3183,India,24/03/1991,2016,Left Handed,Slow Left-Arm Orthodox
-8,RCB,Swapnil Singh,3180,N,N,N,All Rounder,https://www.iplt20.com/players/swapnil-singh/3180,India,22/01/1991,2016,Right Handed,Slow Left-Arm Orthodox
-9,RCB,Tim David,4524,N,N,Y,All Rounder,https://www.iplt20.com/players/tim-david/4524,Australia,16/03/1996,2021,Right Handed,Right-Arm Offbreak
-10,RCB,Romario Shepherd,20609,N,N,Y,All Rounder,https://www.iplt20.com/players/romario-shepherd/20609,West Indies,26/11/1994,2022,Right Handed,Right-Arm Fast Medium
-11,RCB,Jacob Bethell,22074,N,N,Y,All Rounder,https://www.iplt20.com/players/jacob-bethell/22074,England,23/10/2003,2025,Left Handed,Slow Left-Arm Orthodox
-12,RCB,Venkatesh Iyer,8540,N,N,N,All Rounder,https://www.iplt20.com/players/venkatesh-iyer/8540,India,25/12/1994,2021,Left Handed,Right-Arm Medium
-13,RCB,Satvik Deswal,0,N,N,N,All Rounder,-,India,23/03/2007,-,Right Handed,Slow Left-Arm Orthodox
-14,RCB,Mangesh Yadav,0,N,N,N,All Rounder,-,India,10/10/2002,-,Right Handed,Left-Arm Fast
-15,RCB,Vicky Ostwal,20624,N,N,N,All Rounder,https://www.iplt20.com/players/vicky-ostwal/20624,India,01/09/2002,-,Right Handed,Slow Left-Arm Orthodox
-16,RCB,Vihaan Malhotra,0,N,N,N,All Rounder,-,India,01/01/2007,-,Left Handed,Right-Arm Offbreak
-17,RCB,Kanishk Chouhan,0,N,N,N,All Rounder,-,India,26/09/2006,-,Right Handed,Right-Arm Offbreak
-18,RCB,Josh Hazlewood,857,N,N,Y,Bowler,https://www.iplt20.com/players/josh-hazlewood/857,Australia,08/01/1991,2020,Left Handed,Right-Arm Fast Medium
-19,RCB,Rasikh Dar,20577,N,N,N,Bowler,https://www.iplt20.com/players/rasikh-dar/20577,India,05/04/2000,2019,Right Handed,Right-Arm Medium
-20,RCB,Suyash Sharma,5668,N,N,N,Bowler,https://www.iplt20.com/players/suyash-sharma/5668,India,15/05/2003,2023,Right Handed,Legbreak Googly
-21,RCB,Bhuvneshwar Kumar,116,N,N,N,Bowler,https://www.iplt20.com/players/bhuvneshwar-kumar/116,India,05/02/1990,2011,Right Handed,Right-Arm Medium
-22,RCB,Nuwan Thushara,20700,N,N,Y,Bowler,https://www.iplt20.com/players/nuwan-thushara/20700,Sri Lanka,06/08/1994,2024,Right Handed,Right-Arm Medium Fast
-23,RCB,Abhinandan Singh,22136,N,N,N,Bowler,https://www.iplt20.com/players/abhinandan-singh/22136,India,30/03/1997,-,Right Handed,Right-Arm Medium Fast
-24,RCB,Jacob Duffy,0,N,N,Y,Bowler,-,New Zealand,02/08/1994,-,Right Handed,Right-Arm Fast Medium
-25,RCB,Yash Dayal,20591,N,N,N,Bowler,https://www.iplt20.com/players/yash-dayal/20591,India,13/12/1997,2022,Right Handed,Left-Arm Medium Fast
-26,RCB,Richard Gleeson,0,N,N,Y,Bowler,-,England,02/12/1987,-,Right Handed,Right-Arm Fast Medium
-1,SRH,Ishan Kishan,2975,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/ishan-kishan/2975,India,18/07/1998,2016,Left Handed,"Right-Arm Offbreak, Legbreak"
-2,SRH,Aniket Verma,22082,N,N,N,Batter,https://www.iplt20.com/players/aniket-verma/22082,India,05/02/2002,2025,Right Handed,Right-Arm Medium Fast
-3,SRH,Smaran Ravichandran,22378,N,N,N,Batter,https://www.iplt20.com/players/smaran-ravichandran/22378,India,05/05/2003,-,Left Handed,Right-Arm Offbreak
-4,SRH,Salil Arora,0,N,Y,N,Wicket Keeper,-,India,07/11/2002,-,Right Handed,-
-5,SRH,Heinrich Klaasen,3869,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/heinrich-klaasen/3869,South Africa,30/07/1991,2018,Right Handed,Right-Arm Offbreak
-6,SRH,Travis Head,1020,N,N,Y,Batter,https://www.iplt20.com/players/travis-head/1020,Australia,29/12/1993,2016,Left Handed,Right-Arm Offbreak
-7,SRH,Harshal Patel,157,N,N,N,All Rounder,https://www.iplt20.com/players/harshal-patel/157,India,23/11/1990,2012,Right Handed,Right-Arm Medium
-8,SRH,Kamindu Mendis,22077,N,N,Y,All Rounder,https://www.iplt20.com/players/kamindu-mendis/22077,Sri Lanka,30/09/1998,2025,Left Handed,"Right-Arm Offbreak, Slow Left-Arm Orthodox"
-9,SRH,Harsh Dubey,22381,N,N,N,All Rounder,https://www.iplt20.com/players/harsh-dubey/22381,India,23/07/2002,2025,Left Handed,Slow Left-Arm Orthodox
-10,SRH,Brydon Carse,22075,N,N,Y,All Rounder,https://www.iplt20.com/players/brydon-carse/22075,England,31/07/1995,-,Right Handed,Right-Arm Fast Medium
-11,SRH,Shivang Kumar,0,N,N,N,All Rounder,-,India,26/05/2002,-,Right Handed,Left-Arm Wrist Spin
-12,SRH,Krains Fuletra,0,N,N,N,All Rounder,-,India,19/06/2004,-,Right Handed,Left-Arm Wrist Spin
-13,SRH,Liam Livingstone,3644,N,N,Y,All Rounder,https://www.iplt20.com/players/liam-livingstone/3644,England,04/08/1993,2019,Right Handed,"Right-Arm Offbreak, Legbreak"
-14,SRH,David Payne,0,N,N,Y,Bowler,-,England,15/02/1991,-,Right Handed,Left-Arm Fast Medium
-15,SRH,Abhishek Sharma,3760,N,N,N,All Rounder,https://www.iplt20.com/players/abhishek-sharma/3760,India,04/09/2000,2018,Left Handed,Slow Left-Arm Orthodox
-16,SRH,Nitish Kumar Reddy,5711,N,N,N,All Rounder,https://www.iplt20.com/players/nitish-kumar-reddy/5711,India,26/05/2003,2023,Right Handed,Right-Arm Medium Fast
-17,SRH,Pat Cummins,488,Y,N,Y,Bowler,https://www.iplt20.com/players/pat-cummins/488,Australia,08/05/1993,2014,Right Handed,Right-Arm Fast
-18,SRH,Zeeshan Ansari,22007,N,N,N,Bowler,https://www.iplt20.com/players/zeeshan-ansari/22007,India,16/12/1999,2025,Right Handed,Legbreak Googly
-19,SRH,Jaydev Unadkat,86,N,N,N,Bowler,https://www.iplt20.com/players/jaydev-unadkat/86,India,18/10/1991,2010,Right Handed,Left-Arm Medium
-20,SRH,Eshan Malinga,22228,N,N,Y,Bowler,https://www.iplt20.com/players/eshan-malinga/22228,Sri Lanka,04/02/2001,2025,Left Handed,Right-Arm Fast Medium
-21,SRH,Sakib Hussain,20717,N,N,N,Bowler,https://www.iplt20.com/players/sakib-hussain/20717,India,14/12/2004,-,Right Handed,Right-Arm Medium
-22,SRH,Onkar Tarmale,0,N,N,N,Bowler,-,India,22/08/2002,-,Right Handed,Right-Arm Fast
-23,SRH,Amit Kumar,0,N,N,N,Bowler,-,India,02/11/2002,-,Right Handed,Legbreak Googly
-24,SRH,Praful Hinge,0,N,N,N,Bowler,-,India,18/01/2002,-,Right Handed,Right-Arm Medium Fast
-25,SRH,Shivam Mavi,3779,N,N,N,Bowler,https://www.iplt20.com/players/shivam-mavi/3779,India,26/11/1998,2018,Right Handed,Right-Arm Fast Medium
-26,SRH,Dilshan Madushanka,0,N,N,Y,Bowler,-,Sri Lanka,18/09/2000,-,Right Handed,Left-Arm Fast Medium
-27,SRH,Gerald Coetzee,0,N,N,Y,Bowler,-,South Africa,02/10/2000,-,Right Handed,Right-Arm Fast
-28,SRH,R S Ambrish,0,N,N,N,All Rounder,-,India,28/05/2007,-,Left Handed,Right-Arm Medium
+1,CSK,MS Dhoni,1,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/ms-dhoni/1,India,07 July 1981,2008,Right Handed,Right-Arm Medium
+2,CSK,Sanju Samson,258,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/sanju-samson/258,India,11 November 1994,2013,Right Handed,-
+3,CSK,Ruturaj Gaikwad,5443,Y,N,N,Batter,https://www.iplt20.com/players/ruturaj-gaikwad/5443,India,31 January 1997,2020,Right Handed,Right-Arm Offbreak
+4,CSK,Dewald Brevis,20593,N,N,Y,Batter,https://www.iplt20.com/players/dewald-brevis/20593,South Africa,29 April 2003,2022,Right Handed,Legbreak
+5,CSK,Ayush Mhatre,22377,N,N,N,Batter,https://www.iplt20.com/players/ayush-mhatre/22377,India,16 July 2007,2025,Right Handed,Right-Arm Offbreak
+6,CSK,Kartik Sharma,0,N,Y,N,Wicket Keeper,-,India,26 April 2006,-,Right Handed,-
+7,CSK,Sarfaraz Khan,1564,N,N,N,Batter,https://www.iplt20.com/players/sarfaraz-khan/1564,India,22 October 1997,2015,Right Handed,Legbreak
+8,CSK,Urvil Patel,5653,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/urvil-patel/5653,India,17 October 1998,2025,Right Handed,-
+9,CSK,Anshul Kamboj,20702,N,N,N,All Rounder,https://www.iplt20.com/players/anshul-kamboj/20702,India,06 December 2000,2024,Right Handed,Right-Arm Medium
+10,CSK,Jamie Overton,22109,N,N,Y,All Rounder,https://www.iplt20.com/players/jamie-overton/22109,England,10 April 1994,2025,Right Handed,Right-Arm Fast
+11,CSK,Ramakrishna Ghosh,22153,N,N,N,All Rounder,https://www.iplt20.com/players/ramakrishna-ghosh/22153,India,28 August 1997,-,Right Handed,Right-Arm Medium Fast
+12,CSK,Prashant Veer,0,N,N,N,All Rounder,-,India,24 November 2005,-,Right Handed,Slow Left-Arm Orthodox
+13,CSK,Matthew William Short,2032,N,N,Y,All Rounder,https://www.iplt20.com/players/matthew-william-short/2032,Australia,08 November 1995,2023,Right Handed,Right-Arm Offbreak
+14,CSK,Aman Khan,20581,N,N,N,All Rounder,https://www.iplt20.com/players/aman-khan/20581,India,23 November 1996,2022,Right Handed,Right-Arm Medium
+15,CSK,Zak Foulkes,0,N,N,Y,All Rounder,-,New Zealand,05 June 2002,-,Right Handed,Right-Arm Medium
+16,CSK,Shivam Dube,5431,N,N,N,All Rounder,https://www.iplt20.com/players/shivam-dube/5431,India,26 June 1993,2019,Left Handed,Right-Arm Medium
+17,CSK,Khaleel Ahmed,2964,N,N,N,Bowler,https://www.iplt20.com/players/khaleel-ahmed/2964,India,05 December 1997,2018,Right Handed,Left-Arm Fast Medium
+18,CSK,Noor Ahmad,20590,N,N,Y,Bowler,https://www.iplt20.com/players/noor-ahmad/20590,Afghanistan,03 January 2005,2023,Right Handed,Left-Arm Wrist Spin
+19,CSK,Mukesh Choudhary,20575,N,N,N,Bowler,https://www.iplt20.com/players/mukesh-choudhary/20575,India,06 July 1996,2022,Left Handed,Left-Arm Medium
+20,CSK,Spencer Johnson,0,N,N,Y,Bowler,-,Australia,16 December 1995,-,Left Handed,Left-Arm Fast
+21,CSK,Shreyas Gopal,20696,N,N,N,Bowler,https://www.iplt20.com/players/shreyas-gopal/20696,India,04 September 1993,2014,Right Handed,Legbreak
+22,CSK,Gurjapneet Singh,22032,N,N,N,Bowler,https://www.iplt20.com/players/gurjapneet-singh/22032,India,08 November 1998,-,Right Handed,Left-Arm Medium Fast
+23,CSK,Akeal Hosein,5608,N,N,Y,Bowler,https://www.iplt20.com/players/akeal-hosein/5608,West Indies,25 April 1993,-,Left Handed,Slow Left-Arm Orthodox
+24,CSK,Matt Henry,0,N,N,Y,Bowler,-,New Zealand,14 December 1991,-,Right Handed,Right-Arm Fast Medium
+25,CSK,Rahul Chahar,3763,N,N,N,Bowler,https://www.iplt20.com/players/rahul-chahar/3763,India,04 August 1999,2017,Right Handed,Legbreak Googly
+26,CSK,Akash Madhwal,0,N,N,N,Bowler,-,India,25 November 1993,-,Right Handed,Right-Arm Medium Fast
+27,CSK,Dian Forrester,0,N,N,Y,All Rounder,-,South Africa,07 June 2000,-,Left Handed,Right-Arm Fast
+28,CSK,Kuldip Yadav,0,N,N,N,Bowler,-,India,15 October 1996,-,Left Handed,Left-Arm Fast Medium
+29,CSK,Macneil Naronh,0,N,N,N,All Rounder,-,India,23 September 2001,-,Right Handed,Right-Arm Offbreak
+1,DC,KL Rahul,1125,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/kl-rahul/1125,India,18 April 1992,2013,Right Handed,-
+2,DC,Karun Nair,276,N,N,N,Batter,https://www.iplt20.com/players/karun-nair/276,India,06 December 1991,2013,Right Handed,Right-Arm Offbreak
+3,DC,David Miller,187,N,N,Y,Batter,https://www.iplt20.com/players/david-miller/187,South Africa,10 June 1989,2012,Left Handed,Right-Arm Offbreak
+4,DC,Ben Duckett,0,N,Y,Y,Wicket Keeper,-,England,17 October 1994,-,Left Handed,Right-Arm Offbreak
+5,DC,Pathum Nissanka,0,N,N,Y,Batter,-,Sri Lanka,18 May 1998,-,Right Handed,-
+6,DC,Sahil Parakh,0,N,N,N,Batter,-,India,07 June 2007,-,Left Handed,Legbreak
+7,DC,Prithvi Shaw,3764,N,N,N,Batter,https://www.iplt20.com/players/prithvi-shaw/3764,India,09 November 1999,2018,Right Handed,Right-Arm Offbreak
+8,DC,Abishek Porel,33333,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/abishek-porel/33333,India,17 October 2002,2023,Left Handed,-
+9,DC,Tristan Stubbs,20631,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/tristan-stubbs/20631,South Africa,14 August 2000,2022,Right Handed,Right-Arm Offbreak
+10,DC,Axar Patel,1113,Y,N,N,All Rounder,https://www.iplt20.com/players/axar-patel/1113,India,20 January 1994,2014,Left Handed,Slow Left-Arm Orthodox
+11,DC,Sameer Rizvi,20689,N,N,N,All Rounder,https://www.iplt20.com/players/sameer-rizvi/20689,India,06 December 2003,2024,Right Handed,Right-Arm Offbreak
+12,DC,Ashutosh Sharma,20703,N,N,N,All Rounder,https://www.iplt20.com/players/ashutosh-sharma/20703,India,15 September 1998,2024,Right Handed,Right-Arm Medium
+13,DC,Vipraj Nigam,22053,N,N,N,All Rounder,https://www.iplt20.com/players/vipraj-nigam/22053,India,28 July 2004,2025,Right Handed,Legbreak
+14,DC,Ajay Mandal,5811,N,N,N,All Rounder,https://www.iplt20.com/players/ajay-mandal/5811,India,25 February 1996,-,Left Handed,Slow Left-Arm Orthodox
+15,DC,Tripurana Vijay,22252,N,N,N,All Rounder,https://www.iplt20.com/players/tripurana-vijay/22252,India,05 September 2001,-,Right Handed,Right-Arm Offbreak
+16,DC,Madhav Tiwari,22259,N,N,N,All Rounder,https://www.iplt20.com/players/madhav-tiwari/22259,India,28 September 2003,2025,Right Handed,Right-Arm Medium Fast
+17,DC,Auqib Dar,0,N,N,N,All Rounder,-,India,04 November 1996,-,Right Handed,Right-Arm Medium
+18,DC,Nitish Rana,2738,N,N,N,All Rounder,https://www.iplt20.com/players/nitish-rana/2738,India,27 December 1993,2016,Left Handed,"Right-Arm Medium, Right-Arm Offbreak, Legbreak"
+19,DC,Mitchell Starc,490,N,N,Y,Bowler,https://www.iplt20.com/players/mitchell-starc/490,Australia,30 January 1990,2014,Left Handed,Left-Arm Fast
+20,DC,T. Natarajan,3831,N,N,N,Bowler,https://www.iplt20.com/players/t-natarajan/3831,India,04 April 1991,2017,Left Handed,Left-Arm Medium
+21,DC,Mukesh Kumar,5622,N,N,N,Bowler,https://www.iplt20.com/players/mukesh-kumar/5622,India,12 October 1993,2023,Right Handed,Right-Arm Medium
+22,DC,Dushmantha Chameera,817,N,N,Y,Bowler,https://www.iplt20.com/players/dushmantha-chameera/817,Sri Lanka,11 January 1992,2022,Right Handed,Right-Arm Fast
+23,DC,Lungisani Ngidi,3746,N,N,Y,Bowler,https://www.iplt20.com/players/lungisani-ngidi/3746,South Africa,29 March 1996,2018,Right Handed,Right-Arm Fast Medium
+24,DC,Kyle Jamieson,1616,N,N,Y,Bowler,https://www.iplt20.com/players/kyle-jamieson/1616,New Zealand,30 December 1994,2021,Right Handed,Right-Arm Fast Medium
+25,DC,Kuldeep Yadav,261,N,N,N,Bowler,https://www.iplt20.com/players/kuldeep-yadav/261,India,14 December 1994,2016,Left Handed,Left-Arm Wrist Spin
+26,DC,Rehan Ahmed,0,N,N,N,Batter,-,India,07 June 2007,-,Left Handed,Legbreak
+1,GT,Shubman Gill,3761,Y,N,N,Batter,https://www.iplt20.com/players/shubman-gill/3761,India,08 September 1999,2018,Right Handed,Right-Arm Offbreak
+2,GT,Jos Buttler,509,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/jos-buttler/509,England,08 September 1990,2016,Right Handed,-
+3,GT,Kumar Kushagra,20694,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/kumar-kushagra/20694,India,23 October 2004,2024,Right Handed,-
+4,GT,Anuj Rawat,10788,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/anuj-rawat/10788,India,17 October 1999,2021,Left Handed,-
+5,GT,Tom Banton,0,N,Y,Y,Wicket Keeper,-,England,11 November 1998,-,Right Handed,-
+6,GT,Glenn Phillips,3027,N,N,Y,Batter,https://www.iplt20.com/players/glenn-phillips/3027,New Zealand,06 December 1996,2021,Right Handed,Right-Arm Offbreak
+7,GT,Nishant Sindhu,5615,N,N,N,All Rounder,https://www.iplt20.com/players/nishant-sindhu/5615,India,09 April 2004,-,Left Handed,Slow Left-Arm Orthodox
+8,GT,Washington Sundar,2973,N,N,N,All Rounder,https://www.iplt20.com/players/washington-sundar/2973,India,05 October 1999,2017,Left Handed,Right-Arm Offbreak
+9,GT,Mohd. Arshad Khan,20599,N,N,N,All Rounder,https://www.iplt20.com/players/mohd-arshad-khan/20599,India,20 December 1997,2023,Left Handed,Left-Arm Fast Medium
+10,GT,Sai Kishore,7123,N,N,N,All Rounder,https://www.iplt20.com/players/sai-kishore/7123,India,06 November 1996,2022,Left Handed,Slow Left-Arm Orthodox
+11,GT,Jayant Yadav,1740,N,N,N,All Rounder,https://www.iplt20.com/players/jayant-yadav/1740,India,22 January 1990,2015,Right Handed,Right-Arm Offbreak
+12,GT,Jason Holder,1075,N,N,Y,All Rounder,https://www.iplt20.com/players/jason-holder/1075,West Indies,05 November 1991,2013,Right Handed,Right-Arm Medium Fast
+13,GT,Sai Sudharsan,20592,N,N,N,All Rounder,https://www.iplt20.com/players/sai-sudharsan/20592,India,15 October 2001,2022,Left Handed,Legbreak
+14,GT,Shahrukh Khan,7779,N,N,N,All Rounder,https://www.iplt20.com/players/shahrukh-khan/7779,India,27 May 1995,2021,Right Handed,Right-Arm Offbreak
+15,GT,Kagiso Rabada,1664,N,N,Y,Bowler,https://www.iplt20.com/players/kagiso-rabada/1664,South Africa,25 May 1995,2017,Left Handed,Right-Arm Fast
+16,GT,Mohammed Siraj,3840,N,N,N,Bowler,https://www.iplt20.com/players/mohammed-siraj/3840,India,13 March 1994,2017,Right Handed,Right-Arm Fast
+17,GT,Prasidh Krishna,5105,N,N,N,Bowler,https://www.iplt20.com/players/prasidh-krishna/5105,India,19 February 1996,2018,Right Handed,Right-Arm Fast Medium
+18,GT,Manav Suthar,20692,N,N,N,Bowler,https://www.iplt20.com/players/manav-suthar/20692,India,03 August 2002,2024,Left Handed,Slow Left-Arm Orthodox
+19,GT,Gurnoor Singh Brar,1094,N,N,N,Bowler,https://www.iplt20.com/players/gurnoor-singh-brar/1094,India,25 May 2000,2023,Left Handed,Right-Arm Fast
+20,GT,Ishant Sharma,38,N,N,N,Bowler,https://www.iplt20.com/players/ishant-sharma/38,India,02 September 1988,2008,Right Handed,Right-Arm Fast Medium
+21,GT,Ashok Sharma,20584,N,N,N,Bowler,https://www.iplt20.com/players/ashok-sharma/20584,India,17 June 2002,-,Right Handed,Right-Arm Medium
+22,GT,Kulwant Khejroliya,0,N,N,N,Bowler,-,India,13 March 1992,-,Left Handed,Left-Arm Medium Fast
+23,GT,Luke Wood,20721,N,N,Y,Bowler,https://www.iplt20.com/players/luke-wood/20721,England,02 August 1995,2024,Left Handed,Left-Arm Fast Medium
+24,GT,Rahul Tewatia,1749,N,N,N,Bowler,https://www.iplt20.com/players/rahul-tewatia/1749,India,20 May 1993,2014,Left Handed,Legbreak
+25,GT,Rashid Khan,2885,N,N,Y,Bowler,https://www.iplt20.com/players/rashid-khan/2885,Afghanistan,20 September 1998,2017,Right Handed,Legbreak Googly
+26,GT,Connor Esterhuizen,0,N,N,Y,Batter,-,South Africa,31 May 2001,-,Right Handed,-
+1,KKR,Ajinkya Rahane,135,Y,N,N,Batter,https://www.iplt20.com/players/ajinkya-rahane/135,India,06 June 1988,2008,Right Handed,Right-Arm Medium
+2,KKR,Rinku Singh,3830,N,N,N,Batter,https://www.iplt20.com/players/rinku-singh/3830,India,12 October 1997,2018,Left Handed,Right-Arm Offbreak
+3,KKR,Angkrish Raghuvanshi,20690,N,N,N,Batter,https://www.iplt20.com/players/angkrish-raghuvanshi/20690,India,05 June 2004,2024,Right Handed,Slow Left-Arm Orthodox
+4,KKR,Manish Pandey,123,N,N,N,Batter,https://www.iplt20.com/players/manish-pandey/123,India,10 September 1989,2008,Right Handed,Right-Arm Medium
+5,KKR,Cameron Green,5602,N,N,Y,Batter,https://www.iplt20.com/players/cameron-green/5602,Australia,03 June 1999,2023,Right Handed,Right-Arm Fast Medium
+6,KKR,Finn Allen,3020,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/finn-allen/3020,New Zealand,22 April 1999,-,Right Handed,-
+7,KKR,Tejasvi Dahiya Singh,0,N,Y,N,Wicket Keeper,-,India,18 April 2002,-,Right Handed,-
+8,KKR,Rahul Tripathi,3838,N,N,N,Batter,https://www.iplt20.com/players/rahul-tripathi/3838,India,02 March 1991,2017,Right Handed,Right-Arm Medium
+9,KKR,Tim Seifert,1619,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/tim-seifert/1619,New Zealand,14 December 1994,2021,Right Handed,-
+10,KKR,Rovman Powell,3333,N,N,Y,Batter,https://www.iplt20.com/players/rovman-powell/3333,West Indies,23 July 1993,2022,Right Handed,Right-Arm Medium Fast
+11,KKR,Anukul Roy,3774,N,N,N,All Rounder,https://www.iplt20.com/players/anukul-roy/3774,India,30 November 1998,2019,Left Handed,Slow Left-Arm Orthodox
+12,KKR,Sarthak Ranjan,0,N,N,N,All Rounder,-,India,25 September 1996,-,Right Handed,Legbreak
+13,KKR,Daksh Kamra,0,N,N,N,All Rounder,-,India,09 January 2003,-,Right Handed,Legbreak Googly
+14,KKR,Rachin Ravindra,20684,N,N,Y,All Rounder,https://www.iplt20.com/players/rachin-ravindra/20684,New Zealand,18 November 1999,2024,Left Handed,Slow Left-Arm Orthodox
+15,KKR,Ramandeep Singh,20595,N,N,N,All Rounder,https://www.iplt20.com/players/ramandeep-singh/20595,India,13 April 1997,2022,Right Handed,Right-Arm Medium
+16,KKR,Vaibhav Arora,14859,N,N,N,Bowler,https://www.iplt20.com/players/vaibhav-arora/14859,India,14 December 1997,2022,Right Handed,Right-Arm Fast Medium
+17,KKR,Matheesha Pathirana,20627,N,N,Y,Bowler,https://www.iplt20.com/players/matheesha-pathirana/20627,Sri Lanka,18 December 2002,2022,Right Handed,Right-Arm Fast
+18,KKR,Kartik Tyagi,10059,N,N,N,Bowler,https://www.iplt20.com/players/kartik-tyagi/10059,India,08 November 2000,2020,Right Handed,Right-Arm Fast
+19,KKR,Prashant Solanki,20576,N,N,N,Bowler,https://www.iplt20.com/players/prashant-solanki/20576,India,22 February 2000,2022,Right Handed,Legbreak
+20,KKR,Blessing Muzarabani,0,N,N,Y,Bowler,-,Zimbabwe,02 October 1996,-,Right Handed,Right-Arm Fast Medium
+21,KKR,Navdeep Saini,0,N,N,N,Bowler,-,India,23 November 1993,-,Right Handed,Right-Arm Fast
+22,KKR,Umran Malik,15154,N,N,N,Bowler,https://www.iplt20.com/players/umran-malik/15154,India,22 November 1999,2021,Right Handed,Right-Arm Fast
+23,KKR,Sunil Narine,203,N,N,Y,Bowler,https://www.iplt20.com/players/sunil-narine/203,West Indies,26 May 1988,2012,Left Handed,Right-Arm Offbreak
+24,KKR,Varun Chakaravarthy,5432,N,N,N,Bowler,https://www.iplt20.com/players/varun-chakaravarthy/5432,India,29 August 1991,2019,Right Handed,Legbreak Googly
+25,KKR,Saurabh Dubey,0,N,N,N,Bowler,-,India,23 January 1998,-,Right Handed,Left-Arm Medium Fast
+1,LSG,Rishabh Pant,2972,Y,Y,N,Wicket Keeper,https://www.iplt20.com/players/rishabh-pant/2972,India,04 October 1997,2016,Left Handed,-
+2,LSG,Aiden Markram,1667,N,N,Y,Batter,https://www.iplt20.com/players/aiden-markram/1667,South Africa,04 October 1994,2021,Right Handed,Right-Arm Offbreak
+3,LSG,Himmat Singh,5434,N,N,N,Batter,https://www.iplt20.com/players/himmat-singh/5434,India,08 November 1996,2025,Right Handed,Right-Arm Offbreak
+4,LSG,Matthew Breetzke,22375,N,N,Y,Batter,https://www.iplt20.com/players/matthew-breetzke/22375,South Africa,03 November 1998,2025,Right Handed,-
+5,LSG,Mukul Choudhary,0,N,Y,N,Wicket Keeper,-,India,06 August 2004,-,Right Handed,-
+6,LSG,Akshat Raghuwanshi,0,N,N,N,Batter,-,India,15 September 2003,-,Right Handed,Right-Arm Offbreak
+7,LSG,Josh Inglis,22372,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/josh-inglis/22372,Australia,04 March 1995,2025,Right Handed,-
+8,LSG,Nicholas Pooran,1703,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/nicholas-pooran/1703,West Indies,02 October 1995,2019,Left Handed,Right-Arm Offbreak
+9,LSG,Mitchell Marsh,221,N,N,Y,All Rounder,https://www.iplt20.com/players/mitchell-marsh/221,Australia,20 October 1991,2010,Right Handed,Right-Arm Medium
+10,LSG,Abdul Samad,19352,N,N,N,All Rounder,https://www.iplt20.com/players/abdul-samad/19352,India,28 October 2001,2020,Right Handed,Legbreak
+11,LSG,Shahbaz Ahamad,13803,N,N,N,All Rounder,https://www.iplt20.com/players/shahbaz-ahamad/13803,India,11 December 1994,2020,Left Handed,Slow Left-Arm Orthodox
+12,LSG,Arshin Kulkarni,20691,N,N,N,All Rounder,https://www.iplt20.com/players/arshin-kulkarni/20691,India,15 February 2005,2024,Right Handed,Right-Arm Medium
+13,LSG,Wanindu Hasaranga,3082,N,N,Y,All Rounder,https://www.iplt20.com/players/wanindu-hasaranga/3082,Sri Lanka,29 July 1997,2021,Right Handed,Legbreak
+14,LSG,Ayush Badoni,20586,N,N,N,All Rounder,https://www.iplt20.com/players/ayush-badoni/20586,India,03 December 1999,2022,Right Handed,Right-Arm Offbreak
+15,LSG,Mohammad Shami,94,N,N,N,Bowler,https://www.iplt20.com/players/mohammad-shami/94,India,03 September 1990,2013,Right Handed,Right-Arm Fast
+16,LSG,Avesh Khan,1561,N,N,N,Bowler,https://www.iplt20.com/players/avesh-khan/1561,India,13 December 1996,2017,Right Handed,Right-Arm Fast Medium
+17,LSG,M. Siddharth,7119,N,N,N,Bowler,https://www.iplt20.com/players/m-siddharth/7119,India,03 July 1998,2024,Right Handed,Slow Left-Arm Orthodox
+18,LSG,Digvesh Singh,5847,N,N,N,Bowler,https://www.iplt20.com/players/digvesh-singh/5847,India,15 December 1999,2025,Right Handed,Legbreak
+19,LSG,Akash Singh,12585,N,N,N,Bowler,https://www.iplt20.com/players/akash-singh/12585,India,26 April 2002,2021,Right Handed,Left-Arm Medium Fast
+20,LSG,Prince Yadav,22097,N,N,N,Bowler,https://www.iplt20.com/players/prince-yadav/22097,India,12 December 2001,2025,Right Handed,Right-Arm Fast
+21,LSG,Arjun Tendulkar,10244,N,N,N,Bowler,https://www.iplt20.com/players/arjun-tendulkar/10244,India,24 September 1999,2023,Left Handed,Left-Arm Medium Fast
+22,LSG,Anrich Nortje,5433,N,N,Y,Bowler,https://www.iplt20.com/players/anrich-nortje/5433,South Africa,16 November 1993,2020,Right Handed,Right-Arm Fast
+23,LSG,Naman Tiwari,0,N,N,N,Bowler,-,India,08 November 2005,-,Left Handed,Left-Arm Medium Fast
+24,LSG,Mayank Yadav,20585,N,N,N,Bowler,https://www.iplt20.com/players/mayank-yadav/20585,India,17 June 2002,2024,Right Handed,Right-Arm Fast
+25,LSG,Mohsin Khan,4952,N,N,N,Bowler,https://www.iplt20.com/players/mohsin-khan/4952,India,15 July 1998,2022,Left Handed,Left-Arm Medium Fast
+26,LSG,George Linde,0,N,N,Y,All Rounder,-,South Africa,04 December 1991,-,Left Handed,Slow Left-Arm Orthodox
+1,MI,Rohit Sharma,107,N,N,N,Batter,https://www.iplt20.com/players/rohit-sharma/107,India,30 April 1987,2008,Right Handed,Right-Arm Offbreak
+2,MI,Surya Kumar Yadav,108,N,N,N,Batter,https://www.iplt20.com/players/surya-kumar-yadav/108,India,14 September 1990,2012,Right Handed,"Right-Arm Medium, Right-Arm Offbreak"
+3,MI,Robin Minz,20707,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/robin-minz/20707,India,13 September 2002,2025,Left Handed,Slow Left-Arm Orthodox
+4,MI,Sherfane Rutherford,5396,N,N,Y,Batter,https://www.iplt20.com/players/sherfane-rutherford/5396,West Indies,15 August 1998,2019,Left Handed,Right-Arm Fast Medium
+5,MI,Ryan Rickelton,22003,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/ryan-rickelton/22003,South Africa,11 July 1996,2025,Left Handed,-
+6,MI,Quinton de Kock,834,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/quinton-de-kock/834,South Africa,17 December 1992,2013,Left Handed,-
+7,MI,Danish Malewar,0,N,N,N,Batter,-,India,08 October 2003,-,Right Handed,Legbreak
+8,MI,N. Tilak Varma,20594,N,N,N,Batter,https://www.iplt20.com/players/n-tilak-varma/20594,India,08 November 2002,2022,Left Handed,Right-Arm Offbreak
+9,MI,Hardik Pandya,2740,Y,N,N,All Rounder,https://www.iplt20.com/players/hardik-pandya/2740,India,11 October 1993,2015,Right Handed,Right-Arm Medium Fast
+10,MI,Naman Dhir,20701,N,N,N,All Rounder,https://www.iplt20.com/players/naman-dhir/20701,India,31 December 1999,2024,Right Handed,Right-Arm Offbreak
+11,MI,Mitchell Santner,1903,N,N,Y,All Rounder,https://www.iplt20.com/players/mitchell-santner/1903,New Zealand,05 February 1992,2019,Left Handed,Slow Left-Arm Orthodox
+12,MI,Raj Angad Bawa,20601,N,N,N,All Rounder,https://www.iplt20.com/players/raj-angad-bawa/20601,India,12 November 2002,2022,Left Handed,Right-Arm Medium Fast
+13,MI,Atharva Ankolekar,0,N,N,N,All Rounder,-,India,26 September 2000,-,Left Handed,Slow Left-Arm Orthodox
+14,MI,Mayank Rawat,0,N,N,N,All Rounder,-,India,04 December 1999,-,Right Handed,Right-Arm Offbreak
+15,MI,Corbin Bosch,20680,N,N,Y,All Rounder,https://www.iplt20.com/players/corbin-bosch/20680,South Africa,10 September 1994,2025,Right Handed,Right-Arm Fast Medium
+16,MI,Will Jacks,5629,N,N,Y,All Rounder,https://www.iplt20.com/players/will-jacks/5629,England,21 November 1998,2024,Right Handed,Right-Arm offbreak
+17,MI,Shardul Thakur,1745,N,N,N,All Rounder,https://www.iplt20.com/players/shardul-thakur/1745,India,16 October 1991,2015,Right Handed,Right-Arm Medium
+18,MI,Trent Boult,969,N,N,Y,Bowler,https://www.iplt20.com/players/trent-boult/969,New Zealand,22 July 1989,2015,Right Handed,Left-Arm Fast Medium
+19,MI,Mayank Markande,4951,N,N,N,Bowler,https://www.iplt20.com/players/mayank-markande/4951,India,11 November 1997,2018,Right Handed,Legbreak
+20,MI,Deepak Chahar,140,N,N,N,Bowler,https://www.iplt20.com/players/deepak-chahar/140,India,07 August 1992,2016,Right Handed,Right-Arm Medium
+21,MI,Ashwani Kumar,22030,N,N,N,Bowler,https://www.iplt20.com/players/ashwani-kumar/22030,India,29 August 2001,2025,Left Handed,Left-Arm Medium
+22,MI,Raghu Sharma,22379,N,N,N,Bowler,https://www.iplt20.com/players/raghu-sharma/22379,India,11 March 1993,-,Right Handed,Legbreak
+23,MI,Mohammad Salahuddin Izhar,0,N,N,N,Bowler,-,India,01 January 2004,-,Right Handed,Left-Arm Medium
+24,MI,Allah Mohammad Ghazanfar,20725,N,N,Y,Bowler,https://www.iplt20.com/players/allah-ghazanfar/20725,Afghanistan,20 March 2006,2024,Right Handed,"Right-Arm Offbreak, Legbreak"
+25,MI,Jasprit Bumrah,1124,N,N,N,Bowler,https://www.iplt20.com/players/jasprit-bumrah/1124,India,06 December 1993,2013,Right Handed,Right-Arm Fast
+26,MI,Keshav Maharaj,0,N,N,Y,Bowler,-,South Africa,07 February 1990,-,Right Handed,Slow Left-Arm Orthodox
+27,MI,Krish Bhagat,0,N,N,N,Bowler,-,India,06 November 2004,-,Right Handed,Right-Arm Medium
+1,PBKS,Shreyas Iyer,1563,Y,N,N,Batter,https://www.iplt20.com/players/shreyas-iyer/1563,India,06 December 1994,2015,Right Handed,"Right-Arm Offbreak, Legbreak Googly"
+2,PBKS,Nehal Wadhera,5859,N,N,N,Batter,https://www.iplt20.com/players/nehal-wadhera/5859,India,04 September 2000,2023,Left Handed,Legbreak
+3,PBKS,Vishnu Vinod,4305,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/vishnu-vinod/4305,India,02 December 1993,2017,Right Handed,-
+4,PBKS,Harnoor Pannu,22019,N,N,N,Batter,https://www.iplt20.com/players/harnoor-pannu/22019,India,30 January 2003,-,Left Handed,Legbreak
+5,PBKS,Pyla Avinash,22145,N,N,N,Batter,https://www.iplt20.com/players/pyla-avinash/22145,India,07 July 2000,-,Right Handed,Right-Arm Medium Fast
+6,PBKS,Prabhsimran Singh,5436,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/prabhsimran-singh/5436,India,10 August 2000,2019,Right Handed,-
+7,PBKS,Shashank Singh,3261,N,N,N,Batter,https://www.iplt20.com/players/shashank-singh/3261,India,21 November 1991,2022,Right Handed,"Right-Arm Medium, Right-Arm Offbreak"
+8,PBKS,Marcus Stoinis,964,N,N,Y,All Rounder,https://www.iplt20.com/players/marcus-stoinis/964,Australia,16 August 1989,2016,Right Handed,Right-Arm Medium
+9,PBKS,Harpreet Brar,5441,N,N,N,All Rounder,https://www.iplt20.com/players/harpreet-brar/5441,India,16 September 1995,2019,Left Handed,Slow Left-Arm Orthodox
+10,PBKS,Marco Jansen,17068,N,N,Y,All Rounder,https://www.iplt20.com/players/marco-jansen/17068,South Africa,01 May 2000,2021,Right Handed,Left-Arm Fast
+11,PBKS,Azmatullah Omarzai,20685,N,N,Y,All Rounder,https://www.iplt20.com/players/azmatullah-omarzai/20685,Afghanistan,24 March 2000,2024,Right Handed,Right-Arm Medium Fast
+12,PBKS,Priyansh Arya,22052,N,N,N,All Rounder,https://www.iplt20.com/players/priyansh-arya/22052,India,18 September 2001,2025,Left Handed,Right-Arm Offbreak
+13,PBKS,Musheer Khan,22085,N,N,N,All Rounder,https://www.iplt20.com/players/musheer-khan/22085,India,27 February 2005,2025,Right Handed,Slow Left-Arm Orthodox
+14,PBKS,Suryansh Shedge,20683,N,N,N,All Rounder,https://www.iplt20.com/players/suryansh-shedge/20683,India,29 January 2003,2025,Right Handed,Right-Arm Medium Fast
+15,PBKS,Mitch Owen,22380,N,Y,Y,Batter,https://www.iplt20.com/players/mitch-owen/22380,Australia,16 September 2001,2025,Right Handed,Right-Arm Medium
+16,PBKS,Cooper Connolly,0,N,N,Y,All Rounder,-,Australia,22 August 2003,-,Left Handed,Slow Left-Arm Orthodox
+17,PBKS,Ben Dwarshuis,0,N,N,Y,All Rounder,-,Australia,23 June 1994,-,Left Handed,Left-Arm Fast Medium
+18,PBKS,Arshdeep Singh,4698,N,N,N,Bowler,https://www.iplt20.com/players/arshdeep-singh/4698,India,05 February 1999,2019,Left Handed,Left-Arm Medium Fast
+19,PBKS,Yuzvendra Chahal,111,N,N,N,Bowler,https://www.iplt20.com/players/yuzvendra-chahal/111,India,23 July 1990,2013,Right Handed,Legbreak Googly
+20,PBKS,Vyshak Vijaykumar,1097,N,N,N,Bowler,https://www.iplt20.com/players/vyshak-vijaykumar/1097,India,31 January 1997,2023,Right Handed,Right-Arm Medium
+21,PBKS,Yash Thakur,5624,N,N,N,Bowler,https://www.iplt20.com/players/yash-thakur/5624,India,28 December 1998,2023,Right Handed,Right-Arm Fast Medium
+22,PBKS,Xavier Bartlett,22112,N,N,Y,Bowler,https://www.iplt20.com/players/xavier-bartlett/22112,Australia,17 December 1998,2025,Right Handed,Right-Arm Fast Medium
+23,PBKS,Pravin Dubey,3188,N,N,N,Bowler,https://www.iplt20.com/players/pravin-dubey/3188,India,01 July 1993,2020,Right Handed,Legbreak Googly
+24,PBKS,Vishal Nishad,0,N,N,N,Bowler,-,India,01 April 2005,-,Right Handed,Legbreak
+25,PBKS,Lockie Ferguson,3729,N,N,Y,Bowler,https://www.iplt20.com/players/lockie-ferguson/3729,New Zealand,13 June 1991,2017,Right Handed,Right-Arm Fast
+1,RR,Shubham Dubey,20688,N,N,N,Batter,https://www.iplt20.com/players/shubham-dubey/20688,India,27 August 1994,2024,Left Handed,Right-Arm Offbreak
+2,RR,Vaibhav Suryavanshi,22203,N,N,N,Batter,https://www.iplt20.com/players/vaibhav-suryavanshi/22203,India,27 March 2011,2025,Left Handed,Slow Left-Arm Orthodox
+3,RR,Donovan Ferreira,5652,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/donovan-ferreira/5652,South Africa,21 July 1998,2024,Right Handed,Right-Arm Offbreak
+4,RR,Lhuan-dre Pretorius,22383,N,N,Y,Batter,https://www.iplt20.com/players/lhuan-dre-pretorius/22383,South Africa,27 March 2006,2025,Left Handed,-
+5,RR,Ravi Singh,0,N,Y,N,Wicket Keeper,-,India,25 May 2001,-,Left Handed,Legbreak
+6,RR,Aman Rao Perala,0,N,N,N,Batter,-,India,02 June 2004,-,Right Handed,-
+7,RR,Shimron Hetmyer,1705,N,N,Y,Batter,https://www.iplt20.com/players/shimron-hetmyer/1705,West Indies,26 December 1996,2019,Left Handed,-
+8,RR,Yashasvi Jaiswal,13538,N,N,N,Batter,https://www.iplt20.com/players/yashasvi-jaiswal/13538,India,28 December 2001,2020,Left Handed,Legbreak
+9,RR,Dhruv Jurel,20620,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/dhruv-jurel/20620,India,21 January 2001,2023,Right Handed,-
+10,RR,Riyan Parag,4445,N,N,N,Batter,https://www.iplt20.com/players/riyan-parag/4445,India,10 November 2001,2019,Right Handed,"Right-Arm Offbreak, Legbreak"
+11,RR,Yudhvir Singh Charak,10842,N,N,N,All Rounder,https://www.iplt20.com/players/yudhvir-singh-charak/10842,India,13 September 1997,2023,Right Handed,Right-Arm Medium Fast
+12,RR,Ravindra Jadeja,9,N,N,N,All Rounder,https://www.iplt20.com/players/ravindra-jadeja/9,India,06 December 1988,2008,Left Handed,Slow Left-Arm Orthodox
+13,RR,Dasun Shanaka,0,N,N,Y,All Rounder,-,Sri Lanka,09 September 1991,-,Right Handed,Right-Arm Fast Medium
+14,RR,Jofra Archer,3502,N,N,Y,Bowler,https://www.iplt20.com/players/jofra-archer/3502,England,01 April 1995,2018,Right Handed,Right-Arm Fast
+15,RR,Tushar Deshpande,3257,N,N,N,Bowler,https://www.iplt20.com/players/tushar-deshpande/3257,India,15 May 1995,2020,Left Handed,Right-Arm Medium
+16,RR,Kwena Maphaka,20724,N,N,Y,Bowler,https://www.iplt20.com/players/kwena-maphaka/20724,South Africa,08 April 2006,2024,Left Handed,Left-Arm Fast
+17,RR,Ravi Bishnoi,19351,N,N,N,Bowler,https://www.iplt20.com/players/ravi-bishnoi/19351,India,05 September 2000,2020,Right Handed,Legbreak Googly
+18,RR,Sushant Mishra,20695,N,N,N,Bowler,https://www.iplt20.com/players/sushant-mishra/20695,India,23 December 2000,-,Left Handed,Left-Arm Medium Fast
+19,RR,Yash Raj Punja,0,N,N,N,Bowler,-,India,26 June 2006,-,Right Handed,Legbreak Googly
+20,RR,Vignesh Puthur,22266,N,N,N,Bowler,https://www.iplt20.com/players/vignesh-puthur/22266,India,02 March 2001,2025,Right Handed,Left-Arm Wrist Spin
+21,RR,Brijesh Sharma,0,N,N,N,Bowler,-,India,16 December 1998,-,Right Handed,Right-Arm Medium
+22,RR,Adam Milne,434,N,N,Y,Bowler,https://www.iplt20.com/players/adam-milne/434,New Zealand,13 April 1992,-,Right Handed,Right-Arm Fast
+23,RR,Kuldeep Sen,20616,N,N,N,Bowler,https://www.iplt20.com/players/kuldeep-sen/20616,India,22 October 1996,2022,Right Handed,Right-Arm Fast
+24,RR,Sandeep Sharma,1112,N,N,N,Bowler,https://www.iplt20.com/players/sandeep-sharma/1112,India,18 May 1993,2013,Right Handed,Right-Arm Medium
+25,RR,Nandre Burger,20716,N,N,Y,Bowler,https://www.iplt20.com/players/nandre-burger/20716,South Africa,11 August 1995,2024,Left Handed,Left-Arm Fast Medium
+1,RCB,Rajat Patidar,5471,Y,N,N,Batter,https://www.iplt20.com/players/rajat-patidar/5471,India,01 June 1993,2021,Right Handed,Right-Arm offbreak
+2,RCB,Devdutt Padikkal,5430,N,N,N,Batter,https://www.iplt20.com/players/devdutt-padikkal/5430,India,07 July 2000,2020,Left Handed,Right-Arm Offbreak
+3,RCB,Virat Kohli,164,N,N,N,Batter,https://www.iplt20.com/players/virat-kohli/164,India,05 November 1988,2008,Right Handed,Right-Arm Medium
+4,RCB,Phil Salt,5606,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/phil-salt/5606,England,28 August 1996,2023,Right Handed,Right-Arm Offbreak
+5,RCB,Jitesh Sharma,3185,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/jitesh-sharma/3185,India,22 October 1993,2022,Right Handed,-
+6,RCB,Jordan Cox,0,N,Y,Y,Wicket Keeper,-,England,21 October 2000,-,Right Handed,-
+7,RCB,Krunal Pandya,3183,N,N,N,All Rounder,https://www.iplt20.com/players/krunal-pandya/3183,India,24 March 1991,2016,Left Handed,Slow Left-Arm Orthodox
+8,RCB,Swapnil Singh,3180,N,N,N,All Rounder,https://www.iplt20.com/players/swapnil-singh/3180,India,22 January 1991,2016,Right Handed,Slow Left-Arm Orthodox
+9,RCB,Tim David,4524,N,N,Y,All Rounder,https://www.iplt20.com/players/tim-david/4524,Australia,16 March 1996,2021,Right Handed,Right-Arm Offbreak
+10,RCB,Romario Shepherd,20609,N,N,Y,All Rounder,https://www.iplt20.com/players/romario-shepherd/20609,West Indies,26 November 1994,2022,Right Handed,Right-Arm Fast Medium
+11,RCB,Jacob Bethell,22074,N,N,Y,All Rounder,https://www.iplt20.com/players/jacob-bethell/22074,England,23 October 2003,2025,Left Handed,Slow Left-Arm Orthodox
+12,RCB,Venkatesh Iyer,8540,N,N,N,All Rounder,https://www.iplt20.com/players/venkatesh-iyer/8540,India,25 December 1994,2021,Left Handed,Right-Arm Medium
+13,RCB,Satvik Deswal,0,N,N,N,All Rounder,-,India,23 March 2007,-,Right Handed,Slow Left-Arm Orthodox
+14,RCB,Mangesh Yadav,0,N,N,N,All Rounder,-,India,10 October 2002,-,Right Handed,Left-Arm Fast
+15,RCB,Vicky Ostwal,20624,N,N,N,All Rounder,https://www.iplt20.com/players/vicky-ostwal/20624,India,01 September 2002,-,Right Handed,Slow Left-Arm Orthodox
+16,RCB,Vihaan Malhotra,0,N,N,N,All Rounder,-,India,01 January 2007,-,Left Handed,Right-Arm Offbreak
+17,RCB,Kanishk Chouhan,0,N,N,N,All Rounder,-,India,26 September 2006,-,Right Handed,Right-Arm Offbreak
+18,RCB,Josh Hazlewood,857,N,N,Y,Bowler,https://www.iplt20.com/players/josh-hazlewood/857,Australia,08 January 1991,2020,Left Handed,Right-Arm Fast Medium
+19,RCB,Rasikh Dar,20577,N,N,N,Bowler,https://www.iplt20.com/players/rasikh-dar/20577,India,05 April 2000,2019,Right Handed,Right-Arm Medium
+20,RCB,Suyash Sharma,5668,N,N,N,Bowler,https://www.iplt20.com/players/suyash-sharma/5668,India,15 May 2003,2023,Right Handed,Legbreak Googly
+21,RCB,Bhuvneshwar Kumar,116,N,N,N,Bowler,https://www.iplt20.com/players/bhuvneshwar-kumar/116,India,05 February 1990,2011,Right Handed,Right-Arm Medium
+22,RCB,Nuwan Thushara,20700,N,N,Y,Bowler,https://www.iplt20.com/players/nuwan-thushara/20700,Sri Lanka,06 August 1994,2024,Right Handed,Right-Arm Medium Fast
+23,RCB,Abhinandan Singh,22136,N,N,N,Bowler,https://www.iplt20.com/players/abhinandan-singh/22136,India,30 March 1997,-,Right Handed,Right-Arm Medium Fast
+24,RCB,Jacob Duffy,0,N,N,Y,Bowler,-,New Zealand,02 August 1994,-,Right Handed,Right-Arm Fast Medium
+25,RCB,Yash Dayal,20591,N,N,N,Bowler,https://www.iplt20.com/players/yash-dayal/20591,India,13 December 1997,2022,Right Handed,Left-Arm Medium Fast
+26,RCB,Richard Gleeson,0,N,N,Y,Bowler,-,England,02 December 1987,-,Right Handed,Right-Arm Fast Medium
+1,SRH,Ishan Kishan,2975,N,Y,N,Wicket Keeper,https://www.iplt20.com/players/ishan-kishan/2975,India,18 July 1998,2016,Left Handed,"Right-Arm Offbreak, Legbreak"
+2,SRH,Aniket Verma,22082,N,N,N,Batter,https://www.iplt20.com/players/aniket-verma/22082,India,05 February 2002,2025,Right Handed,Right-Arm Medium Fast
+3,SRH,Smaran Ravichandran,22378,N,N,N,Batter,https://www.iplt20.com/players/smaran-ravichandran/22378,India,05 May 2003,-,Left Handed,Right-Arm Offbreak
+4,SRH,Salil Arora,0,N,Y,N,Wicket Keeper,-,India,07 November 2002,-,Right Handed,-
+5,SRH,Heinrich Klaasen,3869,N,Y,Y,Wicket Keeper,https://www.iplt20.com/players/heinrich-klaasen/3869,South Africa,30 July 1991,2018,Right Handed,Right-Arm Offbreak
+6,SRH,Travis Head,1020,N,N,Y,Batter,https://www.iplt20.com/players/travis-head/1020,Australia,29 December 1993,2016,Left Handed,Right-Arm Offbreak
+7,SRH,Harshal Patel,157,N,N,N,All Rounder,https://www.iplt20.com/players/harshal-patel/157,India,23 November 1990,2012,Right Handed,Right-Arm Medium
+8,SRH,Kamindu Mendis,22077,N,N,Y,All Rounder,https://www.iplt20.com/players/kamindu-mendis/22077,Sri Lanka,30 September 1998,2025,Left Handed,"Right-Arm Offbreak, Slow Left-Arm Orthodox"
+9,SRH,Harsh Dubey,22381,N,N,N,All Rounder,https://www.iplt20.com/players/harsh-dubey/22381,India,23 July 2002,2025,Left Handed,Slow Left-Arm Orthodox
+10,SRH,Brydon Carse,22075,N,N,Y,All Rounder,https://www.iplt20.com/players/brydon-carse/22075,England,31 July 1995,-,Right Handed,Right-Arm Fast Medium
+11,SRH,Shivang Kumar,0,N,N,N,All Rounder,-,India,26 May 2002,-,Right Handed,Left-Arm Wrist Spin
+12,SRH,Krains Fuletra,0,N,N,N,All Rounder,-,India,19 June 2004,-,Right Handed,Left-Arm Wrist Spin
+13,SRH,Liam Livingstone,3644,N,N,Y,All Rounder,https://www.iplt20.com/players/liam-livingstone/3644,England,04 August 1993,2019,Right Handed,"Right-Arm Offbreak, Legbreak"
+14,SRH,David Payne,0,N,N,Y,Bowler,-,England,15 February 1991,-,Right Handed,Left-Arm Fast Medium
+15,SRH,Abhishek Sharma,3760,N,N,N,All Rounder,https://www.iplt20.com/players/abhishek-sharma/3760,India,04 September 2000,2018,Left Handed,Slow Left-Arm Orthodox
+16,SRH,Nitish Kumar Reddy,5711,N,N,N,All Rounder,https://www.iplt20.com/players/nitish-kumar-reddy/5711,India,26 May 2003,2023,Right Handed,Right-Arm Medium Fast
+17,SRH,Pat Cummins,488,Y,N,Y,Bowler,https://www.iplt20.com/players/pat-cummins/488,Australia,08 May 1993,2014,Right Handed,Right-Arm Fast
+18,SRH,Zeeshan Ansari,22007,N,N,N,Bowler,https://www.iplt20.com/players/zeeshan-ansari/22007,India,16 December 1999,2025,Right Handed,Legbreak Googly
+19,SRH,Jaydev Unadkat,86,N,N,N,Bowler,https://www.iplt20.com/players/jaydev-unadkat/86,India,18 October 1991,2010,Right Handed,Left-Arm Medium
+20,SRH,Eshan Malinga,22228,N,N,Y,Bowler,https://www.iplt20.com/players/eshan-malinga/22228,Sri Lanka,04 February 2001,2025,Left Handed,Right-Arm Fast Medium
+21,SRH,Sakib Hussain,20717,N,N,N,Bowler,https://www.iplt20.com/players/sakib-hussain/20717,India,14 December 2004,-,Right Handed,Right-Arm Medium
+22,SRH,Onkar Tarmale,0,N,N,N,Bowler,-,India,22 August 2002,-,Right Handed,Right-Arm Fast
+23,SRH,Amit Kumar,0,N,N,N,Bowler,-,India,02 November 2002,-,Right Handed,Legbreak Googly
+24,SRH,Praful Hinge,0,N,N,N,Bowler,-,India,18 January 2002,-,Right Handed,Right-Arm Medium Fast
+25,SRH,Shivam Mavi,3779,N,N,N,Bowler,https://www.iplt20.com/players/shivam-mavi/3779,India,26 November 1998,2018,Right Handed,Right-Arm Fast Medium
+26,SRH,Dilshan Madushanka,0,N,N,Y,Bowler,-,Sri Lanka,18 September 2000,-,Right Handed,Left-Arm Fast Medium
+27,SRH,Gerald Coetzee,0,N,N,Y,Bowler,-,South Africa,02 October 2000,-,Right Handed,Right-Arm Fast
+28,SRH,R S Ambrish,0,N,N,N,All Rounder,-,India,28 May 2007,-,Left Handed,Right-Arm Medium
