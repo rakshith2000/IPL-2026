@@ -56,12 +56,12 @@ def seed_fixtures():
 
 
 def seed_squad():
-    have = {p for (p,) in db.session.query(Squad.Player_ID)}
+    have = {p for (p,) in db.session.query(Squad.Name)}
     new = [Squad(Player_ID=r[0], Team=r[1], Name=r[2], URL_ID=r[3], Captain=r[4],
                  Keeper=r[5], Overseas=r[6], Role=r[7], Player_URL=r[8],
                  Nationality=r[9], DOB=datetime.strptime(r[10], '%d-%m-%Y').date(),
                  Debut=r[11], Batting=r[12], Bowling=r[13])
-           for r in _rows('all teams squad ipl.csv') if int(r[0]) not in have]
+           for r in _rows('all teams squad ipl.csv') if r[2] not in have]
     db.session.add_all(new); db.session.commit()
     return len(new)
 
