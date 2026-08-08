@@ -271,6 +271,8 @@ h3.section-title {
        <div class="tp-main-container">
     <span class="tp-headline">Season Toppers</span>
     <div class="tp-container">
+    
+    {% if tp['Most Runs'][0] %}
     <div class="tp-card-container orange">
       {% set oc = tp['Most Runs'][0] %}
         <div class="player-card">
@@ -301,7 +303,9 @@ h3.section-title {
         </div>
         <a href="/battingstats?option=Most%20Runs" class="leaderboard-btn orange">View Full Leaderboard</a>
     </div>
+    {% endif %}
     
+    {% if tp['Most Wickets'][0] %}
     <div class="tp-card-container purple">
       {% set pc = tp['Most Wickets'][0] %}
         <div class="player-card">
@@ -332,6 +336,7 @@ h3.section-title {
         </div>
         <a href="/bowlingstats?option=Most%20Wickets" class="leaderboard-btn purple">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
     {% if tp['Best Strike Rate'] %}
     <div class="tp-card-container sr">
@@ -366,6 +371,7 @@ h3.section-title {
     </div>
     {% endif %}
 
+    {% if tp['Most Sixes'][0] %}
     <div class="tp-card-container s6">
       {% set s6 = tp['Most Sixes'][0] %}
         <div class="player-card">
@@ -396,7 +402,9 @@ h3.section-title {
         </div>
         <a href="/battingstats?option=Most%20Sixes" class="leaderboard-btn s6">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
+    {% if tp['Highest Scores'][0] %}
     <div class="tp-card-container hs">
       {% set hs = tp['Highest Scores'][0] %}
         <div class="player-card">
@@ -427,7 +435,9 @@ h3.section-title {
         </div>
         <a href="/battingstats?option=Highest%20Scores" class="leaderboard-btn hs">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
+    {% if tp['Most Dot Balls'][0] %}
     <div class="tp-card-container gdb">
       {% set gdb = tp['Most Dot Balls'][0] %}
         <div class="player-card">
@@ -458,7 +468,9 @@ h3.section-title {
         </div>
         <a href="/bowlingstats?option=Most%20Dot%20Balls" class="leaderboard-btn gdb">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
+    {% if tp['Best Bowling Fifures'][0] %}
     <div class="tp-card-container bbi">
       {% set bbi = tp['Best Bowling Figures'][0] %}
         <div class="player-card">
@@ -489,7 +501,9 @@ h3.section-title {
         </div>
         <a href="/bowlingstats?option=Best%20Bowling%20Figures" class="leaderboard-btn bbi">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
+    {% if tp['Most Valuable Players'][0] %}
     <div class="tp-card-container mvp">
       {% set mvp = tp['Most Valuable Players'][0] %}
         <div class="player-card">
@@ -520,7 +534,9 @@ h3.section-title {
         </div>
         <a href="/awards?option=Most%20Valuable%20Players" class="leaderboard-btn mvp">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
+    {% if tp['Fair Play Award'][0] %}
     <div class="tp-card-container fpa">
       {% set fpa = tp['Fair Play Award'][0] %}
         <div class="player-card">
@@ -549,6 +565,7 @@ h3.section-title {
         </div>
         <a href="/awards?option=Fair%20Play%20Award" class="leaderboard-btn fpa">View Full Leaderboard</a>
     </div>
+    {% endif %}
 
     </div>
     </div>
