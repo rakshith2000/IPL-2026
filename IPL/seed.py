@@ -45,7 +45,7 @@ def seed_pointstable():
 def seed_fixtures():
     have = {m for (m,) in db.session.query(Fixture.Match_No)}
     new = [Fixture(Match_No=r[0],
-                   Date=datetime.strptime(r[1], '%d-%m-%Y').date(),
+                   Date=datetime.strptime(r[1], '%d %B %Y').date(),
                    Time=datetime.strptime(r[2], '%H.%M.%S').time(),
                    Team_A=r[3], Team_B=r[4], Venue=r[5], Match_ID=r[6],
                    A_info={'runs': 0, 'overs': 0.0, 'wkts': 0},
@@ -59,7 +59,7 @@ def seed_squad():
     have = {p for (p,) in db.session.query(Squad.Name)}
     new = [Squad(Player_ID=r[0], Team=r[1], Name=r[2], URL_ID=r[3], Captain=r[4],
                  Keeper=r[5], Overseas=r[6], Role=r[7], Player_URL=r[8],
-                 Nationality=r[9], DOB=datetime.strptime(r[10], '%d-%m-%Y').date(),
+                 Nationality=r[9], DOB=datetime.strptime(r[10], '%d %B %Y').date(),
                  Debut=r[11], Batting=r[12], Bowling=r[13])
            for r in _rows('all teams squad ipl.csv') if r[2] not in have]
     db.session.add_all(new); db.session.commit()
