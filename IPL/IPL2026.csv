@@ -1,75 +1,75 @@
 Match No,Date,Time,Team A,Team B,Venue,Match_ID
-1,22-03-2025,19.30.00,KKR,RCB,"Eden Gardens, Kolkata",22955
-2,23-03-2025,15.30.00,SRH,RR,"Rajiv Gandhi International Stadium, Hyderabad",22956
-3,23-03-2025,19.30.00,CSK,MI,"MA Chidambaram Stadium, Chennai",22957
-4,24-03-2025,19.30.00,DC,LSG,"Dr.Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",22958
-5,25-03-2025,19.30.00,GT,PBKS,"Narendra Modi Stadium, Ahmedabad",22959
-6,26-03-2025,19.30.00,RR,KKR,"Barsapara Cricket Stadium, Guwahati",22960
-7,27-03-2025,19.30.00,SRH,LSG,"Rajiv Gandhi International Stadium, Hyderabad",22961
-8,28-03-2025,19.30.00,CSK,RCB,"MA Chidambaram Stadium, Chennai",22962
-9,29-03-2025,19.30.00,GT,MI,"Narendra Modi Stadium, Ahmedabad",22963
-10,30-03-2025,15.30.00,DC,SRH,"Dr.Y.S. Rajasekhara Reddy ACA-VDCA Cricket Stadium, Visakhapatnam",22964
-11,30-03-2025,19.30.00,RR,CSK,"Barsapara Cricket Stadium, Guwahati",22965
-12,31-03-2025,19.30.00,MI,KKR,"Wankhede Stadium, Mumbai",22966
-13,01-04-2025,19.30.00,LSG,PBKS,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22967
-14,02-04-2025,19.30.00,RCB,GT,"M Chinnaswamy Stadium, Bengaluru",22968
-15,03-04-2025,19.30.00,KKR,SRH,"Eden Gardens, Kolkata",22969
-16,04-04-2025,19.30.00,LSG,MI,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22970
-17,05-04-2025,15.30.00,CSK,DC,"MA Chidambaram Stadium, Chennai",22971
-18,05-04-2025,19.30.00,PBKS,RR,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",22972
-19,06-04-2025,19.30.00,SRH,GT,"Rajiv Gandhi International Stadium, Hyderabad",22974
-20,07-04-2025,19.30.00,MI,RCB,"Wankhede Stadium, Mumbai",22975
-21,08-04-2025,15.30.00,KKR,LSG,"Wankhede Stadium, Mumbai",22973
-22,08-04-2025,19.30.00,PBKS,CSK,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",22976
-23,09-04-2025,19.30.00,GT,RR,"Narendra Modi Stadium, Ahmedabad",22977
-24,10-04-2025,19.30.00,RCB,DC,"M Chinnaswamy Stadium, Bengaluru",22978
-25,11-04-2025,19.30.00,CSK,KKR,"MA Chidambaram Stadium, Chennai",22979
-26,12-04-2025,15.30.00,LSG,GT,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22980
-27,12-04-2025,19.30.00,SRH,PBKS,"Rajiv Gandhi International Stadium, Hyderabad",22981
-28,13-04-2025,15.30.00,RR,RCB,"Sawai Mansingh Stadium, Jaipur",22982
-29,13-04-2025,19.30.00,DC,MI,"Arun Jaitley Stadium, Delhi",22983
-30,14-04-2025,19.30.00,LSG,CSK,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22984
-31,15-04-2025,19.30.00,PBKS,KKR,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",22985
-32,16-04-2025,19.30.00,DC,RR,"Arun Jaitley Stadium, Delhi",22986
-33,17-04-2025,19.30.00,MI,SRH,"Wankhede Stadium, Mumbai",22987
-34,18-04-2025,19.30.00,RCB,PBKS,"M Chinnaswamy Stadium, Bengaluru",22988
-35,19-04-2025,15.30.00,GT,DC,"Narendra Modi Stadium, Ahmedabad",22989
-36,19-04-2025,19.30.00,RR,LSG,"Sawai Mansingh Stadium, Jaipur",22990
-37,20-04-2025,15.30.00,PBKS,RCB,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",22991
-38,20-04-2025,19.30.00,MI,CSK,"Wankhede Stadium, Mumbai",22992
-39,21-04-2025,19.30.00,KKR,GT,"Eden Gardens, Kolkata",22993
-40,22-04-2025,19.30.00,LSG,DC,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",22994
-41,23-04-2025,19.30.00,SRH,MI,"Rajiv Gandhi International Stadium, Hyderabad",22995
-42,24-04-2025,19.30.00,RCB,RR,"M Chinnaswamy Stadium, Bengaluru",22996
-43,25-04-2025,19.30.00,CSK,SRH,"MA Chidambaram Stadium, Chennai",22997
-44,26-04-2025,19.30.00,KKR,PBKS,"Eden Gardens, Kolkata",22998
-45,27-04-2025,15.30.00,MI,LSG,"Wankhede Stadium, Mumbai",22999
-46,27-04-2025,19.30.00,DC,RCB,"Arun Jaitley Stadium, Delhi",23000
-47,28-04-2025,19.30.00,RR,GT,"Sawai Mansingh Stadium, Jaipur",23001
-48,29-04-2025,19.30.00,DC,KKR,"Arun Jaitley Stadium, Delhi",23002
-49,30-04-2025,19.30.00,CSK,PBKS,"MA Chidambaram Stadium, Chennai",23003
-50,01-05-2025,19.30.00,RR,MI,"Sawai Mansingh Stadium, Jaipur",23004
-51,02-05-2025,19.30.00,GT,SRH,"Narendra Modi Stadium, Ahmedabad",23005
-52,03-05-2025,19.30.00,RCB,CSK,"M Chinnaswamy Stadium, Bengaluru",23006
-53,04-05-2025,15.30.00,KKR,RR,"Eden Gardens, Kolkata",23007
-54,04-05-2025,19.30.00,PBKS,LSG,"Himachal Pradesh Cricket Association Stadium, Dharamsala",23008
-55,05-05-2025,19.30.00,SRH,DC,"Rajiv Gandhi International Stadium, Hyderabad",23009
-56,06-05-2025,19.30.00,MI,GT,"Wankhede Stadium, Mumbai",23010
-57,07-05-2025,19.30.00,KKR,CSK,"Eden Gardens, Kolkata",23011
-58,17-05-2025,19.30.00,RCB,KKR,"M Chinnaswamy Stadium, Bengaluru",23022
-59,18-05-2025,15.30.00,RR,PBKS,"Sawai Mansingh Stadium, Jaipur",23021
-60,18-05-2025,19.30.00,DC,GT,"Arun Jaitley Stadium, Delhi",23016
-61,19-05-2025,19.30.00,LSG,SRH,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",23024
-62,20-05-2025,19.30.00,CSK,RR,"Arun Jaitley Stadium, Delhi",23017
-63,21-05-2025,19.30.00,MI,DC,"Wankhede Stadium, Mumbai",23020
-64,22-05-2025,19.30.00,GT,LSG,"Narendra Modi Stadium, Ahmedabad",23019
-65,23-05-2025,19.30.00,RCB,SRH,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",23018
-66,24-05-2025,19.30.00,PBKS,DC,"Sawai Mansingh Stadium, Jaipur",23558
-67,25-05-2025,15.30.00,GT,CSK,"Narendra Modi Stadium, Ahmedabad",23023
-68,25-05-2025,19.30.00,SRH,KKR,"Arun Jaitley Stadium, Delhi",23014
-69,26-05-2025,19.30.00,PBKS,MI,"Sawai Mansingh Stadium, Jaipur",23015
-70,27-05-2025,19.30.00,LSG,RCB,"Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",23013
-Qualifier 1,29-05-2025,19.30.00,PBKS,RCB,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",23025
-Eliminator,30-05-2025,19.30.00,GT,MI,"Maharaja Yadavindra Singh International Cricket Stadium - Mullanpur, Chandigarh",23026
-Qualifier 2,01-06-2025,19.30.00,PBKS,MI,"Narendra Modi Stadium, Ahmedabad",23027
-Final,03-06-2025,19.30.00,RCB,PBKS,"Narendra Modi Stadium, Ahmedabad",23028
+1,28/03/2026,19.30.00,RCB,SRH,"M Chinnaswamy Stadium, Bengaluru",40089
+2,29/03/2026,19.30.00,MI,KKR,"Wankhede Stadium, Mumbai",40090
+3,30/03/2026,19.30.00,RR,CSK,"Barsapara Cricket Stadium, Guwahati",40091
+4,31/03/2026,19.30.00,PBKS,GT,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40092
+5,01/04/2026,19.30.00,LSG,DC,"Ekana Cricket Stadium, Lucknow",40093
+6,02/04/2026,19.30.00,KKR,SRH,"Eden Gardens, Kolkata",40094
+7,03/04/2026,19.30.00,CSK,PBKS,"MA Chidambaram Stadium, Chennai",40095
+8,04/04/2026,15.30.00,DC,MI,"Arun Jaitley Stadium, Delhi",40096
+9,04/04/2026,19.30.00,GT,RR,"Narendra Modi Stadium, Ahmedabad",40097
+10,05/04/2026,15.30.00,SRH,LSG,"Rajiv Gandhi International Stadium, Hyderabad",40098
+11,05/04/2026,19.30.00,RCB,CSK,"M Chinnaswamy Stadium, Bengaluru",40099
+12,06/04/2026,19.30.00,KKR,PBKS,"Eden Gardens, Kolkata",40100
+13,07/04/2026,19.30.00,RR,MI,"Barsapara Cricket Stadium, Guwahati",40101
+14,08/04/2026,19.30.00,DC,GT,"Arun Jaitley Stadium, Delhi",40102
+15,09/04/2026,19.30.00,KKR,LSG,"Eden Gardens, Kolkata",40103
+16,10/04/2026,19.30.00,RR,RCB,"Barsapara Cricket Stadium, Guwahati",40104
+17,11/04/2026,15.30.00,PBKS,SRH,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40105
+18,11/04/2026,19.30.00,CSK,DC,"MA Chidambaram Stadium, Chennai",40106
+19,12/04/2026,15.30.00,LSG,GT,"Ekana Cricket Stadium, Lucknow",40107
+20,12/04/2026,19.30.00,MI,RCB,"Wankhede Stadium, Mumbai",40108
+21,13/04/2026,15.30.00,SRH,RR,"Rajiv Gandhi International Stadium, Hyderabad",40229
+22,14/04/2026,19.30.00,CSK,KKR,"MA Chidambaram Stadium, Chennai",40230
+23,15/04/2026,19.30.00,RCB,LSG,"M Chinnaswamy Stadium, Bengaluru",40231
+24,16/04/2026,19.30.00,MI,PBKS,"Wankhede Stadium, Mumbai",40232
+25,17/04/2026,19.30.00,GT,KKR,"Narendra Modi Stadium, Ahmedabad",40233
+26,18/04/2026,15.30.00,RCB,DC,"M Chinnaswamy Stadium, Bengaluru",40234
+27,18/04/2026,19.30.00,SRH,CSK,"Rajiv Gandhi International Stadium, Hyderabad",40235
+28,19/04/2026,15.30.00,KKR,RR,"Eden Gardens, Kolkata",40236
+29,19/04/2026,19.30.00,PBKS,LSG,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40237
+30,20/04/2026,19.30.00,GT,MI,"Narendra Modi Stadium, Ahmedabad",40238
+31,21/04/2026,19.30.00,SRH,DC,"Rajiv Gandhi International Stadium, Hyderabad",40239
+32,22/04/2026,19.30.00,LSG,RR,"Ekana Cricket Stadium, Lucknow",40240
+33,23/04/2026,19.30.00,MI,CSK,"Wankhede Stadium, Mumbai",40241
+34,24/04/2026,19.30.00,RCB,GT,"M Chinnaswamy Stadium, Bengaluru",40242
+35,25/04/2026,15.30.00,DC,PBKS,"Arun Jaitley Stadium, Delhi",40243
+36,25/04/2026,19.30.00,RR,SRH,"Sawai Mansingh Stadium, Jaipur",40244
+37,26/04/2026,15.30.00,GT,CSK,"MA Chidambaram Stadium, Chennai",40245
+38,26/04/2026,19.30.00,LSG,KKR,"Ekana Cricket Stadium, Lucknow",40246
+39,27/04/2026,19.30.00,DC,RCB,"Arun Jaitley Stadium, Delhi",40247
+40,28/04/2026,19.30.00,PBKS,RR,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40248
+41,29/04/2026,19.30.00,MI,SRH,"Wankhede Stadium, Mumbai",40249
+42,30/04/2026,19.30.00,GT,RCB,"Narendra Modi Stadium, Ahmedabad",40250
+43,01/05/2026,19.30.00,RR,DC,"Sawai Mansingh Stadium, Jaipur",40251
+44,02/05/2026,19.30.00,CSK,MI,"MA Chidambaram Stadium, Chennai",40252
+45,03/05/2026,15.30.00,SRH,KKR,"Rajiv Gandhi International Stadium, Hyderabad",40253
+46,03/05/2026,19.30.00,GT,PBKS,"Narendra Modi Stadium, Ahmedabad",40254
+47,04/05/2026,19.30.00,MI,LSG,"Wankhede Stadium, Mumbai",40255
+48,05/05/2026,19.30.00,DC,CSK,"Arun Jaitley Stadium, Delhi",40256
+49,06/05/2026,19.30.00,SRH,PBKS,"Rajiv Gandhi International Stadium, Hyderabad",40257
+50,07/05/2026,19.30.00,LSG,RCB,"Ekana Cricket Stadium, Lucknow",40258
+51,08/05/2026,19.30.00,DC,KKR,"Arun Jaitley Stadium, Delhi",40259
+52,09/05/2026,19.30.00,RR,GT,"Sawai Mansingh Stadium, Jaipur",40260
+53,10/05/2026,15.30.00,CSK,LSG,"MA Chidambaram Stadium, Chennai",40261
+54,10/05/2026,19.30.00,RCB,MI,"Shaheed Veer Narayan Singh Intl Stadium, Raipur",40262
+55,11/05/2026,19.30.00,PBKS,DC,"HPCA Stadium, Dharamsala",40263
+56,12/05/2026,19.30.00,GT,SRH,"Narendra Modi Stadium, Ahmedabad",40264
+57,13/05/2026,19.30.00,RCB,KKR,"Shaheed Veer Narayan Singh Intl Stadium, Raipur",40265
+58,14/05/2026,19.30.00,PBKS,MI,"HPCA Stadium, Dharamsala",40266
+59,15/05/2026,19.30.00,LSG,CSK,"Ekana Cricket Stadium, Lucknow",40267
+60,16/05/2026,19.30.00,KKR,GT,"Eden Gardens, Kolkata",40268
+61,17/05/2026,15.30.00,PBKS,RCB,"HPCA Stadium, Dharamsala",40269
+62,17/05/2026,19.30.00,DC,RR,"Arun Jaitley Stadium, Delhi",40270
+63,18/05/2026,19.30.00,CSK,SRH,"MA Chidambaram Stadium, Chennai",40271
+64,19/05/2026,19.30.00,RR,LSG,"Sawai Mansingh Stadium, Jaipur",40272
+65,20/05/2026,19.30.00,KKR,MI,"Eden Gardens, Kolkata",40273
+66,21/05/2026,19.30.00,CSK,GT,"Narendra Modi Stadium, Ahmedabad",40274
+67,22/05/2026,19.30.00,SRH,RCB,"Rajiv Gandhi International Stadium, Hyderabad",40275
+68,23/05/2026,19.30.00,LSG,PBKS,"Ekana Cricket Stadium, Lucknow",40276
+69,24/05/2026,15.30.00,MI,RR,"Wankhede Stadium, Mumbai",40277
+70,24/05/2026,19.30.00,KKR,DC,"Eden Gardens, Kolkata",40278
+Qualifier 1,26/05/2026,19.30.00,TBA,TBA,"HPCA Stadium, Dharamsala",40386
+Eliminator,27/05/2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40387
+Qualifier 2,29/05/2026,19.30.00,TBA,TBA,"Maharaja Yadavindra Singh Stadium, New Chandigarh",40388
+Final,31/05/2026,19.30.00,TBA,TBA,"Narendra Modi Stadium, Ahmedabad",40389
