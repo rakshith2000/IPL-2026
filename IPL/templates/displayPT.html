@@ -3,346 +3,309 @@
 {{ super() }}
 <title>IPL 2026 Points Table | Team Standings and Rankings</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-    /* Body and Page Background */
-    body {
-        background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
-  background-size: 100%, cover;
-  background-position: center top -48px, center top;
-  background-repeat: repeat, repeat;
-        font-family: 'Exo 2', sans-serif;
-        color: #fff;
-        margin: 0;
-        padding: 0;
-        padding-top: 75px;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-    .banner {
-        padding: 20px 0;
-        text-align: center;
-        margin-top: -20px;
-    }
-
-    .title-banner {
-        font-size: 48px;
-        font-weight: bold;
-        color: #fff;
-        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-        margin-bottom: 1.5rem;
-    }
-
-    .team-logo {
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .form-icon {
-        width: 13px;
-        height: auto;
-    }
-
-    .modern-button {
-        background-color: #ff6b81;
-        color: white;
-        border-radius: 8px;
-        padding: 12px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-
-    .form-img.blink {
-    animation: blink 1.5s infinite;
-    }
-
-    @keyframes blink {
-    0% {
-      transform: scale(0.9);
-    }
-    50% {
-      transform: scale(1.2);
-    }
-    100% {
-      transform: scale(0.9);
-    }
-    }
-
-    .modern-button:hover {
-        transform: translateY(-4px);
-        box-shadow: rgba(255, 105, 180, 0.5) -4px -4px 15px;
-    }
-
-    @media (max-width: 768px) {
-        .title-banner {
-            font-size: 32px;
-        }
-
-        .team-logo {
-            width: 25px;
-            height: 25px;
-        }
-
-        .form-icon {
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    td a {
-        color: inherit;
-        text-decoration: none;
-    }
-    td a:hover {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    body::-webkit-scrollbar {
-        width: 3px;
-        height: 12px;
-    }
-
-    /*body::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0);
-        border-radius: 10px;
-    }*/
-
-    body::-webkit-scrollbar-thumb {
-        background-color: #ff6b81;
-        border-radius: 10px;
-    }
-
-    body::-webkit-scrollbar-thumb:hover {
-        background-color: #f7b733;
-    }
-
-    .table-container::-webkit-scrollbar {
-        height: 12px;
-    }
-
-    .table-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, .1);
-        border-radius: 10px;
-    }
-
-    .table-container::-webkit-scrollbar-thumb {
-        background-color: #ff6b81;
-        border-radius: 10px;
-    }
-
-    .table-container::-webkit-scrollbar-thumb:hover {
-        background-color: #f7b733;
-    }
-
-    .position-flex {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .rank-indicator-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .rank-arrow {
-        font-size: 13px;
-        margin: 0 2px;
-    }
-
-    .rank-diff {
-        font-size: 13px;
-        margin: 0 2px;
-    }
-
-    .rank-arrow.up {
-        color: #4caf50;
-    }
-
-    .rank-arrow.down {
-        color: #f44336;
-    }
-
-    .rank-arrow.same {
-        color: #888;
-    }
-
-    .table__body {
-        transition: opacity 0.3s ease;
-    }
-
-    .table__body.scrolled {
-        opacity: 1;
-    }
-</style>
-
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pointstable.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-{% macro color_class(val) %}
-    {% set v = val|float / 100 if val|float > 1 else val|float %}
-    {% if v >= 0.9 %}box-green
-    {% elif v >= 0.7 %}box-lightgreen
-    {% elif v >= 0.5 %}box-yellowgreen
-    {% elif v >= 0.37 %}box-yellow
-    {% elif v >= 0.14 %}box-orange
-    {% elif v >= 0.01 %}box-lightred
-    {% else %}box-red
-    {% endif %}
-{% endmacro %}
-{% macro gradient_bg(val) -%}
-    {# normalize value: ALWAYS treat input as percentage #}
-    {% set v = (val | float) / 100 %}
-    {% set v = 0 if v < 0 else v %}
-    {% set v = 1 if v > 1 else v %}
 
-    {# HSL interpolation: Green (120°) → Red (0°) #}
-    {% set h = 120 * v %}      {# hue #}
-    {% set s = 65 %}           {# saturation #}
-    {% set l = 28 + 6 * v %}   {# lightness control #}
-
-    {# HSL → RGB conversion #}
-    {% set c = (1 - (2*l/100 - 1)|abs) * (s/100) %}
-    {% set x = c * (1 - ((h / 60) % 2 - 1)|abs) %}
-    {% set m = l/100 - c/2 %}
-
-    {% if h < 60 %}
-        {% set r1, g1, b1 = c, x, 0 %}
-    {% elif h <= 120 %}
-        {% set r1, g1, b1 = x, c, 0 %}
-    {% else %}
-        {% set r1, g1, b1 = c, 0, x %}
-    {% endif %}
-
-    {% set r = ((r1 + m) * 255) | round | int %}
-    {% set g = ((g1 + m) * 255) | round | int %}
-    {% set b = ((b1 + m) * 255) | round | int %}
-
-    background-color: rgb({{ r }}, {{ g }}, {{ b }});
-{%- endmacro %}
-
-{% set clr_dict = {
-    'Delhi Capitals': ['#2561ae', '#282968'], 
-    'Gujarat Giants': ['#e27602', '#ff6600'],
-    'Mumbai Indians': ['#0077b6', '#004ba0'],
-    'Royal Challengers Bangalore': ['#444444', '#2b2a29'],
-    'UP Worrierz': ['#b100cd', '#7600bc']
+{#  ------------------------------------------------------------------ data #}
+{% set HEAD = PT[0] %}
+{% set TIPS = {
+    'P': 'Matches played',
+    'W': 'Matches won',
+    'L': 'Matches lost',
+    'NR': 'No result / abandoned',
+    'Pts': 'Points',
+    'NRR': 'Net run rate',
+    'Last 5': 'Last 5 results — most recent on the right',
+    'Next': 'Next opponent',
+    'Win %': 'Win percentage (a no-result counts as half a win)',
+    'Qual %': 'Chance of qualifying for the playoffs',
+    'Top 2': 'Chance of finishing in the top 2'
 } %}
 
-<div class="banner extra-padding">
-<center>    <span class="title-banner">Points Table</span>
+{#  ---------------------------------------------------------------- macros #}
 
-    <main class="table" id="customers_table">
-        <section class="table__body">
-            <table>
+{# Rank number + movement indicator, or the trophy for the champions #}
+{% macro rank_cell(pos, delta) -%}
+    {%- if pos == 'Champions' -%}
+        <img class="pt-trophy" src="/static/images/trophy.png" alt="Champions" title="Champions">
+    {%- else -%}
+        <span class="pt-rank">
+            <span class="pt-rank__no">{{ pos }}</span>
+            {%- if delta > 0 -%}
+                <span class="pt-delta pt-delta--up" title="Up {{ delta }} from last match">
+                    <span class="pt-delta__arrow">&#9650;</span>{{ delta }}
+                </span>
+            {%- elif delta < 0 -%}
+                <span class="pt-delta pt-delta--down" title="Down {{ delta|abs }} from last match">
+                    <span class="pt-delta__arrow">&#9660;</span>{{ delta|abs }}
+                </span>
+            {%- else -%}
+                <span class="pt-delta pt-delta--same" title="No change">&#8212;</span>
+            {%- endif -%}
+        </span>
+    {%- endif -%}
+{%- endmacro %}
+
+{# Last-5 form as coloured pills; the most recent result pulses #}
+{% macro form_pills(results) -%}
+    {%- if results -%}
+        <span class="pt-form">
+        {%- for r in results -%}
+            {%- set kind = 'w' if r == 'W' else ('d' if r == 'D' else 'l') -%}
+            {%- set label = 'Won' if r == 'W' else ('No result' if r == 'D' else 'Lost') -%}
+            <span class="pt-pill pt-pill--{{ kind }}{{ ' pt-pill--latest' if loop.last }}" title="{{ label }}">
+                {{- 'N' if r == 'D' else r -}}
+            </span>
+        {%- endfor -%}
+        </span>
+    {%- else -%}
+        <span class="pt-form__empty">&mdash;</span>
+    {%- endif -%}
+{%- endmacro %}
+
+{# Next opponent chip with crest #}
+{% macro next_chip(nxt) -%}
+    {%- set opp = nxt|replace('vs ', '')|trim -%}
+    {%- if opp and opp != '--' -%}
+        <span class="pt-next" title="Next up: {{ opp }}">
+            <img src="/static/images/squad_logos/{{ opp }}.png" alt="">{{ opp }}
+        </span>
+    {%- else -%}
+        <span class="pt-next pt-next--none" title="No fixtures left">&mdash;</span>
+    {%- endif -%}
+{%- endmacro %}
+
+{# Probability meter — fill width and hue are both driven by --v in CSS #}
+{% macro meter(val, label) -%}
+    {%- set v = val|float -%}
+    {%- set v = 0 if v < 0 else (100 if v > 100 else v) -%}
+    {%- set tone = 'pt-meter--sure' if v >= 99.95 else ('pt-meter--none' if v <= 0 else '') -%}
+    <span class="pt-meter {{ tone }}" role="img" aria-label="{{ label }}: {{ val }} percent" title="{{ label }}: {{ val }}%">
+        <span class="pt-meter__fill" style="--v: {{ v }}"></span>
+        <span class="pt-meter__val">{{ val }}%</span>
+    </span>
+{%- endmacro %}
+
+{# Win percentage: (W + 0.5 * NR) / P #}
+{% macro win_pct(p, w, nr) -%}
+    {%- set pct = ((w + 0.5 * nr) / p * 100)|round(1) if p else 0 -%}
+    <span class="pt-winpct">
+        <span class="pt-winpct__val">{{ pct }}%</span>
+        <span class="pt-winpct__track"><span class="pt-winpct__bar" style="--v: {{ pct }}"></span></span>
+    </span>
+{%- endmacro %}
+
+<div class="pt-wrap">
+
+    <header class="pt-hero">
+        <span class="pt-hero__eyebrow">TATA IPL 2026 &middot; Standings</span>
+        <h1 class="pt-hero__title">Points Table</h1>
+        <p class="pt-hero__sub">Live team rankings, form guide and qualification probabilities</p>
+
+        <div class="pt-legend">
+            <span class="pt-chip"><span class="pt-chip__dot pt-chip__dot--top2"></span>Top 2 &mdash; Qualifier 1</span>
+            <span class="pt-chip"><span class="pt-chip__dot pt-chip__dot--q"></span>Qualified for playoffs</span>
+            <span class="pt-chip"><span class="pt-chip__dot pt-chip__dot--e"></span>Eliminated</span>
+            <span class="pt-chip"><span class="pt-chip__dot pt-chip__dot--live"></span>Still in contention</span>
+        </div>
+    </header>
+
+    {# ============================================================ DESKTOP #}
+    <div class="pt-card">
+        <div class="pt-scroll" id="ptScroll">
+            <table class="pt-table">
+                <caption class="sr-only">IPL 2026 points table</caption>
                 <thead>
                     <tr>
-                         {% for cols in PT[0][:1] %}
-                        <th class="text-center fade-right" style="color: #fff;"> {{ cols }} </th>
+                        <th scope="col">{{ HEAD[0] }}</th>
+                        <th scope="col">{{ HEAD[2] }}</th>
+                        {% for col in HEAD[3:] %}
+                        <th scope="col"><abbr title="{{ TIPS.get(col, col) }}">{{ col }}</abbr></th>
                         {% endfor %}
-                        <th class="text-center" style="color: #fff;"> {{ cols }} </th>
-                        <th style="color: #fff;"> {{ PT[0][2] }} </th>
-                        {% for cols in PT[0][3:] %}
-                        <th class="text-center" style="color: #fff;"> {{ cols }} </th>
-                        {% endfor %}
-
                     </tr>
                 </thead>
                 <tbody>
                     {% for i in range(10) %}
-                    {% if PT[12][i] == 'Q' and i <= 1 %}{% set bgclr1 = '#6b5a1f' %}{% set bgclr2 = '#8a7a2f' %}{% elif PT[12][i] == 'Q' and i > 1 %}{% set bgclr1 = '#1f5a2a' %}{% set bgclr2 = '#2f7a3f' %}{% elif PT[12][i] == 'E' %}{% set bgclr1 = '#5a1f1f' %}{% set bgclr2 = '#7a2a2a' %}{% else %}{% set bgclr1 = '#2b2a29' %}{% set bgclr2 = '#444444' %}{% endif %}
-                    <tr style="--c1: {{ bgclr1 }}; --c2: {{ bgclr2 }};">
-                        
-                        <td class="text-center fade-right">
-                    {% if PT[1][i] != "Champions" %}
-                        {% if PT[15][i] == 0 %}
-                        <span class="position-flex">
-                        <span class="pos-rank">{{ PT[1][i] }}</span>
-                        <span class="rank-arrow same">&#8212;</span>
-                        </span>
-                        {% else %}
-                            <span class="position-flex">
-                            <span class="pos-rank">{{ PT[1][i] }}</span>
-                            <span class="rank-indicator-row">
-                            {% if PT[15][i] > 0 %}
-                                <span class="rank-arrow up">&#9650;</span>
-                                <span class="rank-diff up">+{{ PT[15][i] }}</span>
-                            {% elif PT[15][i] < 0 %}
-                                <span class="rank-arrow down">&#9660;</span>
-                                <span class="rank-diff down">{{ PT[15][i] }}</span>
-                            {% endif %}
-                            </span>
-                            </span>
-                        {% endif %}
-                    {% else %}
-                        <img src="/static/images/trophy.png" alt="Champions Trophy" style="width: 20px; height: 22px;">
+                    {% set abv = TABV[i] %}
+                    {% set c = clr[abv] %}
+
+                    {#- crest gradient: per-team pick of the two strongest brand colours -#}
+                    {% if abv in ['RCB'] %}{% set ca, cb = c['c3'], c['c1'] %}
+                    {% elif abv in ['PBKS'] %}{% set ca, cb = c['c2'], c['c1'] %}
+                    {% elif abv in ['KKR'] %}{% set ca, cb = c['c2'], c['c3'] %}
+                    {% elif abv in ['MI', 'GT'] %}{% set ca, cb = c['c3'], c['c2'] %}
+                    {% else %}{% set ca, cb = c['c1'], c['c2'] %}
                     {% endif %}
+
+                    {#- row status drives the tint, accent stripe and badge -#}
+                    {% if PT[1][i] == 'Champions' %}{% set status = 'champ' %}
+                    {% elif PT[12][i] == 'Q' and i <= 1 %}{% set status = 'top2' %}
+                    {% elif PT[12][i] == 'Q' %}{% set status = 'q' %}
+                    {% elif PT[12][i] == 'E' %}{% set status = 'e' %}
+                    {% else %}{% set status = '' %}
+                    {% endif %}
+
+                    <tr data-status="{{ status }}"
+                        class="{{ 'is-cutoff' if i == 3 }}"
+                        style="--team-a: {{ ca }}; --team-b: {{ cb }};">
+
+                        <td>{{ rank_cell(PT[1][i], PT[15][i]) }}</td>
+
+                        <td>
+                            <a class="pt-team" href="{{ url_for('main.displayFR') }}?fteam={{ abv }}"
+                               title="See all {{ PT[3][i] }} fixtures">
+                                <span class="pt-team__crest">
+                                    <img src="/static/images/squad_logos/{{ abv }}.png" alt="{{ PT[3][i] }} logo">
+                                    {% if status == 'top2' or status == 'champ' %}<span class="pt-flag pt-flag--top2" title="Top 2">Q</span>
+                                    {% elif status == 'q' %}<span class="pt-flag pt-flag--q" title="Qualified">Q</span>
+                                    {% elif status == 'e' %}<span class="pt-flag pt-flag--e" title="Eliminated">E</span>
+                                    {% endif %}
+                                </span>
+                                <span class="pt-team__names">
+                                    <span class="pt-team__full">{{ PT[3][i] }}</span>
+                                    <span class="pt-team__abv">{{ abv }}</span>
+                                </span>
+                            </a>
                         </td>
 
-                        {% set gradient_color = '' %}
-                        {% if TABV[i] == 'RCB' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c1'] ~ ' 70%' %}
-                        {% elif TABV[i] == 'PBKS' %}
-                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ' 10%, ' ~ clr[TABV[i]]['c1'] ~ ' 70%' %}
-                        {% elif TABV[i] == 'KKR' %}
-                            {% set gradient_color = clr[TABV[i]]['c2'] ~ ' 10%, ' ~ clr[TABV[i]]['c3'] ~ ' 70%' %}
-                        {% elif TABV[i] == 'MI' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
-                        {% elif TABV[i] == 'GT' %}
-                            {% set gradient_color = clr[TABV[i]]['c3'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
-                        {% else %}
-                            {% set gradient_color = clr[TABV[i]]['c1'] ~ ' 10%, ' ~ clr[TABV[i]]['c2'] ~ ' 70%' %}
-                        {% endif %}
-                        <td class="text-center" style="background: linear-gradient(145deg, {{ gradient_color }})">{% if PT[12][i] == "Q" %}<div class="position-indicatorQ"><span>Q</span>{% elif PT[12][i] == "E" %}<div class="position-indicatorE"><span>E</span>{% endif %}</div><img src="/static/images/squad_logos/{{ TABV[i] }}.png" alt=""></td>
-                        <td class="team-name" full="{{ PT[3][i] }}" short="{{ TABV[i] }}"> <b>{{ PT[3][i] }}</b> </td>
                         {% for j in range(4, 8) %}
-                            <td class="text-center">{{ PT[j][i] }}</td>
+                        <td class="pt-num {{ 'pt-num--zero' if PT[j][i] == 0 }}">{{ PT[j][i] }}</td>
                         {% endfor %}
-                        <td class="text-center" ><b>{{ PT[8][i] }}</b></td>
-                        <td class="text-center" ><b>{{ "%+.3f"|format(PT[9][i]|float) }}</b></td>
-                        <td class="text-center" >
-                            {% for result in PT[10][i] %}
-                            {% if loop.last %}
-                                {% if result == 'W' %}
-                                    <img class="form-img blink" src="/static/images/W.png" alt="win icon" />
-                                {% elif result == 'D' %}
-                                    <img class="form-img blink" src="/static/images/D.png" alt="NR/DR icon" />
-                                {% else %}
-                                    <img class="form-img blink" src="/static/images/L.png" alt="loss icon" />
-                                {% endif %}
-                            {% else %}
-                                {% if result == 'W' %}
-                                    <img class="form-img" src="/static/images/W.png" alt="win icon" />
-                                {% elif result == 'D' %}
-                                    <img class="form-img" src="/static/images/D.png" alt="NR/DR icon" />
-                                {% else %}
-                                    <img class="form-img" src="/static/images/L.png" alt="loss icon" />
-                                {% endif %}
-                            {% endif %}
 
-                            {% endfor %}
+                        <td><span class="pt-pts">{{ PT[8][i] }}</span></td>
+
+                        {% set nrr = PT[9][i]|float %}
+                        <td class="pt-nrr {{ 'pt-nrr--pos' if nrr > 0 else ('pt-nrr--neg' if nrr < 0 else '') }}">
+                            {{ "%+.3f"|format(nrr) }}
                         </td>
-                        <td class="text-center">{{ PT[11][i] }}</td>
-                        <td class="text-center" >{%if PT[4][i] != 0 %}{{ ((PT[5][i] + 0.5 * PT[7][i]) / PT[4][i] * 100 )|round(2) }} %{% else %}0 %{% endif %}</td>
-                        <td class="text-center" style="{{ gradient_bg(PT[13][i]) }}"><b>{{ PT[13][i] }} %</b></td>
-                        <td class="text-center" style="{{ gradient_bg(PT[14][i]) }}"><b>{{ PT[14][i] }} %</b></td>
+
+                        <td>{{ form_pills(PT[10][i]) }}</td>
+                        <td>{{ next_chip(PT[11][i]) }}</td>
+                        <td>{{ win_pct(PT[4][i], PT[5][i], PT[7][i]) }}</td>
+                        <td>{{ meter(PT[13][i], 'Qualification chance') }}</td>
+                        <td>{{ meter(PT[14][i], 'Top 2 chance') }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </section>
-        </main>
-    </center>
+        </div>
+        <div class="pt-hint">
+            <span>Swipe to see all stats</span>
+            <span class="pt-hint__arrow">&rarr;</span>
+        </div>
+    </div>
+
+    {# ============================================================= MOBILE #}
+    <div class="pt-cards">
+        {% for i in range(10) %}
+        {% set abv = TABV[i] %}
+        {% set c = clr[abv] %}
+
+        {% if abv in ['RCB'] %}{% set ca, cb = c['c3'], c['c1'] %}
+        {% elif abv in ['PBKS'] %}{% set ca, cb = c['c2'], c['c1'] %}
+        {% elif abv in ['KKR'] %}{% set ca, cb = c['c2'], c['c3'] %}
+        {% elif abv in ['MI', 'GT'] %}{% set ca, cb = c['c3'], c['c2'] %}
+        {% else %}{% set ca, cb = c['c1'], c['c2'] %}
+        {% endif %}
+
+        {% if PT[1][i] == 'Champions' %}{% set status, badge = 'champ', 'Champions' %}
+        {% elif PT[12][i] == 'Q' and i <= 1 %}{% set status, badge = 'top2', 'Top 2' %}
+        {% elif PT[12][i] == 'Q' %}{% set status, badge = 'q', 'Qualified' %}
+        {% elif PT[12][i] == 'E' %}{% set status, badge = 'e', 'Eliminated' %}
+        {% else %}{% set status, badge = '', '' %}
+        {% endif %}
+
+        <article class="ptc" data-status="{{ status }}" style="--team-a: {{ ca }}; --team-b: {{ cb }};">
+            <header class="ptc__top">
+                <div class="ptc__rank">
+                    {% if PT[1][i] == 'Champions' %}
+                    <img class="pt-trophy" src="/static/images/trophy.png" alt="Champions">
+                    {% else %}
+                    <span class="ptc__rankno">{{ PT[1][i] }}</span>
+                    {% if PT[15][i] > 0 %}
+                    <span class="pt-delta pt-delta--up"><span class="pt-delta__arrow">&#9650;</span>{{ PT[15][i] }}</span>
+                    {% elif PT[15][i] < 0 %}
+                    <span class="pt-delta pt-delta--down"><span class="pt-delta__arrow">&#9660;</span>{{ PT[15][i]|abs }}</span>
+                    {% else %}
+                    <span class="pt-delta pt-delta--same">&#8212;</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="ptc__crest">
+                    <img src="/static/images/squad_logos/{{ abv }}.png" alt="{{ PT[3][i] }} logo">
+                </div>
+
+                <div class="ptc__id">
+                    <a class="ptc__name" href="{{ url_for('main.displayFR') }}?fteam={{ abv }}"
+                       aria-label="{{ PT[3][i] }} fixtures">{{ abv }}</a>
+                    <div class="ptc__meta">
+                        {% if badge %}<span class="ptc__badge ptc__badge--{{ status }}">{{ badge }}</span>{% endif %}
+                        <span class="ptc__full">{{ PT[3][i] }}</span>
+                    </div>
+                </div>
+
+                <div class="ptc__pts">
+                    <b>{{ PT[8][i] }}</b>
+                    <span>PTS</span>
+                </div>
+            </header>
+
+            {% set nrr = PT[9][i]|float %}
+            <dl class="ptc__stats">
+                <div class="ptc__stat"><dt>P</dt><dd>{{ PT[4][i] }}</dd></div>
+                <div class="ptc__stat"><dt>W</dt><dd>{{ PT[5][i] }}</dd></div>
+                <div class="ptc__stat"><dt>L</dt><dd>{{ PT[6][i] }}</dd></div>
+                <div class="ptc__stat"><dt>NR</dt><dd>{{ PT[7][i] }}</dd></div>
+                <div class="ptc__stat">
+                    <dt>NRR</dt>
+                    <dd class="{{ 'pt-nrr--pos' if nrr > 0 else ('pt-nrr--neg' if nrr < 0 else '') }}">{{ "%+.2f"|format(nrr) }}</dd>
+                </div>
+            </dl>
+
+            <div class="ptc__row">
+                <div class="ptc__group">
+                    <span class="ptc__label">Last 5</span>
+                    {{ form_pills(PT[10][i]) }}
+                </div>
+                <div class="ptc__group">
+                    <span class="ptc__label">Win</span>
+                    {{ win_pct(PT[4][i], PT[5][i], PT[7][i]) }}
+                </div>
+            </div>
+
+            <div class="ptc__probs">
+                <div class="ptc__prob">
+                    <span class="ptc__label">Qualify</span>
+                    {{ meter(PT[13][i], 'Qualification chance') }}
+                </div>
+                <div class="ptc__prob">
+                    <span class="ptc__label">Top 2</span>
+                    {{ meter(PT[14][i], 'Top 2 chance') }}
+                </div>
+                <div class="ptc__prob">
+                    <span class="ptc__label">Next</span>
+                    {{ next_chip(PT[11][i]) }}
+                </div>
+            </div>
+        </article>
+        {% if i == 3 %}
+        <div class="pt-cut"><span>Playoff cut-off</span></div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <p class="pt-note">
+        <b>Qualify</b> and <b>Top 2</b> are simulated chances based on the remaining fixtures.
+        Teams level on points are split by wins, then net run rate.
+    </p>
+
 </div>
+
 <nav class="bottom-nav">
     <div class="bottom-nav-item">
         <a href="{{ url_for('main.displayFR') }}">
@@ -382,46 +345,16 @@
   </nav>
 
 <script>
-    function updateTeamNames() {
-      const screenWidth = window.innerWidth;
-      const teamElements = document.querySelectorAll('.team-name');
-
-      teamElements.forEach(element => {
-        const fullName = element.getAttribute('full');
-        const shortName = element.getAttribute('short');
-
-        if (screenWidth <= 600) { // Mobile view breakpoint
-          element.innerHTML = `<a href="/fixtures?fteam=${shortName}">${shortName}</a>`;
-        } else {
-          element.innerHTML = `<a href="/fixtures?fteam=${shortName}">${fullName}</a>`;
-        }
-      });
-    }
-
-    // Update team names on load and window resize
-    window.addEventListener('resize', updateTeamNames);
-    window.addEventListener('load', updateTeamNames);
-
-    // Fading effect for table scroll
-    document.addEventListener('DOMContentLoaded', function() {
-      const tableBody = document.querySelector('.table__body');
-      if (tableBody) {
-        tableBody.addEventListener('scroll', function() {
-          if (tableBody.scrollLeft > 0) {
-            tableBody.classList.add('scrolled');
-          } else {
-            tableBody.classList.remove('scrolled');
-          }
-        });
-      }
+    // Drop-shadow on the frozen team column once the table is scrolled sideways.
+    document.addEventListener('DOMContentLoaded', function () {
+        var scroller = document.getElementById('ptScroll');
+        if (!scroller) return;
+        var sync = function () {
+            scroller.classList.toggle('is-scrolled', scroller.scrollLeft > 4);
+        };
+        scroller.addEventListener('scroll', sync, { passive: true });
+        sync();
     });
-</script>
-
-<script>
-VanillaTilt.init(document.querySelector(".jumbotron"), {
-    max: 25,
-    speed: 400,
-});
 </script>
 
 {% endblock %}
