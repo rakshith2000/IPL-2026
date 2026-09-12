@@ -10,7 +10,8 @@ import requests, warnings
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz, process
 from urllib.request import Request, urlopen
-import random, cloudscraper, cloudscraper.exceptions
+import math, random, cloudscraper, cloudscraper.exceptions
+import numpy as np
 from datetime import datetime, date, time, timedelta
 from collections import defaultdict, Counter
 import threading, lxml.etree
@@ -23,13 +24,32 @@ main = Blueprint('main', __name__)
 
 tz = pytz.timezone('Asia/Kolkata')
 
-SIMULATIONS = 100_000
+# ------------------------------------------------------------------ playoff simulation
+# IPL: 10 teams, 70 league matches (double round-robin), top 4 into the playoffs.
+SIMULATIONS = 500_000   # numpy-vectorised, so this is cheap: SE <= 0.07 percentage points
+SIM_CHUNK = 5_000       # sims per batch: keeps the working set in cache, and caps
+                        # peak memory whatever SIMULATIONS is set to
+SIM_SEED = 20260328     # fixed seed => an unchanged points table always gives the same %
 
-# IPL: 10 teams, 70 matches (double round-robin)
-OVERS = 20
-PROB_NR = 0.08     # rain / washout chance (lower than WPL)
-MEAN_SCORE = 170
-STD_DEV = 18
+OVERS = 20              # a side bowled out is still deemed to have faced its full 20
+PROB_NR = 0.022         # washout rate: IPL averages ~0-3 no-results in 70 matches
+
+# Priors for the scoring model. calibrate_match_model() moves these toward whatever
+# this season's completed matches say; with no matches played it returns them unchanged.
+PRIOR_MEAN_SCORE = 172.0   # runs per innings
+PRIOR_STD_DEV = 30.0       # real IPL per-innings SD is ~30-35
+PRIOR_HOME_ADV = 6.0       # runs, i.e. roughly a 55% home win rate
+RIDGE_MEAN = 4.0           # shrinkage weights, in "pseudo-innings" of prior evidence
+RIDGE_TEAM = 8.0           # keeps team ratings near the league mean early in the season
+RIDGE_HOME = 25.0
+RIDGE_CHASE = 25.0
+SIGMA_PRIOR_WEIGHT = 25.0
+EM_ITERS = 12              # EM sweeps for the censored-chase likelihood
+SCORE_FLOOR, SCORE_CEIL = 60, 300
+RATING_CAP = 25.0          # runs, hard cap on a team's attack/defence rating
+CHASE_PACING = 0.64        # a chasing side paces itself, so only part of its spare capacity
+                           # turns into spare balls: tuned so won chases finish with ~13 to
+                           # spare, as they do in the IPL. Straight line would give ~20.
 
 pofs = {'Q1':'Qualifier 1', 'E':'Eliminator', 'Q2':'Qualifier 2', 'F':'Final'}
 
@@ -144,61 +164,269 @@ sqclr = {
     'LSG': {'c1': '#aa003b', 'c2': '#002554'}     # Light Blue to Gold
 }
 
-def simulate_score():
-    runs = int(random.gauss(MEAN_SCORE, STD_DEV))
-    return max(80, runs)
+def _mills_ratio(a):
+    """phi(a) / (1 - Phi(a)) - the expected overshoot of a normal draw above a.
 
-def get_top4_playoffs(teams, remaining_matches):
-    results = defaultdict(lambda: {"top4": 0, "top2": 0, "top1": 0})
-    for _ in range(SIMULATIONS):
-        sim = {t: v.copy() for t, v in teams.items()}
-        for t1, t2 in remaining_matches:
-            if random.random() < PROB_NR:
-                sim[t1]["points"] += 1
-                sim[t2]["points"] += 1
-                continue
-            r1 = simulate_score()
-            r2 = simulate_score()
-            sim[t1]["runs_for"] += r1
-            sim[t1]["runs_against"] += r2
-            sim[t1]["overs_faced"] += OVERS
-            sim[t1]["overs_bowled"] += OVERS
-            sim[t2]["runs_for"] += r2
-            sim[t2]["runs_against"] += r1
-            sim[t2]["overs_faced"] += OVERS
-            sim[t2]["overs_bowled"] += OVERS
-            if r1 > r2:
-                sim[t1]["points"] += 2
-            elif r2 > r1:
-                sim[t2]["points"] += 2
-            else:
-                sim[t1]["points"] += 1
-                sim[t2]["points"] += 1
-        table = []
-        for team, v in sim.items():
-            if v["overs_faced"] == 0 or v["overs_bowled"] == 0:
-                nrr = 0.0
-            else:
-                nrr = (v["runs_for"] / v["overs_faced"]) - (v["runs_against"] / v["overs_bowled"])
-            table.append((team, v["points"], nrr))
-        table.sort(key=lambda x: (x[1], x[2]), reverse=True)
-        for i, (team, _, _) in enumerate(table):
-            if i < 4:
-                results[team]["top4"] += 1
-            if i < 2:
-                results[team]["top2"] += 1
-            if i == 0:
-                results[team]["top1"] += 1
-    top4_predict = {}
-    for team in teams:
-        top4_predict[team] = {'top4':round(results[team]['top4'] / SIMULATIONS * 100, 1), 'top2':round(results[team]['top2'] / SIMULATIONS * 100, 1)}
+    Used to fill in the scores of successful chases, which are only ever observed
+    as ">= the target". Arrays here are at most a few hundred long, so the
+    per-element loop costs nothing and saves a scipy dependency.
+    """
+    out = np.empty(len(a), dtype=float)
+    for k, v in enumerate(a):
+        tail = 0.5 * math.erfc(v / math.sqrt(2.0))
+        out[k] = (v + 1.0 / v) if tail < 1e-12 else (
+            math.exp(-0.5 * v * v) / math.sqrt(2.0 * math.pi) / tail)
+    return out
 
-    return top4_predict
+def home_venue_map():
+    """{venue: home team}, derived from the fixture list rather than hard-coded.
+
+    In the fixture CSV the host is always listed as Team_A, so the home side for a
+    venue is whichever team is listed first there most often. That keeps secondary
+    home grounds (Guwahati, Dharamsala, Raipur...) right, and handles the odd
+    relocated match where the visitor is listed first.
+    """
+    rows = db.session.query(Fixture.Venue, Fixture.Team_A).filter(
+        Fixture.Match_No.notin_(list(pofs.values()))).all()
+    hosts = defaultdict(Counter)
+    for venue, team_a in rows:
+        if venue and team_a:
+            hosts[venue][team_a] += 1
+    return {venue: counter.most_common(1)[0][0] for venue, counter in hosts.items()}
+
+def innings_observations(home_of):
+    """One row per completed league innings, as
+    (batting, bowling, is_home, is_chase, runs, censor_at).
+
+    censor_at is None when the innings was seen in full, or the target when the
+    chase succeeded - the side stopped batting on reaching it, so all we know is
+    that its notional 20-over total was at least that high. Modelling that
+    censoring is what lets every innings inform the ratings without the sample
+    being skewed by winning chases stopping early.
+
+    Super overs, DLS and abandoned matches are skipped: for those the innings
+    total either isn't attributable to a batting order or isn't a 20-over score.
+    """
+    fixtures = Fixture.query.filter(Fixture.Result != None).filter(
+        Fixture.Match_No.notin_(list(pofs.values()))).order_by(Fixture.id).all()
+    rows = []
+    for fx in fixtures:
+        res = fx.Result or ''
+        if fx.Win_T in (None, 'NA') or 'Super over' in res or 'DLS' in res or 'abandoned' in res:
+            continue
+        if 'wicket' in res:        # the winner chased, so it batted second
+            first, second = (fx.Team_B, fx.Team_A) if fx.Win_T == fx.Team_A else (fx.Team_A, fx.Team_B)
+        elif 'run' in res:         # the winner defended, so it batted first
+            first, second = (fx.Team_A, fx.Team_B) if fx.Win_T == fx.Team_A else (fx.Team_B, fx.Team_A)
+        else:
+            continue
+        info = {fx.Team_A: fx.A_info or {}, fx.Team_B: fx.B_info or {}}
+        r1, r2 = info[first].get('runs'), info[second].get('runs')
+        if not r1 or not r2:
+            continue
+        home = home_of.get(fx.Venue, fx.Team_A)
+        rows.append((first, second, first == home, False, r1, None))
+        rows.append((second, first, second == home, True, r2, r1 + 1 if r2 > r1 else None))
+    return rows
+
+def calibrate_match_model(observations=None, home_of=None):
+    """Fit this season's scoring model: innings runs ~ mean + attack + defence + home + chase.
+
+    A ridge penalty pulls every coefficient toward its prior, weighted in
+    pseudo-innings, so the fit degrades gracefully: no matches played returns the
+    priors exactly, and team ratings only move as far as the results justify.
+    Successful chases enter as right-censored observations, handled by EM.
+    """
+    home_of = home_venue_map() if home_of is None else home_of
+    obs = innings_observations(home_of) if observations is None else observations
+
+    names = list(teams_data)
+    idx = {t: k for k, t in enumerate(names)}
+    obs = [o for o in obs if o[0] in idx and o[1] in idx]
+    n_t = len(names)
+    n_col = 3 + 2 * n_t                      # mean | attack(10) | defence(10) | home | chase
+
+    X = np.zeros((len(obs), n_col))
+    y = np.zeros(len(obs))
+    cens = np.full(len(obs), np.nan)
+    for k, (bat, bowl, is_home, is_chase, runs, censor_at) in enumerate(obs):
+        X[k, 0] = 1.0
+        X[k, 1 + idx[bat]] = 1.0
+        X[k, 1 + n_t + idx[bowl]] = 1.0
+        X[k, -2] = 1.0 if is_home else 0.0
+        X[k, -1] = 1.0 if is_chase else 0.0
+        y[k] = runs
+        if censor_at is not None:
+            cens[k] = censor_at
+
+    penalty = np.concatenate(([RIDGE_MEAN], np.full(2 * n_t, RIDGE_TEAM), [RIDGE_HOME, RIDGE_CHASE]))
+    prior = np.concatenate(([PRIOR_MEAN_SCORE], np.zeros(2 * n_t), [PRIOR_HOME_ADV, 0.0]))
+    normal_eq = X.T @ X + np.diag(penalty)   # ridge diagonal keeps this solvable at n = 0
+    target = penalty * prior
+
+    beta = np.linalg.solve(normal_eq, X.T @ y + target)
+    sigma = PRIOR_STD_DEV
+    censored = ~np.isnan(cens)
+    for _ in range(EM_ITERS):
+        fit = X @ beta
+        work = y.copy()
+        sq = np.empty(len(obs))
+        sq[~censored] = (y[~censored] - fit[~censored]) ** 2
+        if censored.any():
+            a = (cens[censored] - fit[censored]) / sigma
+            ratio = _mills_ratio(a)
+            work[censored] = fit[censored] + sigma * ratio      # E[runs | runs >= target]
+            sq[censored] = sigma ** 2 * (1.0 + a * ratio)       # and its second moment
+        sigma = math.sqrt((sq.sum() + SIGMA_PRIOR_WEIGHT * PRIOR_STD_DEV ** 2)
+                          / (len(obs) + SIGMA_PRIOR_WEIGHT))
+        beta = np.linalg.solve(normal_eq, X.T @ work + target)
+
+    return {
+        'mean': float(beta[0]),
+        'sigma': float(np.clip(sigma, 18.0, 45.0)),
+        'attack': {t: float(np.clip(beta[1 + k], -RATING_CAP, RATING_CAP)) for t, k in idx.items()},
+        'defence': {t: float(np.clip(beta[1 + n_t + k], -RATING_CAP, RATING_CAP)) for t, k in idx.items()},
+        'home_adv': float(np.clip(beta[-2], -15.0, 25.0)),
+        'chase_adj': float(np.clip(beta[-1], -20.0, 20.0)),
+        'home_of': home_of,
+        'innings': len(obs),
+    }
+
+def _pct(count, total):
+    """Percentage, keeping 'impossible' and 'merely unlikely' visibly different.
+
+    Returns a plain float - a numpy scalar would reach psycopg2 unadaptable.
+    """
+    if count <= 0:
+        return 0.0
+    if count >= total:
+        return 100.0
+    return float(min(99.9, max(0.1, round(count / total * 100.0, 1))))
+
+def get_top4_playoffs(teams, remaining_matches, model=None):
+    """Monte-Carlo playoff probabilities for every team.
+
+    teams:             {team: {points, wins, runs_for, overs_faced, runs_against, overs_bowled}}
+                       with overs as DECIMAL overs (run ovToPer() on the stored x.y values).
+                       Iteration order breaks exact ties, so pass it ranked.
+    remaining_matches: (team_a, team_b) or (team_a, team_b, venue) rows, league matches only.
+
+    Each simulated match plays out as a real one: a first innings of 20 overs, then
+    a chase that either falls short over the full 20 or gets there early - which is
+    what moves net run rate, and net run rate is what settles most top-4 cut-offs.
+    Teams are ranked on points, then wins, then NRR, matching both the IPL playing
+    conditions and the table this feeds.
+    """
+    names = list(teams)
+    n_t = len(names)
+    idx = {t: k for k, t in enumerate(names)}
+    if model is None:
+        model = calibrate_match_model()
+    mu, sigma = model['mean'], model['sigma']
+    attack, defence = model['attack'], model['defence']
+    home_adv, chase_adj = model['home_adv'], model['chase_adj']
+    home_of = model.get('home_of', {})
+
+    # Resolve each fixture's expected scores once, outside the simulation loop.
+    fixtures = []
+    for m in remaining_matches:
+        a, b, venue = m[0], m[1], (m[2] if len(m) > 2 else None)
+        if a not in idx or b not in idx:
+            continue
+        home = home_of.get(venue, a)
+        exp_a = mu + attack.get(a, 0.0) + defence.get(b, 0.0) + (home_adv if home == a else 0.0)
+        exp_b = mu + attack.get(b, 0.0) + defence.get(a, 0.0) + (home_adv if home == b else 0.0)
+        fixtures.append((idx[a], idx[b], exp_a, exp_b))
+
+    base = {k: np.array([float(teams[t].get(k, 0) or 0) for t in names])
+            for k in ('points', 'wins', 'runs_for', 'overs_faced', 'runs_against', 'overs_bowled')}
+
+    total = SIMULATIONS if fixtures else 1     # nothing left to play => one deterministic pass
+    rng = np.random.default_rng(SIM_SEED + len(fixtures))
+    counts = np.zeros((n_t, 3))
+    done = 0
+    while done < total:
+        n = min(SIM_CHUNK, total - done)
+        # Accumulators are (team, sim): one team's row is contiguous, so the eight
+        # updates each match needs stay cache-friendly.
+        pts, wins, runs_for, overs_faced, runs_against, overs_bowled = (
+            np.repeat(base[k][:, None], n, axis=1) for k in
+            ('points', 'wins', 'runs_for', 'overs_faced', 'runs_against', 'overs_bowled'))
+
+        for i, j, exp_a, exp_b in fixtures:
+            a_first = rng.random(n) < 0.5           # who bats first is close to a coin toss
+            no_res = rng.random(n) < PROB_NR
+            exp_1 = np.where(a_first, exp_a, exp_b)
+            exp_2 = np.where(a_first, exp_b, exp_a) + chase_adj
+
+            first = rng.standard_normal(n)
+            first *= sigma
+            first += exp_1
+            np.rint(first, out=first)
+            np.clip(first, SCORE_FLOOR, SCORE_CEIL, out=first)
+            # What the chasing side would make in a full 20 overs; it only bats on
+            # until the target, so this decides the result and how early it finishes.
+            second = rng.standard_normal(n)
+            second *= sigma
+            second += exp_2
+            np.rint(second, out=second)
+            np.clip(second, SCORE_FLOOR - 20, SCORE_CEIL + 20, out=second)
+
+            target = first + 1.0
+            chased = second >= target
+            over_hit = np.minimum(rng.integers(0, 5, n), np.maximum(second - target, 0.0))
+            pace = np.clip(rng.standard_normal(n) * 0.07 + 1.0, 0.7, 1.15)
+            spare = 1.0 - CHASE_PACING * (1.0 - target / np.maximum(second, 1.0))
+            balls = np.clip(np.ceil(120.0 * spare * pace), 24, 120)
+            runs_2 = np.where(chased, target + over_hit, second)
+            # An innings that ends in defeat counts as the full 20 whether the side
+            # was bowled out or simply ran out of overs.
+            overs_2 = np.where(chased, balls / 6.0, float(OVERS))
+
+            tied = (~chased) & (second == first)    # a tie goes to a super over, not shared points
+            super_over = rng.random(n) < 0.5
+            first_won = (~chased & ~tied) | (tied & super_over)
+            a_won = np.where(a_first, first_won, chased | (tied & ~super_over)) & ~no_res
+            b_won = (~no_res) & ~a_won
+
+            pts[i] += np.where(no_res, 1.0, np.where(a_won, 2.0, 0.0))
+            pts[j] += np.where(no_res, 1.0, np.where(b_won, 2.0, 0.0))
+            wins[i] += a_won
+            wins[j] += b_won
+
+            live = ~no_res                          # a no-result leaves run rates untouched
+            a_runs = np.where(a_first, first, runs_2) * live
+            a_overs = np.where(a_first, float(OVERS), overs_2) * live
+            b_runs = np.where(a_first, runs_2, first) * live
+            b_overs = np.where(a_first, overs_2, float(OVERS)) * live
+            runs_for[i] += a_runs
+            overs_faced[i] += a_overs
+            runs_against[i] += b_runs
+            overs_bowled[i] += b_overs
+            runs_for[j] += b_runs
+            overs_faced[j] += b_overs
+            runs_against[j] += a_runs
+            overs_bowled[j] += a_overs
+
+        scored = np.divide(runs_for, overs_faced, out=np.zeros_like(runs_for), where=overs_faced > 0)
+        conceded = np.divide(runs_against, overs_bowled, out=np.zeros_like(runs_against), where=overs_bowled > 0)
+        # One sort key for points > wins > NRR; the gaps are wide enough that the
+        # lower-priority terms can never bleed into the higher ones.
+        key = pts * -1e6 - wins * 1e3 - np.clip(scored - conceded, -400.0, 400.0)
+        order = np.argsort(np.ascontiguousarray(key.T), axis=1, kind='stable')
+        counts[:, 0] += np.bincount(order[:, :4].ravel(), minlength=n_t)
+        counts[:, 1] += np.bincount(order[:, :2].ravel(), minlength=n_t)
+        counts[:, 2] += np.bincount(order[:, 0], minlength=n_t)
+        done += n
+
+    return {t: {'top4': _pct(counts[k, 0], total),
+                'top2': _pct(counts[k, 1], total),
+                'top1': _pct(counts[k, 2], total)} for t, k in idx.items()}
 
 def refresh_qualification():
-    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
-    teams_t4 = {tm.team_name : {'points': tm.Points, 'runs_for': tm.For['runs'], 'overs_faced': tm.For['overs'], 'runs_against': tm.Against['runs'], 'overs_bowled': tm.Against['overs']} for tm in dataPT}
-    remaining_matches = db.session.query(Fixture.Team_A, Fixture.Team_B).filter(Fixture.Result == None).filter(Fixture.Match_No != 'Eliminator').filter(Fixture.Match_No != 'Qualifier 1').filter(Fixture.Match_No != 'Qualifier 2').filter(Fixture.Match_No != 'Final').order_by(Fixture.id).all()
+    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
+    teams_t4 = {tm.team_name : {'points': tm.Points, 'wins': tm.W, 'runs_for': tm.For['runs'], 'overs_faced': ovToPer(tm.For['overs']), 'runs_against': tm.Against['runs'], 'overs_bowled': ovToPer(tm.Against['overs'])} for tm in dataPT}
+    remaining_matches = db.session.query(Fixture.Team_A, Fixture.Team_B, Fixture.Venue).filter(Fixture.Result == None).filter(Fixture.Match_No.notin_(list(pofs.values()))).order_by(Fixture.id).all()
     top_4 = get_top4_playoffs(teams_t4, remaining_matches)
     for tm in dataPT:
         tm.Qual = top_4[tm.team_name]['top4']
