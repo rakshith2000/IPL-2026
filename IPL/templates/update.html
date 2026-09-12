@@ -1,255 +1,225 @@
-{% extends "base.html" %} {% block head %} {{ super() }}
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
 <title>IPL 2026 | Update Records</title>
-<link
-        rel="stylesheet"
-        href="{{ url_for('static', filename= 'extended_beauty.css') }}"
-        xmlns="http://www.w3.org/1999/html"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/update.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<style>
-body {
-        font-family: 'Exo 2', sans-serif;
-background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
-  background-size: 100%, cover;
-  background-position: center top 30px, center top;
-  background-repeat: repeat, repeat;
-    }
-</style>
-        {% macro flashes() %}
-            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
-                {% for cat,msg in messages %}
-                {% if cat == 'error' %}
-                <div class="alert alert-danger alert-dismissable" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                    {{ msg }}
-                </div>{% endif %}
-                {% if cat == 'success' %}
-                <div class="alert alert-success alert-dismissable" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                    {{ msg }}
-                </div>{% endif %}
-                {% if cat == 'warning' %}
-                <div class="alert alert-warning alert-dismissable" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                    {{ msg }}<br>
-                    <a href="#" type="submit" data-toggle="modal"
-                       data-target="#mymodal">Click Here</a>
-                    to view valid matches
-                </div>{% endif %}
-                {% endfor %}{% endif %} {% endwith %}
-            {% endmacro %}
-<center>
-    <div style="padding-top: 75px;"></div>
-    <br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Update</u> <b>Match Result </b></h5>
-                {% if key == '1' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/updatematch">
-      <label for="match">Enter Match Number: </label>
-      <input
-        type="text"
-        id="match"
-        name="match"
-        aria-describedby="pushupHelp"
-        placeholder="Match number" required/>
-      <input type="hidden" name="hint" value="before">
-      <br>
-      <button type="submit" class="btn btn-success">Click Here</button>
-      </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Update</u> <b>POTM </b></h5>
-                {% if key == '6' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/updatepotm">
-      <label for="potmmatch">Enter Match Number: </label>
-      <input
-        type="text"
-        id="potmmatch"
-        name="potmmatch"
-        aria-describedby="pushupHelp"
-        placeholder="Match number"/>
-      <input type="hidden" name="hint" value="before">
-      <br>
-      <button type="submit" class="btn btn-success">Click Here</button>
-      </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Delete</u> <b>Match Result   </b>   </h5>
-                {% if key == '2' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/deletematch">
-                    <label for="dmatch">Enter Match Number: </label>
-                    <input type="text"
-                                    id="dmatch"
-                                    name="dmatch"
-                                    aria-describedby="pushupHelp"
-                                    placeholder="Match number" required/>
-                    <input type="hidden" name="hint" value="before">
-                    <br>
-                    <button type="submit" class="btn btn-success">Click Here</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Update</u> <b>Playoffs Teams   </b>   </h5>
-                {% if key == '3' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/updateplayoffs">
-                    <label for="pomatch">Select Playoffs Match: </label>
-                    <select name="pomatch" id="pomatch" required="required">
-                        <option value="" disabled selected>----Select----</option>
-                        <option value="Q1">Qualifier 1</option>
-                        <option value="E">Eliminator</option>
-                        <option value="Q2">Qualifier 2</option>
-                        <option value="F">Final</option>
-                    </select>
-                    <input type="hidden" name="hint" value="before">
-                    <br>
-                    <button type="submit" class="btn btn-success">Click Here</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Update</u> <b>Qualified Teams   </b>   </h5>
-                {% if key == '4' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/updatequalification">
-                    <label for="qteam">Select Qualified Team: </label>
-                    <select name="qteam" id="qteam" required="required">
-                        <option value="" disabled selected>----Select----</option>
-                        <option value="CSK">Chennai Super Kings</option>
-                        <option value="DC">Delhi Capitals</option>
-                        <option value="GT">Gujarat Titans</option>
-                        <option value="KKR">Kolkata Knight Riders</option>
-                        <option value="LSG">Lucknow Super Giants</option>
-                        <option value="MI">Mumbai Indians</option>
-                        <option value="PBKS">Punjab Kings</option>
-                        <option value="RR">Rajasthan Royals</option>
-                        <option value="RCB">Royal Challengers Bengaluru</option>
-                        <option value="SRH">Sunrisers Hyderabad</option>
-                    </select>
-                    <input type="hidden" name="hint" value="before">
-                    <br>
-                    <button type="submit" class="btn btn-success">Click Here</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-md-9" style="margin: 0 auto">
-            <div class="jumbotron p-3">
-                <h5>To <u>Update</u> <b>Eliminated Teams   </b>   </h5>
-                {% if key == '5' %}
-                {{ flashes() }}
-                {% endif %}
-                <form method="POST" action="/updateelimination">
-                    <label for="qteam">Select Eliminated Team: </label>
-                    <select name="eteam" id="eteam" required="required">
-                        <option value="" disabled selected>----Select----</option>
-                        <option value="CSK">Chennai Super Kings</option>
-                        <option value="DC">Delhi Capitals</option>
-                        <option value="GT">Gujarat Titans</option>
-                        <option value="KKR">Kolkata Knight Riders</option>
-                        <option value="LSG">Lucknow Super Giants</option>
-                        <option value="MI">Mumbai Indians</option>
-                        <option value="PBKS">Punjab Kings</option>
-                        <option value="RR">Rajasthan Royals</option>
-                        <option value="RCB">Royal Challengers Bengaluru</option>
-                        <option value="SRH">Sunrisers Hyderabad</option>
-                    </select>
-                    <input type="hidden" name="hint" value="before">
-                    <br>
-                    <button type="submit" class="btn btn-success">Click Here</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-</center>
 
-<!-- Modal -->
-<div id="mymodal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <!-- Header -->
-            <div class="modal-header">
-                {% if key == '1' %}
-                <h6 class="modal-title"><b>Updatable Matches List</b></h6> {% endif %}
-                {% if key == '2' %}
-                <h6 class="modal-title"><b>Deletable Matches List</b></h6> {% endif %}
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-            </div>
-        <!-- Body -->
-            <div class="modal-body">
-                    <div class="container">
-                            {% if key == '1' %}
-                        {% for i in FR %}
-                            {% if i.Win_T == None and i.Team_A != 'TBA' and i.Team_B != 'TBA' %}
-                            <div class="jumbotron p-3">
-                            Match -- {{ i.Match_No }} &nbsp;&nbsp; <b>{{ i.Team_A }}</b> vs <b>{{ i.Team_B }}</b>
-                            </div>
-                                {% endif %}
-                        {% endfor %}
-                            {% endif %}
-                            {% if key == '2' %}
-                        {% for i in FR %}
-                            {% if i.Win_T != None%}
-                        <div class="jumbotron p-3">
-                            Match -- {{ i.Match_No }} &nbsp;&nbsp; <b>{{ i.Team_A }}</b> vs <b>{{ i.Team_B }}</b>
-                        </div>{% endif %}
-                        {% endfor %}
-                            {% endif %}
+{#  --------------------------------------------------------------- options #}
+{# Kept inline (the /update route doesn't pass full_name); values must match
+   the abbreviations stored in Pointstable.team_name. #}
+{% set TEAMS = [
+    ('CSK', 'Chennai Super Kings'),
+    ('DC', 'Delhi Capitals'),
+    ('GT', 'Gujarat Titans'),
+    ('KKR', 'Kolkata Knight Riders'),
+    ('LSG', 'Lucknow Super Giants'),
+    ('MI', 'Mumbai Indians'),
+    ('PBKS', 'Punjab Kings'),
+    ('RR', 'Rajasthan Royals'),
+    ('RCB', 'Royal Challengers Bengaluru'),
+    ('SRH', 'Sunrisers Hyderabad')
+] %}
+{% set PLAYOFFS = [('Q1', 'Qualifier 1'), ('E', 'Eliminator'), ('Q2', 'Qualifier 2'), ('F', 'Final')] %}
+
+{#  ---------------------------------------------------------------- macros #}
+
+{# Flash messages for one card. Only the card matching `key` calls this, so the
+   flash queue is consumed exactly once per request. #}
+{% macro flashes() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for cat, msg in messages %}
+                {% if cat in ['error', 'success', 'warning'] %}
+                {% set icon = 'error_outline' if cat == 'error' else ('check_circle_outline' if cat == 'success' else 'warning') %}
+                <div class="alert uc-alert uc-alert--{{ cat }} fade show" role="alert">
+                    <span class="material-icons-round uc-alert__icon">{{ icon }}</span>
+                    <div class="uc-alert__body">
+                        {{ msg }}
+                        {% if cat == 'warning' %}
+                        <br><a href="#" data-toggle="modal" data-target="#mymodal">View valid matches</a>
+                        {% endif %}
                     </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endmacro %}
+
+{# One action card = one POST endpoint. The caller block supplies the field. #}
+{% macro card(tone, icon, title, desc, action, active, btn, btn_icon) %}
+<form class="uc-card uc-card--{{ tone }}" method="POST" action="{{ action }}">
+    <div class="uc-card__head">
+        <span class="uc-card__icon"><span class="material-icons-round">{{ icon }}</span></span>
+        <div>
+            <h2 class="uc-card__title">{{ title }}</h2>
+            <p class="uc-card__desc">{{ desc }}</p>
+        </div>
+    </div>
+    {% if active %}{{ flashes() }}{% endif %}
+    {{ caller() }}
+    <input type="hidden" name="hint" value="before">
+    <button type="submit" class="uc-btn">
+        {{ btn }}<span class="material-icons-round">{{ btn_icon }}</span>
+    </button>
+</form>
+{% endmacro %}
+
+{# Match-number text field + hint #}
+{% macro match_field(id, name) %}
+<div class="uc-field">
+    <label for="{{ id }}">Match number</label>
+    <input type="text" id="{{ id }}" name="{{ name }}" placeholder="e.g. 42 or Q1"
+           autocomplete="off" aria-describedby="{{ id }}Hint" required>
+</div>
+<p class="uc-hint" id="{{ id }}Hint">
+    League <code>1</code>&ndash;<code>70</code> &middot; Playoffs <code>Q1</code> <code>E</code> <code>Q2</code> <code>F</code>
+</p>
+{% endmacro %}
+
+{# Team picker used by both the qualify and eliminate cards #}
+{% macro team_select(id, name, label) %}
+<div class="uc-field">
+    <label for="{{ id }}">{{ label }}</label>
+    <select name="{{ name }}" id="{{ id }}" required>
+        <option value="" disabled selected>Select a team&hellip;</option>
+        {% for abv, full in TEAMS %}
+        <option value="{{ abv }}">{{ full }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endmacro %}
+
+<div class="uc-wrap">
+
+    <header class="uc-hero">
+        <span class="uc-hero__eyebrow">
+            <span class="material-icons-round">verified_user</span>Admin only
+        </span>
+        <h1 class="uc-hero__title">Control Room</h1>
+        <p class="uc-hero__sub">Update results, awards and qualification status for IPL 2026</p>
+    </header>
+
+    {# ==================================================== match records #}
+    <section class="uc-section">
+        <div class="uc-section__head">
+            <h2 class="uc-section__title">Match records</h2>
+        </div>
+
+        <div class="uc-grid">
+
+            {% call card('cyan', 'sports_cricket', 'Update match result', 'Record the scorecard and winner for a completed match.', '/updatematch', key == '1', 'Continue', 'arrow_forward') %}
+                {{ match_field('match', 'match') }}
+            {% endcall %}
+
+            {% call card('gold', 'military_tech', 'Update Player of the Match', 'Pick the POTM from the two squads that played.', '/updatepotm', key == '6', 'Continue', 'arrow_forward') %}
+                {{ match_field('potmmatch', 'potmmatch') }}
+            {% endcall %}
+
+            {% call card('red', 'delete_forever', 'Delete match result', 'Roll back a result so the match can be entered again.', '/deletematch', key == '2', 'Continue', 'arrow_forward') %}
+                {{ match_field('dmatch', 'dmatch') }}
+            {% endcall %}
+
+        </div>
+    </section>
+
+    {# ================================================ tournament status #}
+    <section class="uc-section">
+        <div class="uc-section__head">
+            <h2 class="uc-section__title">Tournament status</h2>
+        </div>
+
+        <div class="uc-grid">
+
+            {% call card('violet', 'account_tree', 'Update playoff teams', 'Set the two teams and venue once a playoff line-up is known.', '/updateplayoffs', key == '3', 'Continue', 'arrow_forward') %}
+                <div class="uc-field">
+                    <label for="pomatch">Playoff match</label>
+                    <select name="pomatch" id="pomatch" required>
+                        <option value="" disabled selected>Select a match&hellip;</option>
+                        {% for code, label in PLAYOFFS %}
+                        <option value="{{ code }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endcall %}
+
+            {% call card('green', 'verified', 'Mark team as qualified', 'Flags the team with a Q in the points table.', '/updatequalification', key == '4', 'Mark qualified', 'check') %}
+                {{ team_select('qteam', 'qteam', 'Qualified team') }}
+            {% endcall %}
+
+            {% call card('rose', 'block', 'Mark team as eliminated', 'Flags the team with an E in the points table.', '/updateelimination', key == '5', 'Mark eliminated', 'check') %}
+                {{ team_select('eteam', 'eteam', 'Eliminated team') }}
+            {% endcall %}
+
+        </div>
+    </section>
+
+    <p class="uc-note">
+        Results and deletions run a qualification refresh in the background, so
+        <b>Qual %</b> and <b>Top 2</b> on the points table may take a moment to catch up.
+    </p>
+
+</div>
+
+<!-- Valid-match list, opened from a warning message -->
+<div id="mymodal" class="modal fade uc-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title">
+                    {% if key == '2' %}Deletable matches{% else %}Updatable matches{% endif %}
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        <!-- Fotter -->
+
+            <div class="modal-body">
+                {% if key == '2' %}
+                    {# already has a result, so it can be rolled back #}
+                    {% set rows = FR | rejectattr('Win_T', 'none') | list %}
+                {% else %}
+                    {# no result yet and both teams known #}
+                    {% set rows = FR | selectattr('Win_T', 'none')
+                                     | rejectattr('Team_A', 'equalto', 'TBA')
+                                     | rejectattr('Team_B', 'equalto', 'TBA') | list %}
+                {% endif %}
+
+                {% for i in rows %}
+                <div class="uc-match">
+                    <span class="uc-match__no">{{ i.Match_No }}</span>
+                    <span class="uc-match__teams">
+                        {{ i.Team_A }}<span class="uc-match__vs">vs</span>{{ i.Team_B }}
+                    </span>
+                    {% if i.Win_T %}
+                    <span class="uc-match__won">
+                        <span class="material-icons-round" style="font-size:12px">emoji_events</span>{{ i.Win_T }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="uc-empty">
+                    <span class="material-icons-round">inbox</span>
+                    <span>No matches available right now.</span>
+                </div>
+                {% endfor %}
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
+
         </div>
     </div>
 </div>
+
 {% endblock %}
