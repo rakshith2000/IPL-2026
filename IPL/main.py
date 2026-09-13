@@ -1363,11 +1363,22 @@ def awards():
 @main.route('/update')
 @login_required
 def update():
-    FR = Fixture.query.all()
-    if request.args.get('key'):
-        key = request.args.get('key')
-    else:
-        key = None
+    FR = sorted(
+        Fixture.query.all(),
+        key=lambda r: (
+            int(r.Match_No)
+            if str(r.Match_No).isdigit()
+            else {
+                "Qualifier 1": 71,
+                "Eliminator": 72,
+                "Qualifier 2": 73,
+                "Final": 74
+            }[r.Match_No]
+        )
+    )
+
+    key = request.args.get('key')
+
     return render_template('update.html', key=key, FR=FR)
 
 @main.route('/updatematch', methods=['POST'])
@@ -1389,7 +1400,7 @@ def updatematch():
         if FR.Team_A == 'TBA' or FR.Team_B == 'TBA':
             flash('Teams are not updated for Playoff Match {} to update its result'.format(match), category='warning')
             return redirect(url_for('main.update', key=key))
-        return render_template('updatematch.html', FR=FR, fn=full_name, match=match)
+        return render_template('updatematch.html', FR=FR, fn=full_name, match=match, clr=clr)
     
     # After: To update Match Result to Database
     if request.method == 'POST' and hint == 'after':
@@ -1448,7 +1459,7 @@ def deletematch():
         if FR.Win_T == None:
             flash('Result for Match {} is not yet updated to delete'.format(dmatch), category='warning')
             return redirect(url_for('main.update', key=key))
-        return render_template('deletematch.html', FR=FR, fn=full_name, dmatch=dmatch)
+        return render_template('deletematch.html', FR=FR, fn=full_name, dmatch=dmatch, clr=clr)
     
     # After: To delete Match Result from Database
     if request.method == "POST" and hint == 'after':
@@ -1491,7 +1502,7 @@ def updatepotm():
         if match not in [i for i in range(1, 71)]+list(pofs.values()):
             flash('Invalid Match number to update potm', category='error')
             return redirect(url_for('main.update', key=key))
-        return render_template('updatepotm.html', FR=FR, fn=full_name, match=match, sq=sq)
+        return render_template('updatepotm.html', FR=FR, fn=full_name, match=match, sq=sq, clr=clr)
     if request.method == 'POST' and hint == 'after':
         match_no = request.form.get('match')
         potm = request.form.get('potm')
@@ -1514,7 +1525,7 @@ def updateplayoffs():
             flash('Invalid match, Select a valid Playoff Match', category='error')
             return redirect(url_for('main.update', key=key))
         FR = Fixture.query.filter_by(Match_No=pofs[pomatch]).first()
-        return render_template('playoffsupdate.html', pomatch=pofs[pomatch], teams=full_name, FR=FR)
+        return render_template('playoffsupdate.html', pomatch=pofs[pomatch], teams=full_name, FR=FR, clr=clr)
     if request.method == 'POST' and hint == 'after':
         pomatch = request.form.get('pomatch')
         FR = Fixture.query.filter_by(Match_No=pomatch).first()

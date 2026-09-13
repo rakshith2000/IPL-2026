@@ -13,7 +13,18 @@
 
 {# Rajasthan Royals' crest lives at RR1.png #}
 {% macro crest(t) -%}
-/static/images/squad_logos/{{ t }}{{ '1' if t == 'RR' else '' }}.png
+/static/images/squad_logos/{{ t }}.png
+{%- endmacro %}
+
+{% macro getclr(team) -%}
+    {% set c = clr[team] %}
+
+    {% if team in ['RCB'] %} --team-a: {{ c['c3'] }}; --team-b: {{ c['c1'] }}
+    {% elif team in ['PBKS'] %} --team-a: {{ c['c2'] }}; --team-b: {{ c['c1'] }}
+    {% elif team in ['KKR'] %} --team-a: {{ c['c2'] }}; --team-b: {{ c['c3'] }}
+    {% elif team in ['MI', 'GT'] %} --team-a: {{ c['c3'] }}; --team-b: {{ c['c2'] }}
+    {% else %} --team-a: {{ c['c1'] }}; --team-b: {{ c['c2'] }}
+    {% endif %}
 {%- endmacro %}
 
 {# Headshots use the lighter -MICRO cut, same as the POTM strip on /fixtures #}
@@ -58,7 +69,7 @@
             {% for t in [FR.Team_A, FR.Team_B] %}
             {% if loop.index == 2 %}<span class="um-vs">vs</span>{% endif %}
             <div class="um-team">
-                <span class="um-team__crest"><img src="{{ crest(t) }}" alt="{{ fn[t] }}"></span>
+                <span class="um-team__crest" style="{{ getclr(t) }}"><img src="{{ crest(t) }}" alt="{{ fn[t] }}"></span>
                 <span class="um-team__abv">{{ t }}</span>
                 <span class="um-team__full">{{ fn[t] }}</span>
             </div>
@@ -122,7 +133,7 @@
                             <label class="um-seg__opt">
                                 <input type="radio" name="team" value="{{ t }}" required
                                        {{ 'checked' if current and current['team'] == t }}>
-                                <span class="um-seg__body">
+                                <span class="um-seg__body" style="{{ getclr(t) }}">
                                     <img src="{{ crest(t) }}" alt="">
                                     <span>{{ t }}</span>
                                 </span>

@@ -11,7 +11,18 @@
 
 {# Rajasthan Royals' crest lives at RR1.png #}
 {% macro crest(t) -%}
-/static/images/squad_logos/{{ t }}{{ '1' if t == 'RR' else '' }}.png
+/static/images/squad_logos/{{ t }}.png
+{%- endmacro %}
+
+{% macro getclr(team) -%}
+    {% set c = clr[team] %}
+
+    {% if team in ['RCB'] %} --team-a: {{ c['c3'] }}; --team-b: {{ c['c1'] }}
+    {% elif team in ['PBKS'] %} --team-a: {{ c['c2'] }}; --team-b: {{ c['c1'] }}
+    {% elif team in ['KKR'] %} --team-a: {{ c['c2'] }}; --team-b: {{ c['c3'] }}
+    {% elif team in ['MI', 'GT'] %} --team-a: {{ c['c3'] }}; --team-b: {{ c['c2'] }}
+    {% else %} --team-a: {{ c['c1'] }}; --team-b: {{ c['c2'] }}
+    {% endif %}
 {%- endmacro %}
 
 {# Runs / Wickets / Overs for one innings. `p` prefixes the field names so the
@@ -38,7 +49,7 @@
 
 {# Panel header with a team crest #}
 {% macro team_head(team, kicker) %}
-<div class="um-panel__head">
+<div class="um-panel__head" style="{{ getclr(team) }}">
     <img src="{{ crest(team) }}" alt="">
     <h6 class="um-panel__title">{{ fn[team] }}<small>{{ kicker }}</small></h6>
 </div>
@@ -50,7 +61,7 @@
     {% for t in [FR.Team_A, FR.Team_B] %}
     <label class="um-seg__opt">
         <input type="radio" name="{{ name }}" value="{{ t }}">
-        <span class="um-seg__body">
+        <span class="um-seg__body" style="{{ getclr(t) }}">
             <img src="{{ crest(t) }}" alt="">
             <span>{{ t }}</span>
         </span>
@@ -130,7 +141,7 @@
             {% for t in [FR.Team_A, FR.Team_B] %}
             {% if loop.index == 2 %}<span class="um-vs">vs</span>{% endif %}
             <div class="um-team">
-                <span class="um-team__crest"><img src="{{ crest(t) }}" alt="{{ fn[t] }}"></span>
+                <span class="um-team__crest" style="{{ getclr(t) }}"><img src="{{ crest(t) }}" alt="{{ fn[t] }}"></span>
                 <span class="um-team__abv">{{ t }}</span>
                 <span class="um-team__full">{{ fn[t] }}</span>
             </div>
