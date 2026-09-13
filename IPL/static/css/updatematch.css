@@ -532,10 +532,22 @@ body::-webkit-scrollbar-thumb {
 .um-seg--wrap {
   grid-auto-flow: row;
   grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+}
+
+.um-seg-teams--wrap {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(5, 1fr);
+  justify-content: center;
+}
+
+.um-seg-teams--wrap > :last-child:nth-child(5n + 1) {
+    grid-column: 3;
 }
 
 @media (min-width: 560px) {
   .um-seg--wrap { grid-template-columns: repeat(4, 1fr); }
+  .um-seg-teams--wrap { grid-template-columns: repeat(5, 1fr); }
 }
 
 /* positioned so the hidden radio (and therefore any validation bubble)
@@ -574,6 +586,10 @@ body::-webkit-scrollbar-thumb {
   text-align: center;
   transition: background-color 0.18s ease, border-color 0.18s ease,
               color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+@media (max-width: 560px) {
+  .um-seg__body { flex-direction: column; }
 }
 
 .um-seg__body img {
