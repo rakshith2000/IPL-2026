@@ -48,7 +48,7 @@
 
 {# Primary brand colour, used for the card's top strip #}
 {% macro brand(t) -%}
-    {{- "#fff" if t in ['TBA'] else (sqclr[t]['c2'] if t in ['GT'] else sqclr[t]['c1']) -}}
+    {{- "#fff" if t in ['TBA'] else (sqclr[t]['c2'] if t in ['GT', 'MI'] else sqclr[t]['c1']) -}}
 {%- endmacro %}
 
 {% macro crest(t, extra, winner) -%}
@@ -325,7 +325,11 @@
                     {% endif %}
                 </div>
 
-                <aside class="fx-card__side">
+                <aside class="fx-card__side 
+                    {% if state == 'live' or i[7] == 'NA' or i[11][0] == 'NA' %}
+                    fx-card__side--mobile-hide
+                    {% endif %}">
+
                     {% if state == 'upcoming' %}
                     <span class="fx-side__label">Match starts in</span>
                     {{ clock(i[1]) }}
