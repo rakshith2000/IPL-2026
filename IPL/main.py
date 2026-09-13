@@ -1091,7 +1091,7 @@ def displayFR():
         dt.append(dtt)
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
-    return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=current_date, clr=clr)
+    return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=current_date, clr=clr, sqclr=sqclr)
 
 @main.route('/teams')
 def teams():

@@ -1,319 +1,377 @@
-{% extends "base.html" %} {% block head %} {{ super() }}
-<title>IPL 2026 Fixtures | Complete Match Schedule</title>
-<link rel="stylesheet" href="{{ url_for('static', filename= 'extended_beauty.css') }}"/>
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<title>IPL 2026 Fixtures | Complete Match Schedule &amp; Results</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fixtures.css') }}">
-<style>
-body {
-    background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
-  background-size: 100%, cover;
-  background-position: center top -48px, center top;
-  background-repeat: repeat, repeat;
-}
-:root {
-   --border_orange :#ffb09e;
-   --border_orange_light :#ffe4dd;
-}
-.plain-link {
-  text-decoration: none !important; /* Removes underline */
-  color: inherit;        /* Keeps color same as surrounding text */
-  cursor: pointer;       /* Normal text cursor */
-}
-.border {
-  border:0px solid #ffe4dd !important;
-}
-.border_orange {
-  border:0px solid #ffb09e !important;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/fixtures-modern.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<div style="padding-top: 79px;">
-<center>
-  {% macro num_suffix(n) %}
-    {% if n % 100 in [11, 12, 13] %}
-        {{ n }}th
-    {% elif n % 10 == 1 %}
-        {{ n }}st
-    {% elif n % 10 == 2 %}
-        {{ n }}nd
-    {% elif n % 10 == 3 %}
-        {{ n }}rd
+
+{#  ------------------------------------------------------------------ data #}
+{% set teams = ['CSK', 'DC', 'GT', 'KKR', 'LSG', 'MI', 'PBKS', 'RCB', 'RR', 'SRH'] %}
+
+{#  Season / team totals for the summary chips and the filter counters.
+    A match is "live" once its start time has passed but no winner is set. #}
+{% set S = namespace(total=0, up=0, live=0, done=0, w=0, l=0, nr=0) %}
+{% for m in FR[1:] %}
+    {% set S.total = S.total + 1 %}
+    {% if m[1] > current_date %}
+        {% set S.up = S.up + 1 %}
+    {% elif m[7] == 'TBA' %}
+        {% set S.live = S.live + 1 %}
     {% else %}
-        {{ n }}th
-    {% endif %}
-{% endmacro %}
-
-    {% set teams = ['CSK', 'DC', 'GT', 'KKR', 'LSG', 'MI', 'PBKS', 'RR', 'RCB', 'SRH'] %}
-    <a href="{{ url_for('main.displayFR', fteam='All') }}"
-     class="custom-button {{ 'active' if hint == 'All' else '' }}">
-     All
-  </a>
-
-  {% for i in teams %}
-    <a href="{{ url_for('main.displayFR', fteam=i) }}"
-       class="custom-button {{ 'active' if hint == i else '' }}">
-       {{ i }}
-    </a>
-  {% endfor %}
-
-<div style="padding-bottom: 35px;"></div>
-{% for i in FR[1:] %}
-{% if i[1] > current_date %}
-<div class="main-container">
-  <div class="score-card border">
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
-    <div style="display: block;">
-      <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
-    </div>
-  </div>
-    <div class="match-info">{{ i[2] }}</div></a>
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-    <div class="score-container">
-      <div class="team-new left-team">
-        <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
-          {{ fn[i[3]] }}
-        </div>
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ i[3] }}{{ '1' if i[3] == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-      </div>
-
-      {% if i[0] | int(default=None) is not none %}
-      <div class="vs-circle">VS</div>
-      {% elif i[0] == 'Final' %}
-      <div class="final"><img src="/static/images/final.png"></div>
-      {% else %}
-      <div class="eliminator"><img src="/static/images/playoffs.png"></div>
-      {% endif %}
-
-      <div class="team-new right-team">
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ i[4] }}{{ '1' if i[4] == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-        <div class="team-display" full="{{ fn[i[4]] }}" short="{{ i[4] }}">
-          {{ fn[i[4]] }}
-        </div>
-      </div>
-    </div></a>
-      <!-- Result -->
-       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-       {% if current_date.date() == i[1].date() %}
-      <div class="result" style="color: #dc6604">Starts Today &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
-       {% elif i[1].date() == (current_date | add_days(1)).date() %}
-       <div class="result" style="color: #dc6604">Starts Tomorrow &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
-       {% else %}
-      <div class="result" style="color: #dc6604">Starts {{ i[1].strftime('%a, %d %b') }} &bull; {{ i[1].strftime('%I:%M %p') }} IST</div>
-      {% endif %}</a>
-    </div>
-
-  <div class="timer-card border">
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">Match starts in</div>
-
-      <div class="clockdiv" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}" style="padding-top: 20px">
-    <div>
-        <span class="days" id="day"></span>
-        <div class="smalltext">DAYS</div>
-    </div>
-    <div>
-        <span class="hours" id="hour"></span>
-        <div class="smalltext">HRS</div>
-    </div>
-    <div>
-        <span class="minutes" id="minute"></span>
-        <div class="smalltext">MINS</div>
-    </div>
-    <div>
-        <span class="seconds" id="second"></span>
-        <div class="smalltext">SECS</div>
-    </div>
-</div>
-  </div>
-</div>
-
-{% elif i[1] <= current_date and i[7] == 'TBA' %}
-<div class="main-container">
-  <div class="score-card border">
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
-    <div style="display: block;">
-      <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
-    </div>
-  </div>
-    <div class="match-info">{{ i[2] }}</div></a>
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-     <div class="score-container">
-      <div class="team-new left-team">
-        <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
-          {{ fn[i[3]] }}
-        </div>
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ i[3] }}{{ '1' if i[3] == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-      </div>
-
-      {% if i[0] | int(default=None) is not none %}
-      <div class="vs-circle">VS</div>
-      {% elif i[0] == 'Final' %}
-      <div class="final"><img src="/static/images/final.png"></div>
-      {% else %}
-      <div class="eliminator"><img src="/static/images/playoffs.png"></div>
-      {% endif %}
-
-      <div class="team-new right-team">
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ i[4] }}{{ '1' if i[4] == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-        <div class="team-display" full="{{ fn[i[4]] }}" short="{{ i[4] }}">
-          {{ fn[i[4]] }}
-        </div>
-      </div>
-    </div></a>
-      <!-- Result -->
-       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-      <div class="result" style="color: #c11616"><span class="result-span blink">Match is In-Progress</span></div></a>
-  </div>
-  <div class="timer-card">
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">Match is In-Progress</div>
-      <div class="vsblock" style="padding-top: 35px;">
-		<img class="team-image" style="{% if i[3] == 'RCB' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'GT' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'MI' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'PBKS' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'KKR' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c3'] }}; {% else %} --c1: {{ clr[i[3]]['c1'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% endif %}" src="\static\images\squad_logos\{{ i[3] }}.png" alt="Team Logo" />
-		<img class="vs-image" src="\static\images\vs.png" alt="Team Logo" />
-		<img class="team-image" style="{% if i[4] == 'RCB' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'GT' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'MI' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'PBKS' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'KKR' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c3'] }}; {% else %} --c1: {{ clr[i[4]]['c1'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% endif %}" src="\static\images\squad_logos\{{ i[4] }}.png" alt="Team Logo" />
-</div>
-  </div>
-</div>
-
-{% elif i[7] != 'TBA' %}
-<div class="main-container">
-  <div class="score-card border">
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}" data-deadline="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}">
-    <div style="display: block;">
-      <div class="date">{% if i[0] | int(default=None) is not none %}{{ "MATCH" ~ " " ~ i[0]  }}{% else %}{{ i[0] | upper }}{% endif %}</div>{{ i[1].strftime('%A, %d %B %Y') }}
-  </div>
-  </div>
-    <div class="match-info">{{ i[2] }}</div></a>
-    {% if 'Super over' not in i[10] %}
-      {% if i[7] == i[3] and i[8] == "runs" %}
-      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
-      {% elif i[7] == i[3] and i[8] == "wickets" %}
-      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
-      {% elif i[7] == i[4] and i[8] == "runs" %}
-      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
-      {% else %}
-      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
-      {% endif %}
-    {% else %}
-      {% if i[7] == i[3] and i[8] == "runs" %}
-      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
-      {% elif i[7] == i[3] and i[8] == "wickets" %}
-      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
-      {% elif i[7] == i[4] and i[8] == "runs" %}
-      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
-      {% else %}
-      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
-      {% endif %}
-    {% endif %}
-
-    <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-    <div class="score-container">
-      <div class="team-new left-team">
-        {% if "Super over" not in i[10] %}
-          {% if TA_S['overs'] == 0 and TA_S['runs'] == 0 and TA_S['wkts'] == 0 %}
-            <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
-            {{ fn[i[3]] }}
-            </div>
-          {% else %}
-            <div class="score-board">
-              <div class="score-new {% if TA == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TA == i[7] %}score-win{% endif %}">{{ TA_S['runs'] }}{{ "" if TA_S['wkts'] == 10 else '/' ~ TA_S['wkts'] }}</div>
-              <div class="overs {% if TA == i[7] %}overs-win{% endif %}">({{ TA_S['overs'] }})</div>
-            </div>
-          {% endif %}
+        {% set S.done = S.done + 1 %}
+        {% if m[7] == 'NA' %}
+            {% set S.nr = S.nr + 1 %}
+        {% elif m[7] == hint %}
+            {% set S.w = S.w + 1 %}
         {% else %}
-        <div class="score-board">
-          <div class="score-new">{{ TA_S['runs'] }}{{ "" if TA_S['wkts'] == 10 else '/' ~ TA_S['wkts'] }}&nbsp;<span class="overs overs-so-font">({{ TA_S['overs'] }})</span></div>
-          <div class="score-new {% if TA == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TA == i[7] %}score-win{% endif %}">{{ TA_S['runsSO'] }}{{ "" if TA_S['wktsSO'] == 10 else '/' ~ TA_S['wktsSO'] }}&nbsp;<span class="overs overs-so-font {% if TA == i[7] %}overs-win{% endif %}">({{ TA_S['oversSO'] }})</span></div>
-        </div>
+            {% set S.l = S.l + 1 %}
         {% endif %}
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ TA }}{{ '1' if TA == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-      </div>
+    {% endif %}
+{% endfor %}
 
-      {% if i[0] | int(default=None) is not none %}
-      <div class="vs-circle">VS</div>
-      {% elif i[0] == 'Final' %}
-      <div class="final"><img src="/static/images/final.png"></div>
-      {% else %}
-      <div class="eliminator"><img src="/static/images/playoffs.png"></div>
-      {% endif %}
+{#  ---------------------------------------------------------------- macros #}
 
-      <div class="team-new right-team">
-        <div class="team-logo">
-          <img src="/static/images/squad_logos/{{ TB }}{{ '1' if TB == 'RR' else '' }}.png" alt="India Flag">
-        </div>
-        {% if "Super over" not in i[10] %}
-          {% if TB_S['overs'] == 0 and TB_S['runs'] == 0 and TB_S['wkts'] == 0 %}
-          <div class="team-display" full="{{ fn[i[4]] }}" short="{{ i[4] }}">
-            {{ fn[i[4]] }}
-          </div>
-          {% else %}
-          <div class="score-board">
-            <div class="score-new {% if TB == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TB == i[7] %}score-win{% endif %}">{{ TB_S['runs'] }}{{ "" if TB_S['wkts'] == 10 else '/' ~ TB_S['wkts'] }}</div>
-            <div class="overs {% if TB == i[7] %}overs-win{% endif %}">({{ TB_S['overs'] }})</div>
-          </div>
-          {% endif %}
-        {% else %}
-        <div class="score-board">
-          <div class="score-new">{{ TB_S['runs'] }}{{ "" if TB_S['wkts'] == 10 else '/' ~ TB_S['wkts'] }}&nbsp;<span class="overs overs-so-font">({{ TB_S['overs'] }})</span></div>
-          <div class="score-new {% if TB == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TB == i[7] %}score-win{% endif %}">{{ TB_S['runsSO'] }}{{ "" if TB_S['wktsSO'] == 10 else '/' ~ TB_S['wktsSO'] }}&nbsp;<span class="overs overs-so-font {% if TB == i[7] %}overs-win{% endif %}">({{ TB_S['oversSO'] }})</span></div>
-        </div>
-        {% endif %}
-      </div>
-    </div></a>
-      <!-- Result -->
-       <a href="{{ url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) }}" class="plain-link">
-      {% if i[7] == "NA" %}
-      <div class="result">{{ i[10] }}</div>
-      {% else %}
-      <div class="result"><span class="team-name" full="{{ fn[i[7]] }}" short="{{ i[7] }}">{{ fn[i[7]] }}</span> {{ i[10] if '1' not in i[10].split(' ') else (i[10].replace('runs', 'run') if 'runs' in i[10] else i[10].replace('wickets', 'wicket')) }}</div>
-      {% endif %}</a>
-      </div>
-  <div class="timer-card">
-    {% if i[7] == "NA" or i[11][0] == "NA" %}
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">{{ 'Match Abandoned' if i[7] == 'NA' else 'Matched Completed' }}</div>
-    <div class="vsblock" style="padding-top: 35px;">
-		  <img class="team-image" style="{% if i[3] == 'RCB' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'GT' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'MI' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'PBKS' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'KKR' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c3'] }}; {% else %} --c1: {{ clr[i[3]]['c1'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% endif %}" src="\static\images\squad_logos\{{ i[3] }}.png" alt="Team Logo" />
-		  <img class="vs-image" src="\static\images\vs.png" alt="Team Logo" />
-		  <img class="team-image" style="{% if i[4] == 'RCB' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'GT' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'MI' %} --c1: {{ clr[i[4]]['c3'] }}; --c2: {{ clr[i[4]]['c2'] }}; {% elif i[4] == 'PBKS' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c1'] }}; {% elif i[4] == 'KKR' %} --c1: {{ clr[i[4]]['c2'] }}; --c2: {{ clr[i[4]]['c3'] }}; {% else %} --c1: {{ clr[i[4]]['c1'] }}; --c2: {{ clr[i[4]]['c2'] }};{% endif %}" src="\static\images\squad_logos\{{ i[4] }}.png" alt="Team Logo" />
+{# Per-team crest gradient — same two-colour picks used on the points table #}
+{% macro grad(t) -%}
+    {%- if t == 'RCB' -%}--c1: {{ clr[t]['c3'] }}; --c2: {{ clr[t]['c1'] }};
+    {%- elif t in ['GT', 'MI'] -%}--c1: {{ clr[t]['c3'] }}; --c2: {{ clr[t]['c2'] }};
+    {%- elif t == 'PBKS' -%}--c1: {{ clr[t]['c2'] }}; --c2: {{ clr[t]['c1'] }};
+    {%- elif t == 'KKR' -%}--c1: {{ clr[t]['c2'] }}; --c2: {{ clr[t]['c3'] }};
+    {%- else -%}--c1: {{ clr[t]['c1'] }}; --c2: {{ clr[t]['c2'] }};
+    {%- endif -%}
+{%- endmacro %}
+
+{# Primary brand colour, used for the card's top strip #}
+{% macro brand(t) -%}
+    {{- "#fff" if t in ['TBA'] else (sqclr[t]['c2'] if t in ['GT'] else sqclr[t]['c1']) -}}
+{%- endmacro %}
+
+{% macro crest(t, extra, winner) -%}
+    <span class="fx-crest {{ extra }}" style="{{ grad(t) }}">
+        <img src="/static/images/squad_logos/{{ t }}.png" alt="{{ fn[t] }} logo" loading="lazy">
+        {%- if winner -%}
+        <span class="fx-crest__trophy" title="Winner"><span class="material-icons-round">emoji_events</span></span>
+        {%- endif -%}
+    </span>
+{%- endmacro %}
+
+{% macro team_name(t) -%}
+    <span class="fx-team__name"><span class="fx-team__full">{{ fn[t] }}</span><span class="fx-team__abv">{{ t }}</span></span>
+{%- endmacro %}
+
+{# Score for one innings. `so` renders the regular score plus the super over #}
+{% macro score_cell(sc, won, playoff, so) -%}
+    {%- set tone = ('is-playoff' if playoff else 'is-win') if won else '' -%}
+    {%- if so -%}
+        <span class="fx-score">
+            <span class="fx-score__line">{{ sc['runs'] }}{{ '' if sc['wkts'] == 10 else '/' ~ sc['wkts'] }}<i>({{ sc['overs'] }})</i></span>
+            <span class="fx-score__line fx-score__line--so {{ tone }}"><span class="fx-so-tag">SO</span>{{ sc['runsSO'] }}{{ '' if sc['wktsSO'] == 10 else '/' ~ sc['wktsSO'] }}<i>({{ sc['oversSO'] }})</i></span>
+        </span>
+    {%- elif sc['overs'] == 0 and sc['runs'] == 0 and sc['wkts'] == 0 -%}
+        {#- nothing bowled — the team name alone carries the row -#}
+    {%- else -%}
+        <span class="fx-score {{ tone }}">{{ sc['runs'] }}{{ '' if sc['wkts'] == 10 else '/' ~ sc['wkts'] }}<i>({{ sc['overs'] }})</i></span>
+    {%- endif -%}
+{%- endmacro %}
+
+{# The four-tile countdown shown on upcoming matches #}
+{% macro clock(dt) -%}
+    <div class="fx-clock" data-deadline="{{ dt.strftime('%Y-%m-%dT%H:%M:%S') }}">
+        <div class="fx-clock__unit"><span class="fx-clock__n" data-u="d">0</span><span class="fx-clock__u">Days</span></div>
+        <div class="fx-clock__unit"><span class="fx-clock__n" data-u="h">0</span><span class="fx-clock__u">Hrs</span></div>
+        <div class="fx-clock__unit"><span class="fx-clock__n" data-u="m">0</span><span class="fx-clock__u">Min</span></div>
+        <div class="fx-clock__unit"><span class="fx-clock__n" data-u="s">0</span><span class="fx-clock__u">Sec</span></div>
     </div>
-    {% else %}
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">Player of the match</div>
-    <div class="potm-content">
-                <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }}">
-                <div class="potm-image text-blue" style="{% if i[11][1] == 'RCB' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'GT' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'MI' %} --c1: {{ clr[i[11][1]]['c3'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% elif i[11][1] == 'PBKS' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c1'] }}; {% elif i[11][1] == 'KKR' %} --c1: {{ clr[i[11][1]]['c2'] }}; --c2: {{ clr[i[11][1]]['c3'] }}; {% else %} --c1: {{ clr[i[11][1]]['c1'] }}; --c2: {{ clr[i[11][1]]['c2'] }}; {% endif %}">
-                    <img src="/static/images/squads/{{ i[11][1] }}-MICRO/{{ i[11][0].replace(' ', '-') }}.png" alt="{{ i[11][0] }}">
-                </div></a>
-                <div class="potm-details">
-                  <a href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}" class="{{ 'disabled' if i[11][1] == 'NA' else '' }} plain-link">
-                    <div class="potm-name">{{ i[11][0] }}</div>
-                  </a>
-                    <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/{{ i[11][1] }}{{ '1' if i[11][1] == 'RR' else '' }}.png" alt="Team Logo" class="team-logo2">
-                        {{ fn[i[11][1]] }}
+{%- endmacro %}
+
+<div class="fx-wrap">
+
+    <header class="fx-hero">
+        <span class="fx-hero__eyebrow">TATA IPL 2026 &middot; {{ 'All Fixtures' if hint == 'All' else fn[hint] }}</span>
+        <h1 class="fx-hero__title">{{ 'Match Schedule' if hint == 'All' else 'Team Fixtures' }}</h1>
+        <p class="fx-hero__sub">Results, live games and countdowns to every remaining match</p>
+
+        <div class="fx-stats">
+            {% if hint == 'All' %}
+            <span class="fx-stat"><b>{{ S.total }}</b> Matches</span>
+            <span class="fx-stat"><b>{{ S.done }}</b> Completed</span>
+            {% if S.live %}<span class="fx-stat fx-stat--live"><b>{{ S.live }}</b> In progress</span>{% endif %}
+            <span class="fx-stat"><b>{{ S.up }}</b> Upcoming</span>
+            {% else %}
+            <span class="fx-stat"><b>{{ S.done }}</b> Played</span>
+            <span class="fx-stat fx-stat--w"><b>{{ S.w }}</b> Won</span>
+            <span class="fx-stat fx-stat--l"><b>{{ S.l }}</b> Lost</span>
+            {% if S.nr %}<span class="fx-stat"><b>{{ S.nr }}</b> No result</span>{% endif %}
+            {#- same convention as the points table: a no-result counts as half a win -#}
+            <span class="fx-stat"><b>{{ (((S.w + 0.5 * S.nr) / S.done * 100) | round | int) if S.done else 0 }}%</b> Win rate</span>
+            <span class="fx-stat"><b>{{ S.up }}</b> Left</span>
+            {% endif %}
+        </div>
+    </header>
+
+    {# =========================================================== toolbar #}
+    <div class="fx-bar" id="fxBar">
+
+        {# Team filter — a real disclosure widget, so it works without JS too #}
+        <details class="fx-dd" id="fxTeamDD">
+            <summary class="fx-dd__btn" aria-label="Filter fixtures by team">
+                {% if hint == 'All' %}
+                <span class="fx-opt__all"><span class="material-icons-round">apps</span></span>
+                {% else %}
+                {{ crest(hint, 'fx-crest--xs', false) }}
+                {% endif %}
+                <span class="fx-dd__label">
+                    <span class="fx-dd__cap">Team</span>
+                    {#- the crest already identifies the team, so phones get the short form -#}
+                    <span class="fx-dd__val">
+                        <span class="fx-dd__long">{{ 'All Teams' if hint == 'All' else fn[hint] }}</span>
+                        <span class="fx-dd__short">{{ 'All' if hint == 'All' else hint }}</span>
+                    </span>
+                </span>
+                <span class="material-icons-round fx-dd__chev">expand_more</span>
+            </summary>
+
+            <div class="fx-dd__menu" role="listbox" aria-label="Teams">
+                <a class="fx-opt {{ 'is-active' if hint == 'All' }}" role="option"
+                   aria-selected="{{ 'true' if hint == 'All' else 'false' }}"
+                   href="{{ url_for('main.displayFR', fteam='All') }}">
+                    <span class="fx-opt__all"><span class="material-icons-round">apps</span></span>
+                    <span class="fx-opt__name">All Teams</span>
+                    <span class="material-icons-round fx-opt__tick">check</span>
+                </a>
+                {% for t in teams %}
+                <a class="fx-opt {{ 'is-active' if hint == t }}" role="option"
+                   aria-selected="{{ 'true' if hint == t else 'false' }}"
+                   href="{{ url_for('main.displayFR', fteam=t) }}">
+                    {{ crest(t, 'fx-crest--xs', false) }}
+                    <span class="fx-opt__name">{{ fn[t] }}</span>
+                    <span class="material-icons-round fx-opt__tick">check</span>
+                </a>
+                {% endfor %}
+            </div>
+        </details>
+
+        {# Status filter — instant, client side #}
+        <div class="fx-seg" role="group" aria-label="Filter by match status">
+            <button type="button" class="fx-seg__btn" data-filter="all" aria-pressed="true">
+                <span class="fx-seg__long">All</span><span class="fx-seg__short">All</span>
+                <span class="fx-seg__n">{{ S.total }}</span>
+            </button>
+            <button type="button" class="fx-seg__btn" data-filter="upcoming" aria-pressed="false">
+                <span class="fx-seg__long">Upcoming</span><span class="fx-seg__short">Next</span>
+                <span class="fx-seg__n">{{ S.up }}</span>
+            </button>
+            {% if S.live %}
+            <button type="button" class="fx-seg__btn" data-filter="live" aria-pressed="false">
+                <span class="fx-seg__long">Live</span><span class="fx-seg__short">Live</span>
+                <span class="fx-seg__n">{{ S.live }}</span>
+            </button>
+            {% endif %}
+            <button type="button" class="fx-seg__btn" data-filter="done" aria-pressed="false">
+                <span class="fx-seg__long">Results</span><span class="fx-seg__short">Done</span>
+                <span class="fx-seg__n">{{ S.done }}</span>
+            </button>
+        </div>
+
+        <button type="button" class="fx-now" id="fxNow" title="Jump to the current or next match">
+            <span class="material-icons-round">my_location</span><span>Now</span>
+        </button>
+    </div>
+
+    <p class="fx-count">Showing <b id="fxShown">{{ S.total }}</b> of <b>{{ S.total }}</b> matches</p>
+
+    {# ============================================================== list #}
+    <div class="fx-list" id="fxList">
+    {% set ns = namespace(month='') %}
+    {% for i in FR[1:] %}
+
+        {% set state = 'upcoming' if i[1] > current_date else ('live' if i[7] == 'TBA' else 'done') %}
+        {% set playoff = i[0] | int(default=None) is none %}
+        {% set label = i[1].strftime('%B %Y') %}
+
+        {% if label != ns.month %}
+        {% set ns.month = label %}
+        <div class="fx-month" data-month="{{ label }}"><span>{{ label }}</span></div>
+        {% endif %}
+
+        {#- left/right split: the side that batted first goes on the left, so the
+            two scores read in the order the innings were actually played -#}
+        {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+        {% set so = false %}
+        {% if state == 'done' %}
+            {% set so = 'Super over' in i[10] %}
+            {% if not so %}
+                {% if i[7] == i[3] and i[8] == 'runs' %}
+                    {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+                {% elif i[7] == i[3] and i[8] == 'wickets' %}
+                    {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+                {% elif i[7] == i[4] and i[8] == 'runs' %}
+                    {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+                {% else %}
+                    {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+                {% endif %}
+            {% else %}
+                {% if i[7] == i[3] and i[8] == 'runs' %}
+                    {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+                {% elif i[7] == i[3] and i[8] == 'wickets' %}
+                    {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+                {% elif i[7] == i[4] and i[8] == 'runs' %}
+                    {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+                {% else %}
+                    {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% set link = url_for('main.FRScore', match=i[0], source='displayFR', fteam=hint) %}
+        {#- the tag is upper-cased in CSS, so keep the readable form for screen readers -#}
+        {% set title = ('Match ' ~ i[0]) if not playoff else i[0] %}
+
+        <article class="fx-card" id="m-{{ i[0] | replace(' ', '-') }}" data-state="{{ state }}"
+                 data-start="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}"
+                 style="--ha: {{ brand(i[3]) }}; --hb: {{ brand(i[4]) }};">
+
+            <a class="fx-card__hit" href="{{ link }}"
+               aria-label="{{ title }}: {{ fn[i[3]] }} versus {{ fn[i[4]] }}, {{ i[1].strftime('%d %B %Y') }}"></a>
+
+            <header class="fx-card__head">
+                <span class="fx-tag {{ 'fx-tag--playoff' if playoff }}">{{ title }}</span>
+                <span class="fx-head__date">{{ i[1].strftime('%a, %d %b %Y') }} &middot; {{ i[1].strftime('%I:%M %p') }} IST</span>
+
+                {% if state == 'live' %}
+                <span class="fx-badge fx-badge--live"><span class="fx-badge__dot"></span>Live</span>
+                {% endif %}
+
+                <span class="fx-actions">
+                    {% if state == 'upcoming' %}
+                    <button type="button" class="fx-icon-btn fx-cal" title="Add to calendar"
+                            data-title="{{ title }}: {{ i[3] }} vs {{ i[4] }}"
+                            data-venue="{{ i[2] }}">
+                        <span class="material-icons-round">event</span>
+                    </button>
+                    {% endif %}
+                    <button type="button" class="fx-icon-btn fx-share" title="Share this match"
+                            data-url="{{ link }}"
+                            data-title="{{ title }}: {{ fn[i[3]] }} vs {{ fn[i[4]] }}">
+                        <span class="material-icons-round">share</span>
+                    </button>
+                </span>
+            </header>
+
+            <div class="fx-card__grid">
+                <div class="fx-card__main">
+
+                    <div class="fx-venue">
+                        <span class="material-icons-round">place</span><span>{{ i[2] }}</span>
                     </div>
+
+                    <div class="fx-teams">
+                        <div class="fx-team fx-team--l {{ 'is-win' if state == 'done' and TA == i[7] else ('is-loss' if state == 'done' and i[7] not in ['NA', TA]) }}">
+                            {{ crest(TA, '', state == 'done' and TA == i[7]) }}
+                            <span class="fx-team__id">
+                                {{ team_name(TA) }}
+                                {% if state == 'done' %}{{ score_cell(TA_S, TA == i[7], playoff, so) }}{% endif %}
+                            </span>
+                        </div>
+
+                        <div class="fx-mid">
+                            {% if playoff and i[0] == 'Final' %}
+                            <img src="/static/images/final.png" alt="Final">
+                            {% elif playoff %}
+                            <img src="/static/images/playoffs.png" alt="Playoff">
+                            {% else %}
+                            <span class="fx-vs">VS</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="fx-team fx-team--r {{ 'is-win' if state == 'done' and TB == i[7] else ('is-loss' if state == 'done' and i[7] not in ['NA', TB]) }}">
+                            {{ crest(TB, '', state == 'done' and TB == i[7]) }}
+                            <span class="fx-team__id">
+                                {{ team_name(TB) }}
+                                {% if state == 'done' %}{{ score_cell(TB_S, TB == i[7], playoff, so) }}{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if state == 'upcoming' %}
+                        {% if current_date.date() == i[1].date() %}
+                        <div class="fx-result fx-result--soon">Starts today <span class="fx-result__time">&bull; {{ i[1].strftime('%I:%M %p') }} IST</span></div>
+                        {% elif i[1].date() == (current_date | add_days(1)).date() %}
+                        <div class="fx-result fx-result--soon">Starts tomorrow <span class="fx-result__time">&bull; {{ i[1].strftime('%I:%M %p') }} IST</span></div>
+                        {% else %}
+                        <div class="fx-result fx-result--soon">Starts {{ i[1].strftime('%a, %d %b') }} <span class="fx-result__time">&bull; {{ i[1].strftime('%I:%M %p') }} IST</span></div>
+                        {% endif %}
+                    {% elif state == 'live' %}
+                    <div class="fx-result fx-result--live"><span class="fx-blink">Match is in progress</span></div>
+                    {% elif i[7] == 'NA' %}
+                    <div class="fx-result fx-result--na">{{ i[10] }}</div>
+                    {% else %}
+                    <div class="fx-result fx-result--won">
+                        <span class="fx-winner"><span class="fx-team__full">{{ fn[i[7]] }}</span><span class="fx-team__abv">{{ i[7] }}</span></span>
+                        {{ i[10] if '1' not in i[10].split(' ') else (i[10].replace('runs', 'run') if 'runs' in i[10] else i[10].replace('wickets', 'wicket')) }}
+                    </div>
+                    {% endif %}
                 </div>
 
+                <aside class="fx-card__side">
+                    {% if state == 'upcoming' %}
+                    <span class="fx-side__label">Match starts in</span>
+                    {{ clock(i[1]) }}
+
+                    {% elif state == 'live' %}
+                    <span class="fx-side__label">Live now</span>
+                    <div class="fx-duel">
+                        {{ crest(i[3], '', false) }}
+                        <span class="fx-duel__vs">VS</span>
+                        {{ crest(i[4], '', false) }}
+                    </div>
+
+                    {% elif i[7] == 'NA' or i[11][0] == 'NA' %}
+                    <span class="fx-side__label">{{ 'Match abandoned' if i[7] == 'NA' else 'Match completed' }}</span>
+                    <div class="fx-duel">
+                        {{ crest(i[3], '', false) }}
+                        <span class="fx-duel__vs">VS</span>
+                        {{ crest(i[4], '', false) }}
+                    </div>
+
+                    {% else %}
+                    <span class="fx-side__label">Player of the match</span>
+                    <a class="fx-potm" href="/team-{{ i[11][1] }}/squad_details/{{ i[11][0] }}">
+                        <span class="fx-potm__img" style="{{ grad(i[11][1]) }}">
+                            <img src="/static/images/squads/{{ i[11][1] }}-MICRO/{{ i[11][0].replace(' ', '-') }}.png"
+                                 alt="{{ i[11][0] }}" loading="lazy">
+                        </span>
+                        <span class="fx-potm__id">
+                            <span class="fx-potm__name">{{ i[11][0] }}</span>
+                            <span class="fx-potm__team">
+                                <img src="/static/images/squad_logos/{{ i[11][1] }}.png" alt="" loading="lazy">
+                                <span>{{ fn[i[11][1]] }}</span>
+                            </span>
+                        </span>
+                    </a>
+                    {% endif %}
+                </aside>
             </div>
-    {% endif %}
-  </div>
+        </article>
+    {% endfor %}
+    </div>
+
+    <div class="fx-empty" id="fxEmpty">
+        <span class="material-icons-round">sports_cricket</span>
+        <b>No matches here</b>
+        <p>Try a different status filter or pick another team.</p>
+    </div>
+
+    <p class="fx-note">
+        All times are shown in IST. Tap any card for the full scorecard.
+    </p>
 </div>
-{% endif %}
-{% endfor %}
-</center>
-<div class="extra-padding"></div>
+
 <nav class="bottom-nav">
     <div class="bottom-nav-item active">
         <a href="{{ url_for('main.displayFR') }}">
@@ -352,151 +410,297 @@ body {
     </div>
   </nav>
 
+<div class="fx-toast" id="fxToast" role="status" aria-live="polite"></div>
+
 <script>
-      // Function to create a timer for a given clock element
-      function createTimer(clockElement) {
-      const deadline = new Date(clockElement.getAttribute("data-deadline")).getTime();
+(function () {
+  'use strict';
 
-      const daysSpan = clockElement.querySelector(".days");
-      const hoursSpan = clockElement.querySelector(".hours");
-      const minutesSpan = clockElement.querySelector(".minutes");
-      const secondsSpan = clockElement.querySelector(".seconds");
+  var list   = document.getElementById('fxList');
+  var bar    = document.getElementById('fxBar');
+  var empty  = document.getElementById('fxEmpty');
+  var shown  = document.getElementById('fxShown');
+  var toastEl = document.getElementById('fxToast');
+  var cards  = Array.prototype.slice.call(document.querySelectorAll('.fx-card'));
+  var STORE  = 'fx-status-filter';
 
-      function updateTimer() {
-        const Tnow = new Date();
-        const timeZone = 'Asia/Kolkata';
-        const dateInTimeZone = new Date(Tnow.toLocaleString('en-US', { timeZone }));
-        const now = dateInTimeZone.getTime();
-        const t = deadline - now;
+  /* ------------------------------------------------------------- helpers */
 
-        if (t < 0) {
-          daysSpan.textContent = "0";
-          hoursSpan.textContent = "0";
-          minutesSpan.textContent = "0";
-          secondsSpan.textContent = "0";
-          return;
-        }
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add('is-on');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { toastEl.classList.remove('is-on'); }, 2200);
+  }
 
-        const days = Math.floor(t / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((t % (1000 * 60)) / 1000);
+  function navHeight() {
+    var nav = document.querySelector('nav.navbar');
+    return nav ? nav.getBoundingClientRect().height : 66;
+  }
 
-        daysSpan.textContent = days;
-        hoursSpan.textContent = hours;
-        minutesSpan.textContent = minutes;
-        secondsSpan.textContent = seconds;
-      }
+  /* The navbar is fixed, so the toolbar has to stick just below it. Its height
+     varies with the viewport, hence the measurement instead of a constant. */
+  function syncStick() {
+    document.documentElement.style.setProperty('--fx-stick', (navHeight() + 8) + 'px');
+  }
 
-      updateTimer(); // Show timer instantly
-      const interval = setInterval(updateTimer, 1000);
-    }
+  syncStick();
+  window.addEventListener('resize', syncStick);
 
-    // Initialize timers for all clock elements
-    document.querySelectorAll(".clockdiv").forEach(function(clockElement) {
-  createTimer(clockElement); // This will start the timer instantly
-});
+  /* Scroll offset = fixed navbar + the sticky toolbar sitting under it. */
+  function topOffset() {
+    return navHeight() + (bar ? bar.getBoundingClientRect().height : 0) + 16;
+  }
 
-    </script>
-    <script>
-    function updateTeamNames() {
-      const screenWidth = window.innerWidth;
-      const teamElements = document.querySelectorAll('.team-name, .result1, .team-display');
+  function goTo(el, smooth) {
+    if (!el) return;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - topOffset();
+    window.scrollTo({ top: y < 0 ? 0 : y, behavior: smooth ? 'smooth' : 'auto' });
+  }
 
-      teamElements.forEach(element => {
-        const fullName = element.getAttribute('full');
-        const shortName = element.getAttribute('short');
+  /* ---------------------------------------------------------- countdowns */
 
-        if (screenWidth <= 845) { // Mobile view breakpoint
-          element.textContent = shortName;
-        } else {
-          element.textContent = fullName;
-        }
-      });
-    }
+  /* Deadlines are IST wall-clock strings. Comparing them against "now"
+     re-expressed in IST keeps the countdown correct in any timezone. */
+  function istNow() {
+    return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })).getTime();
+  }
 
-    // Update team names on load and window resize
-    window.addEventListener('resize', updateTeamNames);
-    window.addEventListener('load', updateTeamNames);
-  </script>
-    <script>
-	window.onload = function() {
-  // Get the current date and time
-  const currentDate = new Date();
-
-  // Find all match elements
-  const matches = document.querySelectorAll('.main-container');
-  let targetMatch = null;
-
-  matches.forEach(function(match) {
-    // Get the match deadline (data-deadline attribute)
-    const matchDate = new Date(match.querySelector('.header').getAttribute('data-deadline'));
-
-    // Get the result element that contains the match status (e.g., "In Progress" or "Starts Sat, 22 Mar . 07:30 PM IST")
-    const resultElement = match.querySelector('.result');
-
-    // Determine if the match is ongoing (if the result is "In Progress")
-    const isOngoing = resultElement && resultElement.textContent.trim() === 'Match is In-Progress';
-
-    // Check if the match is upcoming (has a future date)
-    const isUpcoming = matchDate > currentDate;
-
-    if (isUpcoming) {
-      // If the match is upcoming and no target match has been set yet, or if this is the closest upcoming match
-      if (!targetMatch || matchDate < new Date(targetMatch.querySelector('.header').getAttribute('data-deadline'))) {
-        targetMatch = match; // This will be the closest upcoming match
-      }
-    } else if (isOngoing) {
-      // If the match is ongoing and no target match has been set yet
-      targetMatch = match; // This will be the ongoing match
-    }
+  var clocks = Array.prototype.slice.call(document.querySelectorAll('.fx-clock')).map(function (el) {
+    return {
+      el: el,
+      end: new Date(el.getAttribute('data-deadline')).getTime(),
+      out: {
+        d: el.querySelector('[data-u="d"]'),
+        h: el.querySelector('[data-u="h"]'),
+        m: el.querySelector('[data-u="m"]'),
+        s: el.querySelector('[data-u="s"]')
+      },
+      last: null
+    };
   });
 
-  // If no upcoming or ongoing match was found, look for the last completed match
-  if (!targetMatch) {
-    const completedMatches = Array.from(matches).filter(function(match) {
-      const resultElement = match.querySelector('.result');
-      return resultElement && resultElement.textContent.trim() !== 'Match is In-Progress';
+  function tick() {
+    var now = istNow();
+    clocks.forEach(function (c) {
+      var t = c.end - now;
+      if (t < 0) t = 0;
+      var d = Math.floor(t / 86400000);
+      var h = Math.floor((t % 86400000) / 3600000);
+      var m = Math.floor((t % 3600000) / 60000);
+      var s = Math.floor((t % 60000) / 1000);
+      var key = d + ':' + h + ':' + m + ':' + s;
+      if (key === c.last) return;          /* skip DOM writes when unchanged */
+      c.last = key;
+      c.out.d.textContent = d;
+      c.out.h.textContent = h;
+      c.out.m.textContent = m;
+      c.out.s.textContent = s;
+      c.el.classList.toggle('is-soon', t > 0 && t < 3600000);
+      c.el.classList.toggle('is-over', t === 0);
+    });
+  }
+
+  if (clocks.length) {
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  /* ------------------------------------------------------ status filter */
+
+  function applyFilter(mode) {
+    var count = 0;
+    cards.forEach(function (card) {
+      var show = mode === 'all' || card.getAttribute('data-state') === mode;
+      card.hidden = !show;
+      if (show) count++;
     });
 
-    // If there are completed matches, select the most recent one
-    if (completedMatches.length > 0) {
-      targetMatch = completedMatches[completedMatches.length - 1]; // Last completed match
+    /* Drop month dividers that no longer head any visible card. */
+    var nodes = Array.prototype.slice.call(list.children);
+    for (var i = 0; i < nodes.length; i++) {
+      if (!nodes[i].classList.contains('fx-month')) continue;
+      var any = false;
+      for (var j = i + 1; j < nodes.length; j++) {
+        if (nodes[j].classList.contains('fx-month')) break;
+        if (!nodes[j].hidden) { any = true; break; }
+      }
+      nodes[i].hidden = !any;
+    }
+
+    if (shown) shown.textContent = count;
+    if (empty) empty.classList.toggle('is-on', count === 0);
+
+    Array.prototype.forEach.call(bar.querySelectorAll('.fx-seg__btn'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === mode));
+    });
+
+    /* On the narrowest phones the segment strip can still overflow; make sure
+       the selected one is the one you can see. */
+    var seg = bar.querySelector('.fx-seg');
+    var on = bar.querySelector('.fx-seg__btn[aria-pressed="true"]');
+    if (seg && on && seg.scrollWidth > seg.clientWidth) {
+      on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   }
 
-  // Scroll to the selected target match if found
-  if (targetMatch) {
-    targetMatch.scrollIntoView({ behavior: 'smooth' });
-    const offset = 91; // Padding value
-      const targetPosition = targetMatch.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: targetPosition - offset, behavior: 'smooth' });
+  Array.prototype.forEach.call(bar.querySelectorAll('.fx-seg__btn'), function (btn) {
+    btn.addEventListener('click', function () {
+      var mode = btn.getAttribute('data-filter');
+      applyFilter(mode);
+      try { sessionStorage.setItem(STORE, mode); } catch (e) { /* private mode */ }
+      goTo(list, true);
+    });
+  });
+
+  var saved = 'all';
+  try { saved = sessionStorage.getItem(STORE) || 'all'; } catch (e) { /* ignore */ }
+  if (!bar.querySelector('.fx-seg__btn[data-filter="' + saved + '"]')) saved = 'all';
+  applyFilter(saved);
+
+  /* -------------------------------------------------- team dropdown UX */
+
+  var dd = document.getElementById('fxTeamDD');
+  if (dd) {
+    document.addEventListener('click', function (e) {
+      if (dd.open && !dd.contains(e.target)) dd.open = false;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && dd.open) {
+        dd.open = false;
+        dd.querySelector('summary').focus();
+      }
+    });
+    /* Arrow keys walk the option list once the menu is open. */
+    dd.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      var opts = Array.prototype.slice.call(dd.querySelectorAll('.fx-opt'));
+      if (!opts.length) return;
+      if (!dd.open) { dd.open = true; opts[0].focus(); e.preventDefault(); return; }
+      var at = opts.indexOf(document.activeElement);
+      var next = e.key === 'ArrowDown' ? at + 1 : at - 1;
+      if (next < 0) next = opts.length - 1;
+      if (next >= opts.length) next = 0;
+      opts[next].focus();
+      e.preventDefault();
+    });
+    if (dd.querySelector('.fx-opt.is-active')) {
+      dd.addEventListener('toggle', function () {
+        if (dd.open) dd.querySelector('.fx-opt.is-active').scrollIntoView({ block: 'nearest' });
+      });
+    }
   }
-};
-// Add Move to Top button logic
-(function() {
-    // Create the button
-    const moveTopBtn = document.createElement('button');
-    moveTopBtn.id = 'moveTopBtn';
-    moveTopBtn.className = 'floating-move-top-btn';
-    moveTopBtn.title = 'Move to Top';
-    moveTopBtn.style.display = 'none';
-    moveTopBtn.innerHTML = '<i class="fa fa-arrow-up"></i>';
-    document.body.appendChild(moveTopBtn);
 
-    // Show/hide button on scroll
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 400) {
-            moveTopBtn.style.display = 'flex';
-        } else {
-            moveTopBtn.style.display = 'none';
-        }
-    });
+  /* ------------------------------------------- next / live match anchor */
 
-    // Scroll to top on click
-    moveTopBtn.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+  function currentCard() {
+    var live = cards.filter(function (c) { return !c.hidden && c.getAttribute('data-state') === 'live'; });
+    if (live.length) return live[0];
+    var up = cards.filter(function (c) { return !c.hidden && c.getAttribute('data-state') === 'upcoming'; });
+    if (up.length) return up[0];
+    var done = cards.filter(function (c) { return !c.hidden && c.getAttribute('data-state') === 'done'; });
+    return done.length ? done[done.length - 1] : null;
+  }
+
+  var next = cards.filter(function (c) { return c.getAttribute('data-state') === 'upcoming'; })[0];
+  var anyLive = cards.some(function (c) { return c.getAttribute('data-state') === 'live'; });
+  if (next && !anyLive) {
+    next.classList.add('is-next');
+    var head = next.querySelector('.fx-card__head');
+    var badge = document.createElement('span');
+    badge.className = 'fx-badge fx-badge--next';
+    badge.textContent = 'Next up';
+    head.insertBefore(badge, head.querySelector('.fx-actions'));
+  }
+
+  var nowBtn = document.getElementById('fxNow');
+  if (nowBtn) {
+    nowBtn.addEventListener('click', function () {
+      var target = currentCard();
+      if (target) goTo(target, true);
+      else toast('No matches to jump to');
     });
+  }
+
+  /* Open the page where the action is, unless we were sent to an anchor. */
+  if (!location.hash) {
+    window.addEventListener('load', function () {
+      var target = currentCard();
+      if (target) goTo(target, false);
+    });
+  }
+
+  /* ---------------------------------------------------------- card tools */
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function gcalStamp(d) {
+    return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) +
+           'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00';
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.fx-cal'), function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var card = btn.closest('.fx-card');
+      var start = new Date(card.getAttribute('data-start'));
+      var end = new Date(start.getTime() + 3.5 * 3600000);   /* a T20 runs ~3h30m */
+      var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent('IPL 2026 \u2014 ' + btn.getAttribute('data-title')) +
+        '&dates=' + gcalStamp(start) + '/' + gcalStamp(end) +
+        '&ctz=Asia/Kolkata' +
+        '&location=' + encodeURIComponent(btn.getAttribute('data-venue') || '');
+      window.open(url, '_blank', 'noopener');
+      btn.classList.add('is-done');
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.fx-share'), function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var url = location.origin + btn.getAttribute('data-url');
+      var title = btn.getAttribute('data-title');
+      if (navigator.share) {
+        navigator.share({ title: title, url: url }).catch(function () { /* dismissed */ });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function () {
+          btn.classList.add('is-done');
+          toast('Match link copied');
+        });
+      } else {
+        window.prompt('Copy this link', url);
+      }
+    });
+  });
+
+  /* --------------------------------------------------- sticky bar state */
+
+  var barTop = bar ? bar.offsetTop : 0;
+  var moveTop = document.createElement('button');
+  moveTop.type = 'button';
+  moveTop.id = 'moveTopBtn';
+  moveTop.className = 'floating-move-top-btn';
+  moveTop.title = 'Back to top';
+  moveTop.setAttribute('aria-label', 'Back to top');
+  moveTop.innerHTML = '<span class="material-icons-round">arrow_upward</span>';
+  document.body.appendChild(moveTop);
+  moveTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      if (bar) bar.classList.toggle('is-stuck', window.pageYOffset > barTop - 80);
+      moveTop.classList.toggle('is-on', window.pageYOffset > 500);
+      ticking = false;
+    });
+  }, { passive: true });
 })();
 </script>
 
