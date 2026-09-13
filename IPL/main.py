@@ -633,9 +633,15 @@ def update_toppers():
                 return
     
 def get_innings_data(matID):
-    inn1 = requests.get(f"https://apiv2.cricket.com.au/web/views/comments?fixtureId={matID}&inningNumber=1&commentType=&overLimit=21&jsconfig=eccn%3Atrue&format=json", verify=False).json()
-    inn2 = requests.get(f"https://apiv2.cricket.com.au/web/views/comments?fixtureId={matID}&inningNumber=2&commentType=&overLimit=21&jsconfig=eccn%3Atrue&format=json", verify=False).json()
-    return inn1, inn2
+    innings = []
+    for inn in (1, 2):
+        try:
+            response = requests.get(f"https://apiv2.cricket.com.au/web/views/comments?fixtureId={matID}&inningNumber={inn}&commentType=&overLimit=21&jsconfig=eccn%3Atrue&format=json", verify=False, timeout=15)
+            innings.append(response.json())
+        except Exception as e:
+            print(f"Error fetching innings {inn} for fixture {matID}: {e}")
+            innings.append(None)
+    return innings[0], innings[1]
 
 def calculate_age(dob, current_date):
     # Calculate the number of full years

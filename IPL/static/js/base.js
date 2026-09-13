@@ -17,29 +17,64 @@
         }, {passive: true});
         syncScrolled();
 
-        // Mark the link matching the current path. Detail pages live under
-        // their own routes, so a few sections need extra prefixes.
+        // Mark the link matching the current page. Detail pages live under
+        // their own routes, so a few sections need extra prefixes. Keys are the
+        // link's own target, including ?filter= where two links share a path.
         const ALIASES = {
           '/fixtures': ['/match-'],
-          '/battingstats': ['/bowlingstats', '/awards'],
-          '/todayMatch': ['/scorecard', '/livesquad', '/overs']
+          '/fixtures?filter=live': ['/todayMatch'],
+          '/battingstats': ['/bowlingstats', '/awards']
         };
-        const here = window.location.pathname.replace(/\/+$/, '') || '/';
-        nav.querySelectorAll('.navbar-nav .nav-link[href]').forEach(link => {
-          let path;
+
+        const tidy = p => p.replace(/\/+$/, '') || '/';
+
+        function syncActive() {
+          const here = tidy(window.location.pathname);
+          let hereFilter = null;
           try {
-            path = new URL(link.getAttribute('href'), window.location.origin).pathname;
-          } catch (e) {
-            return;
-          }
-          path = path.replace(/\/+$/, '') || '/';
-          if (path === '/') return;
-          const prefixes = [path].concat(ALIASES[path] || []);
-          if (prefixes.some(p => here.indexOf(p) === 0)) {
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-          }
-        });
+            hereFilter = new URLSearchParams(window.location.search).get('filter');
+          } catch (e) { /* ignore */ }
+
+          const links = [];
+          nav.querySelectorAll('.navbar-nav .nav-link[href]').forEach(link => {
+            let url;
+            try {
+              url = new URL(link.getAttribute('href'), window.location.origin);
+            } catch (e) {
+              return;
+            }
+            const path = tidy(url.pathname);
+            if (path === '/') return;
+            const filter = url.searchParams.get('filter');
+            const sig = path + (filter ? '?filter=' + filter : '');
+            const hit = here.indexOf(path) === 0 ||
+                        (ALIASES[sig] || []).some(p => here.indexOf(p) === 0);
+            links.push({ link, path, filter, hit });
+          });
+
+          // MATCHES and LIVE both sit on /fixtures, so a shared path is settled
+          // by ?filter=: an exact match wins, otherwise the plain link does.
+          const winners = new Set();
+          links.filter(l => l.hit).forEach(l => {
+            const group = links.filter(o => o.hit && o.path === l.path);
+            if (group.length < 2) { winners.add(l.link); return; }
+            const exact = group.find(o => o.filter === hereFilter);
+            winners.add((exact || group.find(o => !o.filter) || group[0]).link);
+          });
+
+          links.forEach(({ link }) => {
+            const on = winners.has(link);
+            link.classList.toggle('active', on);
+            if (on) link.setAttribute('aria-current', 'page');
+            else link.removeAttribute('aria-current');
+          });
+        }
+
+        syncActive();
+
+        // Pages that change ?filter= in place (the fixtures list) call this to
+        // keep the navbar honest without a reload.
+        window.syncNavActive = syncActive;
       })();
 
       // Custom dropdown behavior: hover on desktop, click on mobile for .custom-dropdown

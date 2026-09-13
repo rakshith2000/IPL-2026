@@ -372,8 +372,13 @@
     </p>
 </div>
 
+{#  LIVE is now a view of this same page, so the highlighted nav item follows
+    the status filter. Rendering the ?filter=live case server side avoids a
+    flash of the wrong item; the script keeps it in sync from then on. #}
+{% set nav_live = request.args.get('filter') == 'live' %}
+
 <nav class="bottom-nav">
-    <div class="bottom-nav-item active">
+    <div class="bottom-nav-item {{ '' if nav_live else 'active' }}" data-nav="matches">
         <a href="{{ url_for('main.displayFR') }}">
       <span class="material-icons-round">event</span>
       <span class="bottom-nav-label">MATCHES</span>
@@ -386,8 +391,8 @@
       </a>
     </div>
     <div class="bottom-nav-item spacer"></div>
-    <div class="bottom-nav-item live">
-        <a href="{{ url_for('main.todayMatch') }}">
+    <div class="bottom-nav-item live {{ 'active' if nav_live }}" data-nav="live">
+        <a href="{{ url_for('main.displayFR', filter='live') }}">
       <div class="live-circle"></div>
       <div class="live-content">
         <span class="material-icons-round zoomInOut">play_arrow</span>
@@ -543,21 +548,84 @@
     if (seg && on && seg.scrollWidth > seg.clientWidth) {
       on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
+
+    /* LIVE and MATCHES are the same page, so light up whichever one the
+       current filter represents. */
+    var navMatches = document.querySelector('.bottom-nav-item[data-nav="matches"]');
+    var navLive = document.querySelector('.bottom-nav-item[data-nav="live"]');
+    if (navMatches) navMatches.classList.toggle('active', mode !== 'live');
+    if (navLive) navLive.classList.toggle('active', mode === 'live');
+
+    /* Same story in the desktop navbar, which reads the URL — so this must run
+       after syncUrl. (Undefined on first load: base.js loads later and does its
+       own initial pass.) */
+    if (window.syncNavActive) window.syncNavActive();
+  }
+
+  /* Keep ?filter= in step with the buttons, so a refresh or a shared link
+     reproduces what is on screen instead of the value we arrived with. */
+  function syncUrl(mode) {
+    if (!window.history || !history.replaceState) return;
+    try {
+      var u = new URL(location.href);
+      if (mode === 'all') u.searchParams.delete('filter');
+      else u.searchParams.set('filter', mode);
+      history.replaceState(null, '', u.toString());
+    } catch (e) { /* ignore */ }
   }
 
   Array.prototype.forEach.call(bar.querySelectorAll('.fx-seg__btn'), function (btn) {
     btn.addEventListener('click', function () {
       var mode = btn.getAttribute('data-filter');
+      syncUrl(mode);          /* URL first — the navbar highlighter reads it */
       applyFilter(mode);
-      try { sessionStorage.setItem(STORE, mode); } catch (e) { /* private mode */ }
+      remember(mode);
       goTo(list, true);
     });
   });
 
-  var saved = 'all';
-  try { saved = sessionStorage.getItem(STORE) || 'all'; } catch (e) { /* ignore */ }
-  if (!bar.querySelector('.fx-seg__btn[data-filter="' + saved + '"]')) saved = 'all';
-  applyFilter(saved);
+  /* ?filter=live (used by the LIVE shortcut in the bottom nav) beats whatever
+     the session remembered — an explicit link should always land where it says.
+     Falls back to 'all' if that state has no button, e.g. no live match today. */
+  /* the value reaches us from a URL and from storage, so keep it to [a-z]
+     rather than interpolating it straight into a selector */
+  function segFor(mode) {
+    if (!mode || !/^[a-z]+$/.test(mode)) return null;
+    return bar.querySelector('.fx-seg__btn[data-filter="' + mode + '"]');
+  }
+
+  /* 'live' is a nav destination rather than a view preference — it is only ever
+     honoured from an explicit ?filter=live. Remembering it would make the
+     MATCHES button, which links to a bare /fixtures, look like it does nothing. */
+  function remember(mode) {
+    try {
+      if (mode === 'live') sessionStorage.removeItem(STORE);
+      else sessionStorage.setItem(STORE, mode);
+    } catch (e) { /* private mode */ }
+  }
+
+  function initialFilter() {
+    var fromUrl = null;
+    try { fromUrl = new URLSearchParams(location.search).get('filter'); } catch (e) { /* ignore */ }
+    if (segFor(fromUrl)) {
+      remember(fromUrl);
+      return fromUrl;
+    }
+    var saved = null;
+    try { saved = sessionStorage.getItem(STORE); } catch (e) { /* ignore */ }
+    return segFor(saved) ? saved : 'all';
+  }
+
+  var start = initialFilter();
+
+  /* If the URL asked for something we cannot honour — ?filter=live on a day
+     with no live match — correct it before base.js reads it for the navbar,
+     otherwise the two navs would disagree. */
+  var asked = null;
+  try { asked = new URLSearchParams(location.search).get('filter'); } catch (e) { /* ignore */ }
+  if (asked !== null && asked !== start) syncUrl(start);
+
+  applyFilter(start);
 
   /* -------------------------------------------------- team dropdown UX */
 
