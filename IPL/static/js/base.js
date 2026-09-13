@@ -1,3 +1,47 @@
+      // Navbar chrome: elevation on scroll + current-page highlight
+
+      (function() {
+        const nav = document.querySelector('nav.navbar');
+        if (!nav) return;
+
+        // Denser shadow once the page leaves the top
+        let ticking = false;
+        function syncScrolled() {
+          nav.classList.toggle('is-scrolled', window.pageYOffset > 8);
+          ticking = false;
+        }
+        window.addEventListener('scroll', () => {
+          if (ticking) return;
+          ticking = true;
+          window.requestAnimationFrame(syncScrolled);
+        }, {passive: true});
+        syncScrolled();
+
+        // Mark the link matching the current path. Detail pages live under
+        // their own routes, so a few sections need extra prefixes.
+        const ALIASES = {
+          '/fixtures': ['/match-'],
+          '/battingstats': ['/bowlingstats', '/awards'],
+          '/todayMatch': ['/scorecard', '/livesquad', '/overs']
+        };
+        const here = window.location.pathname.replace(/\/+$/, '') || '/';
+        nav.querySelectorAll('.navbar-nav .nav-link[href]').forEach(link => {
+          let path;
+          try {
+            path = new URL(link.getAttribute('href'), window.location.origin).pathname;
+          } catch (e) {
+            return;
+          }
+          path = path.replace(/\/+$/, '') || '/';
+          if (path === '/') return;
+          const prefixes = [path].concat(ALIASES[path] || []);
+          if (prefixes.some(p => here.indexOf(p) === 0)) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+          }
+        });
+      })();
+
       // Custom dropdown behavior: hover on desktop, click on mobile for .custom-dropdown
 
       (function() {

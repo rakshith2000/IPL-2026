@@ -1,3 +1,21 @@
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+  --nav-blue-1: #0b47bd;
+  --nav-blue-2: #063a9e;
+  --nav-blue-3: #042a72;
+  --nav-gold: #ffca08;
+  --nav-cyan: #4fc3f7;
+  --nav-danger: #ff6b81;
+  --nav-ink: #ffffff;
+  --nav-ink-dim: rgba(255, 255, 255, 0.76);
+  --nav-line: rgba(255, 255, 255, 0.14);
+  --nav-pad-l: 40px;
+  --nav-pad-r: 20px;
+  --nav-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
 /* Global Styles */
       body {
         font-family: 'Exo 2', sans-serif;
@@ -24,39 +42,90 @@
         background-color: #f7b733;
     }
 
-      /* Navbar */
+      /* ============================================================
+         Navbar shell
+         ============================================================ */
       nav.navbar {
-        background: url("/static/images/rounded_spiral.png"), linear-gradient(145deg, #0056d2, #003c8a);
+        /* Keep exactly two layers (spiral + gradient) so per-page
+           `background-position` overrides keep mapping 1:1. */
+        background-image:
+          url("/static/images/rounded_spiral.png"),
+          linear-gradient(135deg, #0e54d6 0%, var(--nav-blue-1) 28%, var(--nav-blue-2) 62%, var(--nav-blue-3) 100%);
         background-size: 170px 150px, cover;
         background-position: center left -15px, center;
-        background-repeat: no-repeat;
+        background-repeat: no-repeat, no-repeat;
+        -webkit-backdrop-filter: blur(14px) saturate(140%);
+        backdrop-filter: blur(14px) saturate(140%);
         color: white;
-        padding: 10px 20px 10px 40px;
+        padding: 10px var(--nav-pad-r) 10px var(--nav-pad-l);
         position: fixed;
         width: 100%;
         top: 0;
         left: 0;
         overflow: visible; /* allow dropdowns to overflow instead of being clipped */
         z-index: 1000;
+        border-bottom: 1px solid var(--nav-line);
+        /* inset top sheen + outer elevation */
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                    0 6px 24px rgba(2, 12, 40, 0.28);
+        transform: translateZ(0); /* own layer: avoids repaint artifacts under the fixed bar */
+        transition: box-shadow 260ms var(--nav-ease), border-color 260ms var(--nav-ease);
       }
+
+      /* Thin accent line along the bottom edge */
+      nav.navbar::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 2px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(79, 195, 247, 0.85) 18%,
+          rgba(255, 202, 8, 0.85) 55%,
+          transparent 95%);
+        opacity: 0.55;
+        pointer-events: none;
+        transition: opacity 260ms var(--nav-ease);
+      }
+
+      /* Denser, more grounded bar once the page is scrolled */
+      nav.navbar.is-scrolled {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16),
+                    0 10px 34px rgba(2, 12, 40, 0.45);
+        border-bottom-color: rgba(255, 255, 255, 0.20);
+      }
+      nav.navbar.is-scrolled::after {
+        opacity: 1;
+      }
+
       @media (max-width: 991px) {
   nav.navbar {
-    background-size: 170px 150px, cover !important; /* 60px = fixed image height */
+    background-size: 170px 150px, cover !important;
     background-repeat: no-repeat, no-repeat !important;
     background-position: left -15px top -40px, center;
   }
   .navbar-collapse {
     width: 100vw !important;
-    margin-left: calc(-1 * (40px)); /* negate navbar left padding */
-    margin-right: calc(-1 * (20px)); /* negate navbar right padding */
+    margin-left: calc(-1 * var(--nav-pad-l)); /* negate navbar left padding */
+    margin-right: calc(-1 * var(--nav-pad-r)); /* negate navbar right padding */
     left: 0;
     right: 0;
-    border-radius: 0;
-    padding-left: 10px;
-    padding-right: 0;
-    background: linear-gradient(145deg, #0056d2, #003c8a);
+    border-radius: 0 0 22px 22px;
+    padding: 6px 14px 14px;
+    margin-top: 10px;
+    border-top: 1px solid var(--nav-line);
+    background: linear-gradient(180deg, rgba(9, 48, 130, 0.98), rgba(4, 34, 92, 0.99));
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 18px 40px rgba(2, 12, 40, 0.45);
   }
 }
+
+      /* ============================================================
+         Brand
+         ============================================================ */
       nav a.navbar-brand {
         font-family: 'Exo 2', sans-serif;
         font-weight: 700;
@@ -64,6 +133,18 @@
         text-transform: uppercase;
         display: flex;
         align-items: center;
+        transition: transform 240ms var(--nav-ease), filter 240ms var(--nav-ease);
+      }
+      nav a.navbar-brand img {
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+        transition: transform 240ms var(--nav-ease);
+      }
+      nav a.navbar-brand:hover img,
+      nav a.navbar-brand:focus img {
+        transform: scale(1.06);
+      }
+      nav a.navbar-brand:active {
+        transform: translateY(1px);
       }
 
       .extra-pr-100 {
@@ -78,39 +159,92 @@
         padding-left: 40px;
       }
 
-      /* Modern Navbar Links */
-      nav .navbar-nav .nav-link {
-        color: #fff !important;
+      /* ============================================================
+         Navbar links
+         ============================================================ */
+      /* `nav.navbar ...` keeps this above Bootstrap's
+         `.navbar-expand-lg .navbar-nav .nav-link` padding. */
+      nav.navbar .navbar-nav .nav-link {
+        color: var(--nav-ink-dim) !important;
         font-family: 'Exo 2', sans-serif;
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
         font-weight: 600;
-        padding: 8px 18px 8px 18px;
-        margin-right: 5px;
-        border-radius: 8px;
+        letter-spacing: 0.045em;
+        padding: 9px 15px;
+        border-radius: 12px;
         position: relative;
-        transition: color 0.2s;
         text-decoration: none;
-        background: none;
+        background: transparent;
+        transition: color 200ms var(--nav-ease), background-color 200ms var(--nav-ease),
+                    transform 160ms var(--nav-ease);
       }
-      /* Hide the pseudo-element and use a box-shadow underline to avoid rendering artifacts */
-      nav .navbar-nav .nav-link::after {
-        display: none !important;
+
+      /* Sliding underline indicator (width is padding-independent) */
+      nav.navbar .navbar-nav .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 5px;
+        width: 62%;
+        height: 2px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, var(--nav-cyan), var(--nav-gold));
+        transform: translateX(-50%) scaleX(0);
+        transition: transform 280ms var(--nav-ease);
+        pointer-events: none;
       }
-      nav .navbar-nav .nav-link {
-        transition: color 0.25s, box-shadow 0.2s ease;
+
+      nav.navbar .navbar-nav .nav-link:hover,
+      nav.navbar .navbar-nav .nav-link:focus {
+        color: var(--nav-ink) !important;
+        background-color: rgba(255, 255, 255, 0.10);
       }
-      nav .navbar-nav .nav-link:hover,
-      nav .navbar-nav .nav-link.active {
-        box-shadow: inset 0 -2px 0 #fff; /* thin 2px underline */
+      nav.navbar .navbar-nav .nav-link:active {
+        transform: translateY(1px);
       }
-      nav .navbar-nav .nav-link:hover,
-      nav .navbar-nav .nav-link.active {
-        color: #fff !important;
-        background: none;
+      nav.navbar .navbar-nav .nav-link:hover::after,
+      nav.navbar .navbar-nav .nav-link:focus::after,
+      nav.navbar .navbar-nav .nav-link.active::after {
+        transform: translateX(-50%) scaleX(1);
       }
-      nav .navbar-nav .nav-link:hover::after,
-      nav .navbar-nav .nav-link.active::after {
-        transform: scaleX(1);
+
+      /* Current page */
+      nav.navbar .navbar-nav .nav-link.active,
+      nav.navbar .navbar-nav .nav-item .nav-link.active {
+        color: var(--nav-ink) !important;
+        background-color: rgba(255, 255, 255, 0.13);
+      }
+      nav.navbar .navbar-nav .nav-link.active::after {
+        background: linear-gradient(90deg, var(--nav-gold), #ffa726);
+      }
+
+      nav.navbar .navbar-nav .nav-link:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.65);
+        outline-offset: 2px;
+      }
+
+      /* LIVE link: pulsing status dot.
+         Laid out in flow (not absolutely placed) so page-level
+         padding overrides can never push it over the label. */
+      nav.navbar .navbar-nav .nav-link--live {
+        display: inline-flex;
+        align-items: center;
+      }
+      nav.navbar .navbar-nav .nav-link--live::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 7px;
+        height: 7px;
+        margin-right: 8px;
+        border-radius: 50%;
+        background: #ff5252;
+        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.65);
+        animation: navLivePulse 1.8s ease-out infinite;
+      }
+      @keyframes navLivePulse {
+        0%   { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.6); }
+        70%  { box-shadow: 0 0 0 8px rgba(255, 82, 82, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
       }
 
       /* Remove old button styles from nav links */
@@ -126,12 +260,153 @@
         margin-right: 0 !important;
       }
 
-      .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+      .nav-item{
+        margin-right: 4px;
       }
 
-      .nav-item{
-        margin-right: 5px;
+      /* ============================================================
+         Hamburger toggler (animates into an X)
+         ============================================================ */
+      nav.navbar .navbar-toggler {
+        border: 1px solid var(--nav-line);
+        border-radius: 12px;
+        padding: 9px 11px;
+        background: rgba(255, 255, 255, 0.07);
+        box-shadow: none !important;
+        outline: none !important;
+        transition: background-color 200ms var(--nav-ease), border-color 200ms var(--nav-ease),
+                    transform 140ms var(--nav-ease);
+      }
+      nav.navbar .navbar-toggler:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+      nav.navbar .navbar-toggler:active {
+        transform: scale(0.94);
+      }
+      nav.navbar .navbar-toggler:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.65) !important;
+        outline-offset: 2px;
+      }
+
+      nav.navbar .navbar-toggler .navbar-toggler-icon {
+        display: block;
+        position: relative;
+        width: 22px;
+        height: 16px;
+        /* middle bar */
+        background: linear-gradient(#fff, #fff) center center / 22px 2px no-repeat;
+        transition: background-size 200ms var(--nav-ease);
+      }
+      nav.navbar .navbar-toggler .navbar-toggler-icon::before,
+      nav.navbar .navbar-toggler .navbar-toggler-icon::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: #fff;
+        transition: transform 280ms var(--nav-ease), top 220ms var(--nav-ease),
+                    bottom 220ms var(--nav-ease);
+      }
+      nav.navbar .navbar-toggler .navbar-toggler-icon::before { top: 0; }
+      nav.navbar .navbar-toggler .navbar-toggler-icon::after  { bottom: 0; }
+
+      nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+        background-size: 0 2px;
+      }
+      nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::before {
+        top: 7px;
+        transform: rotate(45deg);
+      }
+      nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon::after {
+        bottom: 7px;
+        transform: rotate(-45deg);
+      }
+
+      /* ============================================================
+         Mobile menu panel
+         ============================================================ */
+      @media (max-width: 991px) {
+        /* Inset the accent so it clears the panel's rounded corners */
+        nav.navbar::after {
+          left: 18px;
+          right: 18px;
+          border-radius: 2px;
+        }
+        nav .navbar-nav {
+          padding: 4px 0 2px;
+        }
+        .nav-item {
+          margin-right: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .nav-item:last-child {
+          border-bottom: none;
+        }
+        nav.navbar .navbar-nav .nav-link {
+          padding: 14px 14px;
+          border-radius: 12px;
+          font-size: 1rem !important;
+          display: flex;
+          align-items: center;
+        }
+        /* Underline reads as a left accent bar on mobile */
+        nav.navbar .navbar-nav .nav-link::after {
+          left: 0;
+          right: auto;
+          top: 10px;
+          bottom: 10px;
+          width: 3px;
+          height: auto;
+          border-radius: 3px;
+          transform: scaleY(0);
+          transform-origin: center top;
+          transition: transform 260ms var(--nav-ease);
+        }
+        nav.navbar .navbar-nav .nav-link:hover::after,
+        nav.navbar .navbar-nav .nav-link:focus::after,
+        nav.navbar .navbar-nav .nav-link.active::after {
+          transform: scaleY(1);
+        }
+        nav.navbar .navbar-nav .nav-link--live {
+          display: flex;
+        }
+
+        /* Staggered reveal of the menu rows */
+        .navbar-collapse.show .nav-item,
+        .navbar-collapse.collapsing .nav-item,
+        .navbar-collapse.show .form-inline,
+        .navbar-collapse.collapsing .form-inline {
+          animation: navRowIn 320ms var(--nav-ease) both;
+        }
+        .navbar-collapse.show .nav-item:nth-child(1) { animation-delay: 30ms; }
+        .navbar-collapse.show .nav-item:nth-child(2) { animation-delay: 60ms; }
+        .navbar-collapse.show .nav-item:nth-child(3) { animation-delay: 90ms; }
+        .navbar-collapse.show .nav-item:nth-child(4) { animation-delay: 120ms; }
+        .navbar-collapse.show .nav-item:nth-child(5) { animation-delay: 150ms; }
+        .navbar-collapse.show .form-inline { animation-delay: 180ms; }
+
+        /* Auth buttons sit on their own row, evenly spread */
+        .navbar-collapse .form-inline {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          padding: 12px 2px 4px;
+          margin-top: 6px !important;
+          border-top: 1px solid rgba(255, 255, 255, 0.09);
+        }
+        .navbar-collapse .form-inline .outline-btn {
+          margin-left: 0;
+          flex: 1 1 auto;
+          text-align: center;
+          padding: 11px 14px;
+        }
+      }
+
+      @keyframes navRowIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
 
 
@@ -146,13 +421,16 @@
         .custom-dropdown .custom-dropdown-menu {
           position: absolute;
           left: 0;
-          top: 100%;
+          top: calc(100% + 6px);
           white-space: nowrap;
           z-index: 2000;
-          background: #0b2a66;
-          border-radius: 8px;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-          padding: 6px 8px;
+          background: linear-gradient(180deg, rgba(12, 52, 138, 0.98), rgba(6, 33, 88, 0.98));
+          -webkit-backdrop-filter: blur(16px) saturate(140%);
+          backdrop-filter: blur(16px) saturate(140%);
+          border: 1px solid var(--nav-line);
+          border-radius: 14px;
+          box-shadow: 0 18px 42px rgba(2, 12, 40, 0.45);
+          padding: 6px;
           opacity: 0;
           transform: translateY(-8px) scale(0.98);
           transform-origin: top center;
@@ -169,46 +447,68 @@
           overflow: hidden;
           opacity: 0;
           visibility: hidden;
-          /* Make mobile menu visually distinct from the navbar (white background) */
-          background: #0b2a66;
-          padding: 6px 8px;
-          border-radius: 8px;
-          box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 6px;
+          border-radius: 12px;
+          box-shadow: none;
           transition: max-height 280ms ease, opacity 180ms ease;
           pointer-events: none;
         }
       }
-      .custom-dropdown .custom-dropdown-item { display: block; padding: 10px 14px; color: #ffffff; text-decoration: none; border-radius: 6px; font-style: italic; }
-      .custom-dropdown .custom-dropdown-item:hover { background: rgba(5, 75, 180, 0.247); }
+      .custom-dropdown .custom-dropdown-item {
+        display: block;
+        padding: 10px 14px;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 10px;
+        font-style: italic;
+        transition: background-color 160ms var(--nav-ease), transform 140ms var(--nav-ease);
+      }
+      .custom-dropdown .custom-dropdown-item:hover { background: rgba(255, 255, 255, 0.12); transform: translateX(2px); }
       .custom-dropdown.is-open > .custom-dropdown-menu,
       .custom-dropdown .custom-dropdown-menu.show {
         opacity: 1; transform: translateY(0) scale(1); visibility: visible; pointer-events: auto; }
       @media (max-width: 991px) {
         .custom-dropdown.is-open > .custom-dropdown-menu { max-height: 800px; opacity: 1; visibility: visible; pointer-events: auto; }
       }
+
+      /* ============================================================
+         Outline buttons
+         ============================================================ */
       .outline-btn {
         display: inline-block;
-        padding: 6px 12px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.18);
-        background: transparent;
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.20);
+        background: rgba(255, 255, 255, 0.04);
         color: #fff;
         text-decoration: none;
         font-weight: 700;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
         margin-left: 8px;
         line-height: 1;
-        transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 120ms ease;
+        cursor: pointer;
+        transition: background-color 180ms var(--nav-ease), color 180ms var(--nav-ease),
+                    border-color 180ms var(--nav-ease), box-shadow 180ms var(--nav-ease),
+                    transform 120ms var(--nav-ease);
       }
-      .outline-btn:hover, .outline-btn:focus { background: rgba(255,255,255,0.1); color: #fff; }
-      .outline-btn:active { transform: translateY(1px); }
-      .outline-btn--accent { border-color: #4fc3f7; color: #4fc3f7; }
-      .outline-btn--accent:hover { background: rgba(79,195,247,0.1); color: #4fc3f7; }
-      .outline-btn--danger { border-color: #ff6b81; color: #ff6b81; }
-      .outline-btn--danger:hover { background: rgba(255,107,129,0.1); color: #ff6b81; }
-      .outline-btn--gray { border-color: #b0bec5; color: #b0bec5; }
-      .outline-btn--gray:hover { background: rgba(176,190,197,0.1); color: #b0bec5; }
-      .outline-btn--white { border-color: rgba(255,255,255,0.9); color: #fff; }
+      .outline-btn:hover, .outline-btn:focus {
+        background: rgba(255,255,255,0.14);
+        color: #fff;
+        box-shadow: 0 6px 18px rgba(2, 12, 40, 0.35);
+        transform: translateY(-1px);
+      }
+      .outline-btn:active { transform: translateY(1px); box-shadow: none; }
+      .outline-btn:focus-visible { outline: 2px solid rgba(255,255,255,0.65); outline-offset: 2px; }
+      .outline-btn--accent { border-color: rgba(79,195,247,0.55); color: var(--nav-cyan); }
+      .outline-btn--accent:hover { background: rgba(79,195,247,0.16); color: var(--nav-cyan); box-shadow: 0 6px 18px rgba(79,195,247,0.25); }
+      .outline-btn--danger { border-color: rgba(255,107,129,0.55); color: var(--nav-danger); }
+      .outline-btn--danger:hover { background: rgba(255,107,129,0.16); color: var(--nav-danger); box-shadow: 0 6px 18px rgba(255,107,129,0.25); }
+      .outline-btn--gray { border-color: rgba(176,190,197,0.45); color: #b0bec5; }
+      .outline-btn--gray:hover { background: rgba(176,190,197,0.16); color: #cfd8dc; }
+      .outline-btn--white { border-color: rgba(255,255,255,0.85); color: #fff; }
       .outline-btn,
       .outline-btn:hover,
       .outline-btn:focus {
@@ -224,4 +524,35 @@
         .extra-padding {
           padding-bottom: 70px!important;
         }
+      }
+
+      /* ============================================================
+         Motion / print
+         ============================================================ */
+      @media (prefers-reduced-motion: reduce) {
+        nav.navbar,
+        nav.navbar::after,
+        nav a.navbar-brand,
+        nav a.navbar-brand img,
+        nav .navbar-nav .nav-link,
+        nav .navbar-nav .nav-link::after,
+        nav.navbar .navbar-toggler,
+        nav.navbar .navbar-toggler .navbar-toggler-icon,
+        nav.navbar .navbar-toggler .navbar-toggler-icon::before,
+        nav.navbar .navbar-toggler .navbar-toggler-icon::after,
+        .custom-dropdown .custom-dropdown-menu,
+        .custom-dropdown .custom-dropdown-item,
+        .outline-btn {
+          transition-duration: 1ms !important;
+        }
+        nav .navbar-nav .nav-link--live::before,
+        .navbar-collapse.show .nav-item,
+        .navbar-collapse.collapsing .nav-item,
+        .navbar-collapse.show .form-inline {
+          animation: none !important;
+        }
+      }
+
+      @media print {
+        nav.navbar { display: none !important; }
       }
