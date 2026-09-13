@@ -1184,6 +1184,47 @@ def get_liveScore(match):
     MatchDT = [dict(row._mapping) for row in MatchDT]
     return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm, 'clr': ptclr, 'clr2': clr, 'inn1': Inn1, 'inn2': Inn2, 'fn': full_name})
 
+def get_liveStrip(match):
+    """Scores + status line only, for the ticker on the fixtures list.
+
+    The fixtures page polls this every 10s for each in-progress match, so it is
+    kept deliberately thin: no squad load, no player-name matching. It exists
+    because cmc2.sportskeeda.com only sends Access-Control-Allow-Origin for
+    www.sportskeeda.com, so the browser cannot read that response directly.
+
+    Returns {'ok': bool, 'teams': [{team, score, batting}], 'info': str}.
+    Upstream problems come back as ok=False rather than an error, so the page
+    just keeps showing the last score it had.
+    """
+    blank = {'match': match, 'ok': False, 'teams': [], 'info': '', 'status': ''}
+    try:
+        MatchDT = db.session.execute(
+            text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),
+            {'matchno': match}).fetchall()
+        if not MatchDT:
+            return blank
+        row = MatchDT[0]
+        MatchURL = render_live_URL(row[4], row[5], match, row[2])
+        MatchLDT = requests.get(MatchURL, verify=False, timeout=10).json()
+    except Exception:
+        return blank
+
+    # The feed names teams in full ("Royal Challengers Bengaluru"); map that back
+    # to our abbreviation so the card can tell which side is which.
+    abv_of = {v: k for k, v in full_name.items()}
+    teams = []
+    for t in (MatchLDT.get('score_strip') or []):
+        name = t.get('name') or t.get('p_name') or ''
+        teams.append({
+            'team': abv_of.get(name) or (t.get('short_name') or ''),
+            'score': (t.get('score') or '').strip(),
+            'batting': bool(t.get('currently_batting')),
+        })
+
+    return {'match': match, 'ok': True, 'teams': teams,
+            'info': MatchLDT.get('info') or '',
+            'status': MatchLDT.get('match_status') or ''}
+
 def get_scoreCard(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())

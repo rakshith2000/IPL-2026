@@ -69,7 +69,7 @@
     {%- set tone = ('is-playoff' if playoff else 'is-win') if won else '' -%}
     {%- if so -%}
         <span class="fx-score">
-            <span class="fx-score__line">{{ sc['runs'] }}{{ '' if sc['wkts'] == 10 else '/' ~ sc['wkts'] }}<i>({{ sc['overs'] }})</i></span>
+            <span class="fx-score__line fx-score__line--prior">{{ sc['runs'] }}{{ '' if sc['wkts'] == 10 else '/' ~ sc['wkts'] }}<i>({{ sc['overs'] }})</i></span>
             <span class="fx-score__line fx-score__line--so {{ tone }}"><span class="fx-so-tag">SO</span>{{ sc['runsSO'] }}{{ '' if sc['wktsSO'] == 10 else '/' ~ sc['wktsSO'] }}<i>({{ sc['oversSO'] }})</i></span>
         </span>
     {%- elif sc['overs'] == 0 and sc['runs'] == 0 and sc['wkts'] == 0 -%}
@@ -235,6 +235,7 @@
 
         <article class="fx-card" id="m-{{ i[0] | replace(' ', '-') }}" data-state="{{ state }}"
                  data-start="{{ i[1].strftime('%Y-%m-%dT%H:%M:%S') }}"
+                 {% if state == 'live' %}data-match="{{ i[0] }}"{% endif %}
                  style="--ha: {{ brand(i[3]) }}; --hb: {{ brand(i[4]) }};">
 
             <a class="fx-card__hit" href="{{ link }}"
@@ -276,7 +277,9 @@
                             {{ crest(TA, '', state == 'done' and TA == i[7]) }}
                             <span class="fx-team__id">
                                 {{ team_name(TA) }}
-                                {% if state == 'done' %}{{ score_cell(TA_S, TA == i[7], playoff, so) }}{% endif %}
+                                {% if state == 'done' %}{{ score_cell(TA_S, TA == i[7], playoff, so) }}
+                                {%- elif state == 'live' %}<span class="fx-score fx-score--live" data-live-score="{{ TA }}"><span class="fx-score__wait">&mdash;</span></span>
+                                {%- endif %}
                             </span>
                         </div>
 
@@ -294,7 +297,9 @@
                             {{ crest(TB, '', state == 'done' and TB == i[7]) }}
                             <span class="fx-team__id">
                                 {{ team_name(TB) }}
-                                {% if state == 'done' %}{{ score_cell(TB_S, TB == i[7], playoff, so) }}{% endif %}
+                                {% if state == 'done' %}{{ score_cell(TB_S, TB == i[7], playoff, so) }}
+                                {%- elif state == 'live' %}<span class="fx-score fx-score--live" data-live-score="{{ TB }}"><span class="fx-score__wait">&mdash;</span></span>
+                                {%- endif %}
                             </span>
                         </div>
                     </div>
@@ -308,7 +313,8 @@
                         <div class="fx-result fx-result--soon">Starts {{ i[1].strftime('%a, %d %b') }} <span class="fx-result__time">&bull; {{ i[1].strftime('%I:%M %p') }} IST</span></div>
                         {% endif %}
                     {% elif state == 'live' %}
-                    <div class="fx-result fx-result--live"><span class="fx-blink">Match is in progress</span></div>
+                    {#- filled from the feed's "info" line; the fallback stands until the first poll lands -#}
+                    <div class="fx-result fx-result--live" data-live-info><span class="fx-blink">Match is in progress</span></div>
                     {% elif i[7] == 'NA' %}
                     <div class="fx-result fx-result--na">{{ i[10] }}</div>
                     {% else %}
@@ -511,6 +517,121 @@
   if (clocks.length) {
     tick();
     setInterval(tick, 1000);
+  }
+
+  /* --------------------------------------------------------- live scores */
+
+  /* Polls our own /api/match-<no>/liveStrip, which proxies the score feed.
+     A direct call to the feed is impossible from the browser: it only sends
+     Access-Control-Allow-Origin for www.sportskeeda.com. */
+  var LIVE_MS = 10000;
+  var liveCards = cards.filter(function (c) { return c.getAttribute('data-match'); });
+
+  /* One innings: "174/8 (20 ov)" -> bold runs with the overs set smaller.
+     Built as nodes rather than innerHTML because this is third-party text. */
+  function scoreLine(text, cls) {
+    var line = document.createElement('span');
+    line.className = 'fx-score__line' + (cls ? ' ' + cls : '');
+    var re = /\(([^)]*)\)/g;
+    var at = 0, m;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > at) line.appendChild(document.createTextNode(text.slice(at, m.index)));
+      var ov = document.createElement('i');
+      ov.textContent = '(' + m[1].replace(/ ov/g, '') + ')';
+      line.appendChild(ov);
+      at = m.index + m[0].length;
+    }
+    if (at < text.length) line.appendChild(document.createTextNode(text.slice(at)));
+    return line;
+  }
+
+  /* A super over arrives as one string joined by "&", with the regular innings
+     usually carrying no overs: "155/8 & 1/2 (0.3 ov)". Stack it the same way a
+     finished super over is shown — innings above, decider below with an SO tag. */
+  function paintScore(el, raw, batting) {
+    var text = String(raw || '').replace(/^\*/, '').trim();
+    if (el.getAttribute('data-shown') === text) {
+      el.classList.toggle('is-batting', !!batting);
+      return;                                   /* nothing moved since last poll */
+    }
+    var had = el.getAttribute('data-shown');
+    el.setAttribute('data-shown', text);
+    el.textContent = '';
+    el.classList.toggle('is-batting', !!batting);
+    if (had) {                                  /* flash only on a real change */
+      el.classList.remove('is-bump');
+      void el.offsetWidth;                      /* restart the animation */
+      el.classList.add('is-bump');
+    }
+
+    var box = document.createElement('span');
+    box.className = 'fx-score__lines';
+    el.appendChild(box);
+
+    if (!text) {
+      var wait = document.createElement('span');
+      wait.className = 'fx-score__wait';
+      wait.textContent = 'Yet to bat';
+      box.appendChild(wait);
+      el.classList.remove('has-so');
+      return;
+    }
+
+    var halves = text.split('&');
+    if (halves.length === 2) {
+      box.appendChild(scoreLine(halves[0].trim(), 'fx-score__line--prior'));
+      var so = scoreLine(halves[1].trim(), 'fx-score__line--so');
+      var tag = document.createElement('span');
+      tag.className = 'fx-so-tag';
+      tag.textContent = 'SO';
+      so.insertBefore(tag, so.firstChild);
+      box.appendChild(so);
+      el.classList.add('has-so');
+    } else {
+      box.appendChild(scoreLine(text, ''));
+      el.classList.remove('has-so');
+    }
+  }
+
+  function paintCard(card, data) {
+    if (!data || !data.ok) return;              /* keep whatever is on screen */
+
+    (data.teams || []).forEach(function (t) {
+      /* the name is third-party, so keep it out of the selector unless plain */
+      if (!t || !t.team || !/^[A-Za-z0-9]+$/.test(t.team)) return;
+      var el = card.querySelector('[data-live-score="' + t.team + '"]');
+      if (el) paintScore(el, t.score, t.batting);
+    });
+
+    var info = card.querySelector('[data-live-info]');
+    if (info && data.info) info.textContent = data.info;
+  }
+
+  var inFlight = {};
+
+  function pollCard(card) {
+    var no = card.getAttribute('data-match');
+    if (!no || inFlight[no]) return;
+    inFlight[no] = true;
+    fetch('/api/match-' + encodeURIComponent(no) + '/liveStrip', { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { paintCard(card, d); })
+      .catch(function () { /* offline or upstream down — leave the last score up */ })
+      .then(function () { inFlight[no] = false; });
+  }
+
+  function pollLive() {
+    if (document.hidden) return;               /* don't poll a backgrounded tab */
+    liveCards.forEach(pollCard);
+  }
+
+  if (liveCards.length) {
+    pollLive();
+    setInterval(pollLive, LIVE_MS);
+    /* catch up straight away when the tab comes back */
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) pollLive();
+    });
   }
 
   /* ------------------------------------------------------ status filter */

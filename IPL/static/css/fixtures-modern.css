@@ -785,8 +785,10 @@ body::-webkit-scrollbar-thumb {
 
 .fx-score__line { display: block; }
 
-/* super over: the regular innings drops back so the decider reads first */
-.fx-score__line:first-child { font-size: 0.82rem; font-weight: 700; color: var(--fx-ink-3); }
+/* super over: the regular innings drops back so the decider reads first.
+   Keyed off a modifier, not :first-child — live scores reuse .fx-score__line
+   for the single-innings case and must keep full weight. */
+.fx-score__line--prior { font-size: 0.82rem; font-weight: 700; color: var(--fx-ink-3); }
 .fx-score__line--so { font-size: 1.05rem; }
 
 .fx-so-tag {
@@ -804,6 +806,54 @@ body::-webkit-scrollbar-thumb {
 }
 
 .fx-team--l .fx-score { text-align: right; }
+
+/* ---- live score, refreshed in place every 10s ---- */
+
+/* the lines stack inside their own box so the batting dot can sit alongside
+   both of them during a super over */
+.fx-score--live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fx-ink);
+}
+
+.fx-team--l .fx-score--live { flex-direction: row-reverse; }
+
+.fx-score__lines { min-width: 0; }
+.fx-team--l .fx-score__lines { text-align: right; }
+.fx-score--live.has-so .fx-score__lines { line-height: 1.25; }
+
+/* the side at the crease gets a pulsing marker */
+.fx-score--live.is-batting { color: var(--fx-orange); }
+
+.fx-score--live.is-batting::after {
+  content: '';
+  flex: none;
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fx-orange);
+  box-shadow: 0 0 7px rgba(255, 157, 60, 0.85);
+  animation: fx-blink 1.4s ease-in-out infinite;
+}
+
+.fx-score--live.is-batting i { color: rgba(255, 157, 60, 0.72); }
+
+.fx-score__wait {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--fx-ink-3);
+}
+
+/* brief lift whenever the number actually changes */
+.fx-score--live.is-bump { animation: fx-bump 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes fx-bump {
+  30% { transform: translateY(-3px); filter: brightness(1.45); }
+}
 
 /* ---- centre marker ---- */
 

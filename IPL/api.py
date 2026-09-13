@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta
 from . import db
 from .models import User, Pointstable, Fixture, Squad
-from .main import get_stats, get_matchInfo, get_scoreCard, get_liveScore, get_matchOvers, get_liveSquad
+from .main import get_stats, get_matchInfo, get_scoreCard, get_liveScore, get_matchOvers, get_liveSquad, get_liveStrip
 import os, csv, re, pytz, requests, time
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, jsonify, render_template, url_for, redirect, request, flash, Response, json, stream_with_context
@@ -46,3 +46,10 @@ def api_match_overs(match):
 def api_liveSquad(match):
     """Return JSON for the liveSquad (used by API)."""
     return jsonify(get_liveSquad(match))
+
+@api.route('/api/match-<match>/liveStrip')
+def api_liveStrip(match):
+    """Scores + status for one in-progress match, polled by the fixtures list."""
+    resp = jsonify(get_liveStrip(match))
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
