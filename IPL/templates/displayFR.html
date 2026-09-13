@@ -166,12 +166,13 @@
                 <span class="fx-seg__long">Upcoming</span><span class="fx-seg__short">Next</span>
                 <span class="fx-seg__n">{{ S.up }}</span>
             </button>
-            {% if S.live %}
+            {#- always rendered, even at zero: LIVE is a nav destination, and it
+                has to be able to say "nothing is on" rather than silently
+                falling back to All -#}
             <button type="button" class="fx-seg__btn" data-filter="live" aria-pressed="false">
                 <span class="fx-seg__long">Live</span><span class="fx-seg__short">Live</span>
                 <span class="fx-seg__n">{{ S.live }}</span>
             </button>
-            {% endif %}
             <button type="button" class="fx-seg__btn" data-filter="done" aria-pressed="false">
                 <span class="fx-seg__long">Results</span><span class="fx-seg__short">Done</span>
                 <span class="fx-seg__n">{{ S.done }}</span>
@@ -361,10 +362,10 @@
     {% endfor %}
     </div>
 
-    <div class="fx-empty" id="fxEmpty">
-        <span class="material-icons-round">sports_cricket</span>
-        <b>No matches here</b>
-        <p>Try a different status filter or pick another team.</p>
+    <div class="fx-empty" id="fxEmpty" data-team="{{ 'All' if hint == 'All' else fn[hint] }}">
+        <span class="material-icons-round" id="fxEmptyIcon">sports_cricket</span>
+        <b id="fxEmptyTitle">No matches here</b>
+        <p id="fxEmptyText">Try a different status filter or pick another team.</p>
     </div>
 
     <p class="fx-note">
@@ -387,7 +388,7 @@
     <div class="bottom-nav-item">
         <a href="{{ url_for('main.displayPT') }}">
       <span class="material-icons-round">table_chart</span>
-      <span class="bottom-nav-label">PTS TABLE</span>
+      <span class="bottom-nav-label">STANDINGS</span>
       </a>
     </div>
     <div class="bottom-nav-item spacer"></div>
@@ -514,6 +515,31 @@
 
   /* ------------------------------------------------------ status filter */
 
+  /* An empty list should say what is missing — "no live matches" reads very
+     differently from "no results yet", and LIVE lands here whenever nothing
+     is in progress. */
+  var EMPTY = {
+    live: ['videocam_off', 'No live matches',
+           'No match is in progress right now.', ' are not playing right now.'],
+    upcoming: ['event_busy', 'No upcoming matches',
+               'Every fixture has been played.', ' have no fixtures left.'],
+    done: ['history', 'No results yet',
+           'No match has finished yet.', ' have not finished a match yet.'],
+    all: ['sports_cricket', 'No matches here',
+          'Try another team.', ' have no matches.']
+  };
+
+  function describeEmpty(mode) {
+    var copy = EMPTY[mode] || EMPTY.all;
+    var team = empty.getAttribute('data-team');
+    var icon = document.getElementById('fxEmptyIcon');
+    var title = document.getElementById('fxEmptyTitle');
+    var text = document.getElementById('fxEmptyText');
+    if (icon) icon.textContent = copy[0];
+    if (title) title.textContent = copy[1];
+    if (text) text.textContent = (team && team !== 'All') ? team + copy[3] : copy[2];
+  }
+
   function applyFilter(mode) {
     var count = 0;
     cards.forEach(function (card) {
@@ -535,7 +561,10 @@
     }
 
     if (shown) shown.textContent = count;
-    if (empty) empty.classList.toggle('is-on', count === 0);
+    if (empty) {
+      empty.classList.toggle('is-on', count === 0);
+      if (count === 0) describeEmpty(mode);
+    }
 
     Array.prototype.forEach.call(bar.querySelectorAll('.fx-seg__btn'), function (b) {
       b.setAttribute('aria-pressed', String(b.getAttribute('data-filter') === mode));

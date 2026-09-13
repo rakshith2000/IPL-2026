@@ -6,6 +6,34 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests, uuid
 from datetime import datetime, timedelta
 
+liveURL_Prefix = "https://cmc2.sportskeeda.com/live-cricket-score/"
+liveURL_Suffix = "/ajax"
+
+full_name = {'CSK':'Chennai Super Kings',
+             'DC':'Delhi Capitals',
+             'KKR':'Kolkata Knight Riders',
+             'GT':'Gujarat Titans',
+             'LSG':'Lucknow Super Giants',
+             'MI':'Mumbai Indians',
+             'PBKS':'Punjab Kings',
+             'RR':'Rajasthan Royals',
+             'RCB':'Royal Challengers Bengaluru',
+             'SRH':'Sunrisers Hyderabad',
+             'TBA':'TBA'}
+
+def render_live_URL(tA, tB, mn, dt):
+    teamAB = full_name[tA].replace(" ", "-").lower() + "-vs-" + full_name[tB].replace(" ", "-").lower()
+    if mn.isdigit():
+        matchNo = "match-" + mn
+    elif tA != "TBA" and tB != "TBA":
+        matchNo = mn.lower().replace(' ','-')
+    else:
+        matchNo = mn.lower().replace(' ','-') + "-ipl-2026t20"
+    dt = dt.strftime("%d-%B-%Y").lower()
+    URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
+    print(URL)
+    return URL
+
 def add_days(value, days):
     return value + timedelta(days=days)
 
@@ -23,6 +51,7 @@ def create_app():
 
     app.jinja_env.filters['add_days'] = add_days
     app.jinja_env.filters['eval_str'] = eval_str
+    app.jinja_env.filters['render_live_URL'] = render_live_URL
 
     db.init_app(app)
     login_manager = LoginManager()
