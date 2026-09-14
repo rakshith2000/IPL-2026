@@ -980,7 +980,8 @@ def delete_rank_for_fixture(match):
 def getRanksForPT():
     teams = {'CSK': 1, 'DC': 2, 'GT': 3, 'KKR': 4, 'LSG': 5, 'MI': 6, 'PBKS': 7, 'RR': 8, 'RCB': 9, 'SRH': 10}
     matches = Fixture.query.filter(Fixture.Win_T != None).order_by(Fixture.id.desc()).limit(2).all()
-    if len(matches) == 0:
+    # Rank is only stamped on league matches, so the latest result can carry none
+    if len(matches) == 0 or matches[0].Rank is None:
         return {team: 0 for team in teams.keys()}
     elif len(matches) == 1:
         rankdiff = {}
@@ -988,9 +989,6 @@ def getRanksForPT():
             prev = teams[team]
             rankdiff[team] = prev - rank
         return rankdiff
-    elif len(matches) == 2 and matches[0].Rank is None:
-         rankdiff = {'CSK': 0, 'DC': 0, 'GT': 0, 'KKR': 0, 'LSG': 0, 'MI': 0, 'PBKS': 0, 'RR': 0, 'RCB': 0, 'SRH': 0}
-         return rankdiff
     else:
         rankdiff = {}
         for team, rank in matches[0].Rank.items():
@@ -998,12 +996,33 @@ def getRanksForPT():
             rankdiff[team] = prev - rank
         return rankdiff
 
+def getNextOpponents(teams):
+    """Next unplayed opponent for each team abbreviation ('--' once the season is done)."""
+    nextOpp = {}
+    for team in teams:
+        fixtures = db.session.execute(
+            text('SELECT "Team_A", "Team_B", "Result" FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team order by id'),
+            {'team': team}).fetchall()
+        opp = '--'
+        for j in fixtures:
+            if j[2] is not None:
+                continue
+            opp = j[0] if j[0] != team else j[1]
+            break
+        nextOpp[team] = opp
+    return nextOpp
+
 @main.route('/')
 def index():
     PT = Pointstable.query.order_by(Pointstable.Points.desc(), Pointstable.W.desc(),
                                     Pointstable.NRR.desc(), Pointstable.id.asc()).all()
     TP = {t.category: t.stats for t in Toppers.query.order_by(Toppers.id.asc())}
-    return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP)
+    finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
+    # Same extras the standings page shows, so the home cards can match it exactly
+    return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP,
+                           ranks=getRanksForPT(),
+                           nxt=getNextOpponents([i.team_name for i in PT]),
+                           champion=finalsData.Win_T if finalsData else None)
 
 @main.route('/pointstable')
 def displayPT():
@@ -1012,19 +1031,12 @@ def displayPT():
          [], [], [], [], [], [], [], [], [], [], [], [], [], []]
     teams_ABV = []
     rankChanges = getRanksForPT()
+    nextOpp = getNextOpponents([i.team_name for i in dataPT])
     finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
     for index, i in enumerate(dataPT):
         img = "/static/images/{}.png".format(i.team_name)
-        dataFR = db.session.execute(
-    text('SELECT "Team_A", "Team_B", "Result" FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team order by id'),
-                                                {'team': i.team_name}).fetchall()
-        nm = '--'
-        for j in dataFR:
-            if j[2] != None:
-                continue
-            nm = j[0] if j[0] != i.team_name else j[1]
-            nm = 'vs ' + nm
-            break
+        nm = nextOpp[i.team_name]
+        nm = nm if nm == '--' else 'vs ' + nm
         dt[1][index] = dt[1][index] if not finalsData else dt[1][index] if finalsData.Win_T != i.team_name else 'Champions'
         dt[2].append(img)
         teams_ABV.append(i.team_name)

@@ -27,77 +27,7 @@
 } %}
 
 {#  ---------------------------------------------------------------- macros #}
-
-{# Rank number + movement indicator, or the trophy for the champions #}
-{% macro rank_cell(pos, delta) -%}
-    {%- if pos == 'Champions' -%}
-        <img class="pt-trophy" src="/static/images/trophy.png" alt="Champions" title="Champions">
-    {%- else -%}
-        <span class="pt-rank">
-            <span class="pt-rank__no">{{ pos }}</span>
-            {%- if delta > 0 -%}
-                <span class="pt-delta pt-delta--up" title="Up {{ delta }} from last match">
-                    <span class="pt-delta__arrow">&#9650;</span>{{ delta }}
-                </span>
-            {%- elif delta < 0 -%}
-                <span class="pt-delta pt-delta--down" title="Down {{ delta|abs }} from last match">
-                    <span class="pt-delta__arrow">&#9660;</span>{{ delta|abs }}
-                </span>
-            {%- else -%}
-                <span class="pt-delta pt-delta--same" title="No change">&#8212;</span>
-            {%- endif -%}
-        </span>
-    {%- endif -%}
-{%- endmacro %}
-
-{# Last-5 form as coloured pills; the most recent result pulses #}
-{% macro form_pills(results) -%}
-    {%- if results -%}
-        <span class="pt-form">
-        {%- for r in results -%}
-            {%- set kind = 'w' if r == 'W' else ('d' if r == 'D' else 'l') -%}
-            {%- set label = 'Won' if r == 'W' else ('No result' if r == 'D' else 'Lost') -%}
-            <span class="pt-pill pt-pill--{{ kind }}{{ ' pt-pill--latest' if loop.last }}" title="{{ label }}">
-                {{- 'N' if r == 'D' else r -}}
-            </span>
-        {%- endfor -%}
-        </span>
-    {%- else -%}
-        <span class="pt-form__empty">&mdash;</span>
-    {%- endif -%}
-{%- endmacro %}
-
-{# Next opponent chip with crest #}
-{% macro next_chip(nxt) -%}
-    {%- set opp = nxt|replace('vs ', '')|trim -%}
-    {%- if opp and opp != '--' -%}
-        <span class="pt-next" title="Next up: {{ opp }}">
-            <img src="/static/images/squad_logos/{{ opp }}.png" alt="">{{ opp }}
-        </span>
-    {%- else -%}
-        <span class="pt-next pt-next--none" title="No fixtures left">&mdash;</span>
-    {%- endif -%}
-{%- endmacro %}
-
-{# Probability meter — fill width and hue are both driven by --v in CSS #}
-{% macro meter(val, label) -%}
-    {%- set v = val|float -%}
-    {%- set v = 0 if v < 0 else (100 if v > 100 else v) -%}
-    {%- set tone = 'pt-meter--sure' if v >= 99.95 else ('pt-meter--none' if v <= 0 else '') -%}
-    <span class="pt-meter {{ tone }}" role="img" aria-label="{{ label }}: {{ val }} percent" title="{{ label }}: {{ val }}%">
-        <span class="pt-meter__fill" style="--v: {{ v }}"></span>
-        <span class="pt-meter__val">{{ val }}%</span>
-    </span>
-{%- endmacro %}
-
-{# Win percentage: (W + 0.5 * NR) / P #}
-{% macro win_pct(p, w, nr) -%}
-    {%- set pct = ((w + 0.5 * nr) / p * 100)|round(1) if p else 0 -%}
-    <span class="pt-winpct">
-        <span class="pt-winpct__val">{{ pct }}%</span>
-        <span class="pt-winpct__track"><span class="pt-winpct__bar" style="--v: {{ pct }}"></span></span>
-    </span>
-{%- endmacro %}
+{% from "macros/points.html" import rank_cell, delta_pill, form_pills, next_chip, meter, win_pct %}
 
 <div class="pt-wrap">
 
@@ -226,13 +156,7 @@
                     <img class="pt-trophy" src="/static/images/trophy.png" alt="Champions">
                     {% else %}
                     <span class="ptc__rankno">{{ PT[1][i] }}</span>
-                    {% if PT[15][i] > 0 %}
-                    <span class="pt-delta pt-delta--up"><span class="pt-delta__arrow">&#9650;</span>{{ PT[15][i] }}</span>
-                    {% elif PT[15][i] < 0 %}
-                    <span class="pt-delta pt-delta--down"><span class="pt-delta__arrow">&#9660;</span>{{ PT[15][i]|abs }}</span>
-                    {% else %}
-                    <span class="pt-delta pt-delta--same">&#8212;</span>
-                    {% endif %}
+                    {{ delta_pill(PT[15][i]) }}
                     {% endif %}
                 </div>
 
