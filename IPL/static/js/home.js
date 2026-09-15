@@ -40,12 +40,21 @@
 
       /* The track is centred on the active slide, so the neighbours peek in
          from both sides at any viewport width — then clamped to the stage, so
-         the first and last cards sit flush instead of against dead space. */
+         the first and last cards sit flush instead of against dead space.
+
+         The far edge comes from the last slide's layout box, NOT the track's
+         scrollWidth: scrollable overflow is measured from the *transformed*
+         boxes, and the resting slides are scale(0.9). That makes scrollWidth
+         under-report the track by half a slide's shrinkage, so the clamp stops
+         short and the last card is left hanging over the edge. offsetLeft and
+         offsetWidth ignore transforms, so they stay honest. */
       function offsetFor(i) {
         var slide = slides[i];
         if (!slide) return 0;
+        var last = slides[slides.length - 1];
+        var contentEnd = last.offsetLeft + last.offsetWidth;
         var want = (stage.clientWidth / 2) - (slide.offsetLeft + slide.offsetWidth / 2);
-        var min = stage.clientWidth - track.scrollWidth;
+        var min = stage.clientWidth - contentEnd;
         if (min >= 0) return want;                 /* whole track fits: centre it */
         return Math.min(0, Math.max(min, want));
       }
