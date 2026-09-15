@@ -1113,7 +1113,37 @@ def displayFR():
 
 @main.route('/teams')
 def teams():
-    return render_template('teams.html', fn=full_name, champions=champions, clr=ptclr, sqclr=sqclr, mclr=clr)
+    """Franchise directory: honours, squad make-up and this season's form.
+
+    The season numbers on a team card have to agree with the standings page,
+    so they come from the same source in the same order - Pointstable, keyed
+    by team abbreviation with its display position attached.
+    """
+    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(), Pointstable.W.desc(),
+                                        Pointstable.NRR.desc(), Pointstable.id.asc()).all()
+    standings = {}
+    for index, i in enumerate(dataPT):
+        wl = list(eval(i.Win_List).values()) if i.Win_List else []
+        standings[i.team_name] = {
+            'pos': index + 1, 'P': i.P, 'W': i.W, 'L': i.L, 'NR': i.NR,
+            'Pts': i.Points, 'NRR': i.NRR, 'qed': i.qed,
+            'form': ''.join(wl[-5:])
+        }
+
+    # Squad make-up, in one pass over the table rather than ten count queries
+    squads = {t: {'total': 0, 'overseas': 0} for t in teams_data}
+    for team, overseas in db.session.query(Squad.Team, Squad.Overseas).all():
+        if team in squads:
+            squads[team]['total'] += 1
+            if overseas == 'Y':
+                squads[team]['overseas'] += 1
+
+    finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
+    return render_template('teams.html', fn=full_name, champions=champions, clr=ptclr,
+                           sqclr=sqclr, mclr=clr, td=teams_data, st=standings, squads=squads,
+                           ranks=getRanksForPT(),
+                           nxt=getNextOpponents([i.team_name for i in dataPT]),
+                           champion=finalsData.Win_T if finalsData else None)
 
 @main.route('/teams/<team>')
 def squad(team):

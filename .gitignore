@@ -5,3 +5,4 @@ __pycache__/*
 flask_start.sh
 git_start.sh
 qodana.yaml
+instance/*

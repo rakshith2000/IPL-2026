@@ -1,348 +1,452 @@
 {% extends "base.html" %}
 {% block head %}
 {{ super() }}
-<title>IPL Teams | Complete List & Cup Winning Years</title>
+<title>IPL 2026 Teams | Franchises, Squads &amp; Title Honours</title>
+<meta name="description" content="All ten IPL 2026 franchises — squads, captains, home grounds, season form and every title each team has won.">
 <link rel="stylesheet" href="{{ url_for('static', filename='extended_beauty.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
+{#- the season numbers on a card reuse the points-table form pills, win-% bar,
+    next-up chip and rank deltas, so they must read exactly the same -#}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pointstable.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/teams.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-<style>
-/* ---- Your existing styles remain ---- */
-.flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  gap: 20px;
-  padding: 20px;
-}
 
-body {
-  background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
-  background-size: 100%, cover;
-  background-position: center top -48px, center top;
-  background-repeat: repeat, repeat;
-  font-family: 'Exo 2', sans-serif;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-  padding-top: 75px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
+{% from "macros/points.html" import form_pills, next_chip, win_pct, delta_pill, crest_grad %}
 
-body::-webkit-scrollbar { width: 3px; height: 10px; }
-body::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, .1);
-  border-radius: 10px;
-}
-body::-webkit-scrollbar-thumb {
-  background-color: #ff6b81;
-  border-radius: 10px;
-}
-body::-webkit-scrollbar-thumb:hover { background-color: #f7b733; }
+{#  ------------------------------------------------------------------ data #}
 
-.flex-item {
-  background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
-  width: 398px;
-  height: 427px;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.6s;
-  perspective: 1000px;
-  position: relative;
-}
+{% set TEAMS = fn.keys() | reject('equalto', 'TBA') | list %}
 
-.flex-item:hover {
-  /*transform: translateY(-15px);*/
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.5);
-}
+{#  The identity word behind each squad photo — the half of the name that is
+    not on the crest, so the card still says who it is at a glance. #}
+{% set WORD = {
+    'CSK': 'Chennai', 'DC': 'Delhi', 'GT': 'Gujarat', 'KKR': 'Kolkata',
+    'LSG': 'Lucknow', 'MI': 'Mumbai', 'PBKS': 'Punjab', 'RR': 'Rajasthan',
+    'RCB': 'Bengaluru', 'SRH': 'Hyderabad'
+} %}
 
-.flex-item a {
-  text-decoration: none;
-  color: inherit;
-}
+{#  Accent per team. ptclr is picked for white surfaces and several of those
+    are near-black, which disappears on this page — these are the same brand
+    colours chosen for contrast against the dark background. #}
+{% set ACC = {
+    'CSK': '#f9cd05', 'DC': '#4f8cff', 'GT': '#dbbe6e', 'KKR': '#c9a6ff',
+    'LSG': '#ff4d7e', 'MI': '#4aa8ff', 'PBKS': '#ff4d55', 'RR': '#ff69b4',
+    'RCB': '#ff3b45', 'SRH': '#ff8a24'
+} %}
 
-.grad-card {
-  background: radial-gradient(circle at center, var(--c1) 0%, var(--c1) 20%, var(--c2) 100%);
-  padding: 10px 0px 0px 0px;
-  text-align: center;
-  height: 100%;
-  border-radius: 10px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
+{#  Champions whose franchise no longer competes, so they are not in
+    `champions` (which is keyed by the current ten) but did win the season.
+    Shown in the roll of honour only — they count towards no team's tally. #}
+{% set LEGACY = {'2009': ['DCH', 'Deccan Chargers']} %}
 
-.card-content {
-  margin-top: 6px;
-  font-size: 16px;
-  color: #fefefe;
-  position: relative;
-  z-index: 2;
-}
+{#  One row per team, carrying just the keys the page sorts on. The same keys
+    go out as data-attributes so the toolbar can re-sort without a reload. #}
+{% set ROWS = [] %}
+{% for t in TEAMS %}
+    {% set s = st.get(t) %}
+    {% set _ = ROWS.append({
+        'abv': t,
+        'pos': s.pos if s else 99,
+        'titles': champions[t] | length,
+        'latest': (champions[t] | map('int') | max) if champions[t] else 0,
+        'name': fn[t] | lower }) %}
+{% endfor %}
 
-/* Watermark */
-.card-content::before {
-  content: attr(data-watermark);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 32px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.06);
-  pointer-events: none;
-  text-transform: uppercase;
-  text-align: center;
-  word-break: break-word;
-  max-width: 80%;
-}
+{#  Standings order is only meaningful once somebody has played; before that
+    the table is ten teams level on nothing, so lead with the honours. #}
+{% set PLAYED = (st.values() | sum(attribute='P')) if st else 0 %}
+{% set SORT = 'pos' if PLAYED else 'titles' %}
 
-.watermark {
-  position: absolute;
-  top: -25px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  line-height: 0.7;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  z-index: 1;
-}
-.watermark span {
-  font-size: 4.5rem;
-  font-weight: 800;
-  font-weight: bold;
-  color: rgba(0,0,0,0.07);
-  white-space: nowrap;
-  transform: rotate(-5deg);
-  text-transform: uppercase;
-  margin: 5px 0;
-}
+{#- sort() is stable, so the chain reads as "titles, then latest, then name" -#}
+{% set ROWS = (ROWS | sort(attribute='pos')) if SORT == 'pos'
+              else (ROWS | sort(attribute='name') | sort(attribute='latest', reverse=true)
+                         | sort(attribute='titles', reverse=true)) %}
 
-.card-content {
-  position: relative;
-  z-index: 2;
-  overflow: visible;
-  margin-top: 6px;
-  font-size: 16px;
-  color: #fefefe;
-}
-
-.team-image {
-  margin: 0 auto;
-  width: 80px;
-  height: 80px;
-  border-radius: 20px;
-  background: linear-gradient(145deg, var(--c1) 10%, var(--c2) 70%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease-in-out;
-}
-
-.team-image:hover { transform: scale(1.2); }
-
-.team-players {
-  margin: 0 auto;
-  width: 320px;
-  height: 225px;
-  z-index: 2;
-  position: relative;
-}
-
-.card-footer {
-  background: url('/static/images/headers/sh-tl.png'), url('/static/images/headers/sh-tr.png'), url('/static/images/headers/sh-bl.png'), url('/static/images/headers/sh-br.png'), #fff;
-  background-position: left top, right top, left bottom, right bottom, center;
-  background-size: 35%, 35%, 35%, 22%, cover;
-  background-repeat: no-repeat;
-  padding: 10px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.team-name {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: var(--clr);
-  margin-top: 8px;
-}
-.team-name span{
-  line-height: 1.1;
-}
-
-.gradient-text {
-  background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad0c4);
-  -webkit-background-clip: text;
-  color: transparent;
-  font-size: 20px;
-}
-
-/* ---------------- ADD THESE FOR FLIP EFFECT ONLY ---------------- */
-.card-flip { height: 100%; background: radial-gradient(circle at center, var(--c1) 0%, var(--c1) 20%, var(--c2) 100%);}
-.card-flip-inner {
-  height: 100%;
-  transition: transform 0.7s cubic-bezier(.4,2.08,.55,.44);
-  transform-style: preserve-3d;
-  position: relative;
-}
-.grad-card:hover .card-flip-inner,
-.grad-card:focus .card-flip-inner {
-  transform: rotateY(180deg);
-}
-.card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  left: 0; top: 0;
-  backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.card-front { z-index: 3; }
-.card-back {
-  transform: rotateY(180deg);
-  z-index: 2;
-}
-
-/* Optional: back face content light background */
-.card-back .card-content {
-  /* background: rgba(255,255,255,0.1);*/
-  color: #fff;
-  border-radius: 30px 30px 0 0;
-  margin-bottom: 0;
-  margin-top: 0;
-  padding: 0;
-}
-
-.card-back .card-footer {
-  background: rgba(255,255,255,0.1);
-  color: #222;
-  border-radius: 20px; /* 0 20px 20px; */
-  margin: 0 0 auto 0;
-  padding: 16px 0 12px 0;
-}
-
-/* Trophy image on the back */
-.card-back .card-content img {
-  width: 120px;
-  margin: 32px auto 20px auto;
-  display: block;
-}
-
-/* Years grid styling */
-.card-back .card-footer > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.card-back .card-footer .years-line {
-  text-align: center;
-  font-size: 1.1em;
-  font-weight: 600;
-  margin: 4px 0;
-  word-spacing: 5px;
-  letter-spacing: 1px;
-}
-
-.card-back .card-footer .champ-year {
-  color:  #fff; /* #E76F51;*/
-}
-/* --------------------------------------------------------------- */
-</style>
-
-<!-- Background Section -->
-<div class="extra-padding" style="background-image: url('/static/images/banner_bg.jpg'); background-size: cover; background-attachment: fixed;">
-  <center>
-    <div>
-        <span style="font-size: 36px; font-weight: bold; font-family: 'Exo 2', sans-serif; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);">
-          IPL 2026 Teams
-        </span>
-      </div>
-  </center>
-  {% set shortNames = { 'RCB': 'Bengaluru', 'CSK': 'Chennai', 'MI': 'Mumbai', 'KKR': 'Kolkata', 'PBKS': 'Punjab', 'GT': 'Gujarat', 'RR': 'Rajasthan', 'DC': 'Delhi Delhi', 'SRH': 'Hyderabad', 'LSG': 'Lucknow' } %}
-  <div class="flex-container">
-    {% for i in fn.keys() %}
-    {% if i != 'TBA' %}
-    <div class="flex-item">
-      <a href="{{ url_for('main.squad', team=i) }}">
-        {% if champions[i] %}
-        <div class="grad-card card-flip" style="{% if i == 'RCB' %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c3'] }}; {% elif i == 'LSG' %} --c1: {{ sqclr[i]['c1'] }}; --c2: {{ sqclr[i]['c2'] }}; {% elif i == 'CSK' %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'GT' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% elif i == 'MI' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% elif i == 'PBKS' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'KKR' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% else %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% endif %}">
-          <div class="card-flip-inner">
-            <!-- FRONT FACE: your unchanged content -->
-            <div class="card-face card-front">
-              <div class="card-content">
-                <div class="watermark">
-              {% for j in range(4) %}
-              <span>{{ shortNames[i] }}</span>
-              {% endfor %}
-              </div>
-                <img class="team-players" src="/static/images/team_players/{{ i }}.png" alt="Team Logo"/>
-              </div>
-              <div class="card-footer">
-                <img class="team-image" style="{% if i == 'RCB' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'LSG' %} --c1: {{ sqclr[i]['c2'] }}; --c2: {{ sqclr[i]['c1'] }}; {% elif i == 'GT' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'MI' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'PBKS' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'KKR' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% else %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c2'] }}; {% endif %}" src="/static/images/squad_logos/{{ i }}.png" alt="Team Logo" />
-                <div class="team-name" style="--clr: {{ clr[i] }};"><span style="font-size: 25px; font-weight: 800;">{{ fn[i].split(' ')[:-1] | join(' ') | upper }}</span><span style="font-size: 45px; font-weight: 800;">{{ fn[i].split(' ')[-1] | upper }}</span></div>
-              </div>
-            </div>
-
-            <!-- BACK FACE: trophy and champion years, with all spacing and alignment -->
-            <div class="card-face card-back" style="justify-content: center;">
-              <div class="card-content">
-                <div class="watermark">
-                {% for j in range(12) %}
-                <span>{{ shortNames[i] }}</span>
-                {% endfor %}
-                </div>
-                <img src="/static/images/trophy.png" style="position: relative; z-index: 1;" alt="Trophy" />
-              </div>
-              <div class="card-footer" style="width: 90%; margin: 0 auto;">
-                <div>
-                  {% set years = champions[i] %}
-                  {% for y in years|batch(3) %}
-                  <div class="years-line">
-                    {% for year in y %}
-                      <span class="champ-year">{{ year }}</span>{% if not loop.last %} | {% endif %}
-                    {% endfor %}
-                  </div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% else %}
-        <div class="grad-card" style="{% if i == 'RCB' %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c3'] }};{% elif i == 'LSG' %} --c1: {{ sqclr[i]['c1'] }}; --c2: {{ sqclr[i]['c2'] }}; {% elif i == 'CSK' %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'GT' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% elif i == 'MI' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% elif i == 'PBKS' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'KKR' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% else %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% endif %}">
-          <!-- Content Block Space for Middle -->
-          <div class="card-content">
-            <div class="watermark">
-            {% for j in range(4) %}
-            <span>{{ shortNames[i] }}</span>
-            {% endfor %}
-            </div>
-            <img class="team-players" src="/static/images/team_players/{{ i }}.png" alt="Team Logo" />
-          </div>
-
-          <!-- Footer for Logo and Name -->
-          <div class="card-footer" style="--clr: {{ sqclr[i]['c2'] }};">
-            <img class="team-image" style="{% if i == 'RCB' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'LSG' %} --c1: {{ sqclr[i]['c2'] }}; --c2: {{ sqclr[i]['c1'] }}; {% elif i == 'GT' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'MI' %} --c1: {{ mclr[i]['c3'] }}; --c2: {{ mclr[i]['c2'] }}; {% elif i == 'PBKS' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c1'] }}; {% elif i == 'KKR' %} --c1: {{ mclr[i]['c2'] }}; --c2: {{ mclr[i]['c3'] }}; {% else %} --c1: {{ mclr[i]['c1'] }}; --c2: {{ mclr[i]['c2'] }}; {% endif %}" src="/static/images/squad_logos/{{ i }}.png" alt="Team Logo" />
-            <div class="team-name" style="--clr: {{ clr[i] }};"><span style="font-size: 25px; font-weight: 900;">{{ fn[i].split(' ')[:-1] | join(' ') | upper }}</span><span style="font-size: 45px; font-weight: 900;">{{ fn[i].split(' ')[-1] | upper }}</span></div>
-          </div>
-
-        </div>
-        {% endif %}
-      </a>
-    </div>
-    {% endif %}
+{#  Every season's champion, newest first #}
+{% set ROLL = [] %}
+{% for t in TEAMS %}
+    {% for y in champions[t] %}
+    {% set _ = ROLL.append({'y': y | int, 'abv': t, 'name': fn[t], 'gone': false}) %}
     {% endfor %}
-  </div>
+{% endfor %}
+{% for y, who in LEGACY.items() %}
+    {% set _ = ROLL.append({'y': y | int, 'abv': who[0], 'name': who[1], 'gone': true}) %}
+{% endfor %}
+{% set ROLL = ROLL | sort(attribute='y', reverse=true) %}
+{% set WINNERS = ROLL | map(attribute='abv') | unique | list | length %}
+
+{#  Most decorated franchise, which can be a tie #}
+{% set MOST = champions.values() | map('length') | max %}
+{% set BEST = [] %}
+{% for t in TEAMS %}{% if champions[t] | length == MOST %}{% set _ = BEST.append(t) %}{% endif %}{% endfor %}
+
+{% set HOLDER = champion if champion in TEAMS else (ROLL[0].abv if ROLL else none) %}
+
+{#  ---------------------------------------------------------------- macros #}
+
+{#  Stage gradient — the per-team colour pairs the card art was tuned with #}
+{% macro stage_grad(t) -%}
+    {%- if t == 'RCB' -%}--stage-1: {{ mclr[t]['c1'] }}; --stage-2: {{ mclr[t]['c3'] }};
+    {%- elif t == 'LSG' -%}--stage-1: {{ sqclr[t]['c1'] }}; --stage-2: {{ sqclr[t]['c2'] }};
+    {%- elif t == 'CSK' -%}--stage-1: {{ mclr[t]['c1'] }}; --stage-2: {{ mclr[t]['c2'] }};
+    {%- elif t in ['GT', 'MI', 'KKR'] -%}--stage-1: {{ mclr[t]['c2'] }}; --stage-2: {{ mclr[t]['c3'] }};
+    {%- else -%}--stage-1: {{ mclr[t]['c2'] }}; --stage-2: {{ mclr[t]['c1'] }};
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro crest(t, size) -%}
+    <span class="tm-crest {{ size }}" style="{{ crest_grad(t, mclr) if t in mclr }}">
+        <img src="/static/images/squad_logos/{{ t }}.png" alt="{{ fn[t] if t in fn else t }} crest" loading="lazy">
+    </span>
+{%- endmacro %}
+
+<div class="tm-wrap">
+
+    {# ============================================================== hero #}
+    <header class="tm-hero">
+        <span class="tm-hero__eyebrow">TATA IPL 2026 &middot; Franchises</span>
+        <h1 class="tm-hero__title">The Ten Teams</h1>
+        <p class="tm-hero__sub">
+            Squads, captains and home grounds &mdash; with every title each franchise has lifted
+        </p>
+
+        <div class="tm-facts">
+            <span class="tm-fact"><b>{{ TEAMS | length }}</b> Franchises</span>
+            <span class="tm-fact"><b>{{ ROLL | length }}</b> Seasons decided</span>
+            {% if HOLDER %}
+            <span class="tm-fact tm-fact--gold">
+                <img src="/static/images/squad_logos/{{ HOLDER }}.png" alt="">
+                <b>{{ HOLDER }}</b> Reigning champions
+            </span>
+            {% endif %}
+            {% if MOST %}
+            <span class="tm-fact tm-fact--cyan"><b>{{ BEST | join(' & ') }}</b> Most titles &middot; {{ MOST }}</span>
+            {% endif %}
+        </div>
+    </header>
+
+    {# =========================================================== toolbar #}
+    <div class="tm-bar" id="tmBar">
+        <div class="tm-search">
+            <span class="material-icons-round tm-search__icon">search</span>
+            <label class="sr-only" for="tmSearch">Search teams</label>
+            <input type="search" id="tmSearch" autocomplete="off" spellcheck="false"
+                   placeholder="Search a team, captain, coach or ground">
+            <button type="button" class="tm-search__clear" id="tmClear" aria-label="Clear search" hidden>
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+
+        <div class="tm-seg" role="group" aria-label="Sort teams">
+            <button type="button" class="tm-seg__btn" data-sort="pos"
+                    aria-pressed="{{ 'true' if SORT == 'pos' else 'false' }}"
+                    {{ 'disabled' if not PLAYED }}
+                    title="{{ 'League position' if PLAYED else 'Available once the season is under way' }}">
+                <span class="material-icons-round">table_chart</span>Standings
+            </button>
+            <button type="button" class="tm-seg__btn" data-sort="titles"
+                    aria-pressed="{{ 'true' if SORT == 'titles' else 'false' }}" title="Most titles first">
+                <span class="material-icons-round">emoji_events</span>Titles
+            </button>
+            <button type="button" class="tm-seg__btn" data-sort="name"
+                    aria-pressed="false" title="Alphabetical">
+                <span class="material-icons-round">sort_by_alpha</span>A&ndash;Z
+            </button>
+        </div>
+
+    </div>
+
+    {# ============================================================= cards #}
+    <div class="tm-grid" id="tmGrid">
+        {% for r in ROWS %}
+        {% set t = r.abv %}
+        {% set s = st.get(t) %}
+        {% set info = td.get(t, {}) %}
+        {% set sq = squads.get(t, {}) %}
+        {% set titles = r.titles %}
+
+        {#- same status ladder as the standings page -#}
+        {% if champion and champion == t %}{% set status, badge = 'champ', 'Champions' %}
+        {% elif s and s.qed == 'Q' and s.pos <= 2 %}{% set status, badge = 'top2', 'Top 2' %}
+        {% elif s and s.qed == 'Q' %}{% set status, badge = 'q', 'Qualified' %}
+        {% elif s and s.qed == 'E' %}{% set status, badge = 'e', 'Eliminated' %}
+        {% else %}{% set status, badge = '', '' %}
+        {% endif %}
+
+        {% set pre = fn[t].split(' ')[:-1] | join(' ') %}
+        {% set last = fn[t].split(' ')[-1] %}
+
+        <article class="tm-card" id="tm-{{ t }}"
+                 data-abv="{{ t }}"
+                 data-name="{{ r.name }}"
+                 data-pos="{{ r.pos }}"
+                 data-titles="{{ titles }}"
+                 data-latest="{{ r.latest }}"
+                 data-search="{{ [t, fn[t], WORD[t], info.get('Captain', ''), info.get('Coach', ''),
+                                  info.get('Venue', ''), info.get('Owner', '')] | join(' ') | lower }}"
+                 style="{{ stage_grad(t) }} {{ crest_grad(t, mclr) }} --brand: {{ ACC[t] }};
+                        --motif: url('/static/images/headers/{{ t }}.png');"
+                 aria-labelledby="tmName{{ t }}">
+
+            <div class="tm-flip">
+
+                {# ------------------------------------------------- front #}
+                <div class="tm-face tm-face--front">
+
+                    <div class="tm-stage">
+                        <span class="tm-stage__motif" aria-hidden="true"></span>
+                        <span class="tm-stage__word" aria-hidden="true">{{ WORD[t] }}</span>
+                        <img class="tm-stage__squad" src="/static/images/team_players/{{ t }}.png"
+                             alt="{{ fn[t] }} players" loading="lazy">
+
+                        <div class="tm-stage__tags">
+                            {#- before a ball is bowled every team is level on nothing, so the
+                                table position says less than the honours do -#}
+                            {% if s and PLAYED %}
+                            <span class="tm-pos" title="{{ 'Champions' if status == 'champ' else 'League position' }}">
+                                {% if status == 'champ' %}
+                                <img class="tm-pos__cup" src="/static/images/trophy.png" alt="Champions">
+                                {% endif %}
+                                #{{ s.pos }}
+                                {{ delta_pill(ranks.get(t, 0) if s.P else 0) }}
+                            </span>
+                            {% elif titles %}
+                            <span class="tm-pos" title="Titles won">
+                                <img class="tm-pos__cup" src="/static/images/trophy.png" alt="">
+                                {{ titles }}
+                            </span>
+                            {% else %}
+                            <span></span>
+                            {% endif %}
+
+                            {% if badge %}
+                            <span class="tm-badge tm-badge--{{ status }}">
+                                {%- if status == 'champ' %}<span class="material-icons-round">emoji_events</span>{% endif -%}
+                                {{ badge }}
+                            </span>
+                            {% elif titles %}
+                            <span class="tm-badge tm-badge--title" title="Latest title {{ r.latest }}">
+                                {{ titles }}&times; Champion{{ '' if titles == 1 else 's' }}
+                            </span>
+                            {% else %}
+                            <span class="tm-badge tm-badge--none">Yet to win</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="tm-idbar">
+                        {{ crest(t, '') }}
+                        <span class="tm-id" id="tmName{{ t }}">
+                            {% if pre %}<span class="tm-id__pre">{{ pre | upper }}</span>{% endif %}
+                            <span class="tm-id__last">{{ last | upper }}</span>
+                        </span>
+                        <span class="tm-abv">{{ t }}</span>
+                    </div>
+
+                    <div class="tm-body">
+                        {#- a row of zeroes is noise until the season starts; once it has,
+                            a team still on nought is worth showing as exactly that -#}
+                        {% if s and PLAYED %}
+                        {% set nrr = s.NRR | float %}
+                        <dl class="tm-stats">
+                            <div class="tm-stat"><dt>P</dt><dd>{{ s.P }}</dd></div>
+                            <div class="tm-stat"><dt>W</dt><dd>{{ s.W }}</dd></div>
+                            <div class="tm-stat"><dt>L</dt><dd>{{ s.L }}</dd></div>
+                            <div class="tm-stat"><dt>NR</dt><dd>{{ s.NR }}</dd></div>
+                            <div class="tm-stat">
+                                <dt>NRR</dt>
+                                <dd class="{{ 'pt-nrr--pos' if nrr > 0 else ('pt-nrr--neg' if nrr < 0 else '') }}">{{ "%+.3f"|format(nrr) }}</dd>
+                            </div>
+                            <div class="tm-stat tm-stat--pts"><dt>Pts</dt><dd>{{ s.Pts }}</dd></div>
+                        </dl>
+
+                        <div class="tm-row">
+                            <div class="tm-group">
+                                <span class="tm-label">Last 5</span>
+                                {{ form_pills(s.form) }}
+                            </div>
+                            <div class="tm-group">
+                                <span class="tm-label">Win</span>
+                                {{ win_pct(s.P, s.W, s.NR) }}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="tm-preseason">
+                            <span class="material-icons-round">schedule</span>
+                            Season numbers appear once the first ball is bowled
+                        </div>
+                        {% endif %}
+
+                        <ul class="tm-quick">
+                            {% if info.get('Captain') %}
+                            <li title="Captain">
+                                <span class="material-icons-round">military_tech</span>
+                                <span>{{ info['Captain'] }}</span>
+                            </li>
+                            {% endif %}
+                            {% if s and nxt.get(t, '--') != '--' %}
+                            <li title="Next opponent">
+                                <span class="material-icons-round">event</span>
+                                <span>Next {{ next_chip(nxt[t]) }}</span>
+                            </li>
+                            {% elif info.get('Coach') %}
+                            <li title="Head coach">
+                                <span class="material-icons-round">sports</span>
+                                <span>{{ info['Coach'] }}</span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <footer class="tm-foot">
+                        <a class="tm-btn tm-btn--primary" data-squad href="{{ url_for('main.squad', team=t) }}">
+                            <span class="material-icons-round">groups</span>Squad
+                        </a>
+                        <a class="tm-btn" href="{{ url_for('main.displayFR') }}?fteam={{ t }}">
+                            <span class="material-icons-round">event</span>Fixtures
+                        </a>
+                        <button type="button" class="tm-btn tm-btn--icon" data-flip="open"
+                                aria-expanded="false" aria-controls="tmBack{{ t }}"
+                                title="{{ fn[t] }} honours and franchise details"
+                                aria-label="{{ fn[t] }} honours and franchise details">
+                            <span class="material-icons-round">emoji_events</span>
+                        </button>
+                    </footer>
+                </div>
+
+                {# -------------------------------------------------- back #}
+                <div class="tm-face tm-face--back" id="tmBack{{ t }}">
+
+                    <div class="tm-back__head">
+                        {{ crest(t, 'tm-crest--sm') }}
+                        <span class="tm-back__id">
+                            <span class="tm-back__eyebrow">Honours &amp; franchise</span>
+                            <span class="tm-back__name">{{ fn[t] }}</span>
+                        </span>
+                        <button type="button" class="tm-x" data-flip="close"
+                                title="Back to the {{ t }} card" aria-label="Back to the {{ fn[t] }} card">
+                            <span class="material-icons-round">close</span>
+                        </button>
+                    </div>
+
+                    <div class="tm-honour {{ 'tm-honour--none' if not titles }}">
+                        {% if titles %}
+                        <img class="tm-honour__cup" src="/static/images/trophy.png" alt="" loading="lazy">
+                        <div class="tm-honour__id">
+                            <div class="tm-honour__count">
+                                <b>{{ titles }}</b>
+                                <span>{{ 'IPL Title' if titles == 1 else 'IPL Titles' }}</span>
+                            </div>
+                            <ul class="tm-years">
+                                {% for y in champions[t] | sort(reverse=true) %}
+                                <li class="{{ 'is-latest' if y | int == r.latest }}">{{ y }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% else %}
+                        <div class="tm-honour__blank">
+                            <span class="material-icons-round">emoji_events</span>
+                            Still chasing a first title
+                        </div>
+                        <p class="tm-honour__note">
+                            {{ fn[t] }} have not lifted the trophy yet
+                            {%- if s and s.qed == 'Q' %} &mdash; and are through to this year's playoffs
+                            {%- elif s and s.P %} &mdash; {{ s.W }} {{ 'win' if s.W == 1 else 'wins' }} from {{ s.P }} so far this season
+                            {%- endif %}.
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <dl class="tm-table">
+                        {% if info.get('Captain') %}
+                        <div class="tm-table__row"><dt>Captain</dt><dd>{{ info['Captain'] }}</dd></div>
+                        {% endif %}
+                        {% if info.get('Coach') %}
+                        <div class="tm-table__row"><dt>Head coach</dt><dd>{{ info['Coach'] }}</dd></div>
+                        {% endif %}
+                        {% if info.get('Venue') %}
+                        <div class="tm-table__row"><dt>Home</dt><dd>{{ info['Venue'] }}</dd></div>
+                        {% endif %}
+                        {% if info.get('Owner') %}
+                        <div class="tm-table__row"><dt>Owner</dt><dd>{{ info['Owner'] }}</dd></div>
+                        {% endif %}
+                        {% if sq.get('total') %}
+                        <div class="tm-table__row">
+                            <dt>Squad</dt>
+                            <dd>{{ sq['total'] }} players <em>&middot; {{ sq['overseas'] }} overseas</em></dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+
+                    <footer class="tm-foot">
+                        <a class="tm-btn tm-btn--primary" href="{{ url_for('main.squad', team=t) }}">
+                            <span class="material-icons-round">groups</span>Full squad
+                        </a>
+                        <a class="tm-btn" href="{{ url_for('main.displayFR') }}?fteam={{ t }}">
+                            <span class="material-icons-round">event</span>Fixtures
+                        </a>
+                    </footer>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="tm-empty" id="tmEmpty">
+        <span class="material-icons-round">search_off</span>
+        <span class="tm-empty__title">No teams found</span>
+        <span class="tm-empty__text" id="tmEmptyText">Try a team name, a captain, a coach or a home ground.</span>
+    </div>
+
+    {# ==================================================== roll of honour #}
+    <section class="tm-sec" aria-labelledby="tmRoll">
+        <div class="tm-sec__head">
+            <div>
+                <span class="tm-sec__eyebrow">Every season since 2008</span>
+                <h2 class="tm-sec__title" id="tmRoll">Roll of Honour</h2>
+            </div>
+            <span class="tm-sec__note">{{ ROLL | length }} finals &middot; {{ WINNERS }} different winners</span>
+        </div>
+
+        <ol class="tm-roll">
+            {% for e in ROLL %}
+            <li>
+                {% if e.gone %}
+                {#- the franchise is gone, so there is no squad or card to open -#}
+                <span class="tm-roll__item tm-roll__item--gone" title="{{ e.name }} — franchise no longer competes">
+                    <span class="tm-roll__year">{{ e.y }}</span>
+                    <span class="tm-roll__crest">
+                        <img src="/static/images/squad_logos/{{ e.abv }}.png" alt="{{ e.name }}" loading="lazy">
+                    </span>
+                    <span class="tm-roll__abv">{{ e.abv }}</span>
+                </span>
+                {% else %}
+                <a class="tm-roll__item {{ 'tm-roll__item--now' if loop.first }}"
+                   href="#tm-{{ e.abv }}" data-jump="{{ e.abv }}"
+                   style="{{ crest_grad(e.abv, mclr) }} --brand: {{ ACC[e.abv] }};"
+                   title="{{ e.name }} — champions {{ e.y }}">
+                    <span class="tm-roll__year">{{ e.y }}</span>
+                    <span class="tm-roll__crest">
+                        <img src="/static/images/squad_logos/{{ e.abv }}.png" alt="{{ e.name }}" loading="lazy">
+                    </span>
+                    <span class="tm-roll__abv">{{ e.abv }}</span>
+                </a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+
+        <p class="tm-note">
+            Tap a season to jump to that team's honours.
+            <b>{{ LEGACY['2009'][1] }}</b>, the 2009 champions, no longer compete &mdash; their title is
+            listed here but counts towards no current franchise.
+        </p>
+    </section>
 </div>
+
 <nav class="bottom-nav">
     <div class="bottom-nav-item">
         <a href="{{ url_for('main.displayFR') }}">
@@ -380,4 +484,7 @@ body::-webkit-scrollbar-thumb:hover { background-color: #f7b733; }
       </a>
     </div>
   </nav>
+
+<script src="{{ url_for('static', filename='js/teams.js') }}" defer></script>
+
 {% endblock %}
