@@ -103,6 +103,33 @@ teams_data = {
     'SRH': {'Captain': 'Pat Cummins', 'Coach': 'Daniel Vettori', 'Owner': 'Sun TV Network Ltd', 'Venue': 'Rajiv Gandhi Intl. Cricket Stadium'}
 }
 
+# Official channels, linked from each team's squad page. Franchises do rename
+# their handles after a rebrand (RCB did in 2024), so these are worth a look
+# whenever a team changes its name.
+teams_social = {
+    'CSK':  {'web': 'https://www.chennaisuperkings.com',   'x': 'https://x.com/ChennaiIPL',
+             'ig': 'https://www.instagram.com/chennaiipl', 'fb': 'https://www.facebook.com/ChennaiIPL'},
+    'DC':   {'web': 'https://www.delhicapitals.in',        'x': 'https://x.com/DelhiCapitals',
+             'ig': 'https://www.instagram.com/delhicapitals', 'fb': 'https://www.facebook.com/DelhiCapitals'},
+    'GT':   {'web': 'https://www.gujarattitansipl.com',    'x': 'https://x.com/gujarat_titans',
+             'ig': 'https://www.instagram.com/gujarat_titans', 'fb': 'https://www.facebook.com/GujaratTitans'},
+    'KKR':  {'web': 'https://www.kkr.in',                  'x': 'https://x.com/KKRiders',
+             'ig': 'https://www.instagram.com/kkriders',   'fb': 'https://www.facebook.com/KolkataKnightRiders'},
+    'LSG':  {'web': 'https://www.lucknowsupergiants.in',   'x': 'https://x.com/LucknowIPL',
+             'ig': 'https://www.instagram.com/lucknowsupergiants', 'fb': 'https://www.facebook.com/lucknowsupergiants'},
+    'MI':   {'web': 'https://www.mumbaiindians.com',       'x': 'https://x.com/mipaltan',
+             'ig': 'https://www.instagram.com/mumbaiindians', 'fb': 'https://www.facebook.com/mumbaiindians'},
+    'PBKS': {'web': 'https://www.punjabkingsipl.in',       'x': 'https://x.com/PunjabKingsIPL',
+             'ig': 'https://www.instagram.com/punjabkingsipl', 'fb': 'https://www.facebook.com/PunjabKingsIPL'},
+    'RR':   {'web': 'https://www.rajasthanroyals.com',     'x': 'https://x.com/rajasthanroyals',
+             'ig': 'https://www.instagram.com/rajasthanroyals', 'fb': 'https://www.facebook.com/rajasthanroyals'},
+    'RCB':  {'web': 'https://www.royalchallengers.com',    'x': 'https://x.com/RCBTweets',
+             'ig': 'https://www.instagram.com/royalchallengers.bengaluru',
+             'fb': 'https://www.facebook.com/royalchallengers.bengaluru'},
+    'SRH':  {'web': 'https://www.sunrisershyderabad.in',   'x': 'https://x.com/SunRisers',
+             'ig': 'https://www.instagram.com/sunrisershyd', 'fb': 'https://www.facebook.com/SunRisersHyderabad'},
+}
+
 full_name = {'CSK':'Chennai Super Kings',
              'DC':'Delhi Capitals',
              'KKR':'Kolkata Knight Riders',
@@ -1147,8 +1174,35 @@ def teams():
 
 @main.route('/teams/<team>')
 def squad(team):
+    """One franchise: honours, this season's form, official channels and the squad."""
     sq = Squad.query.filter_by(Team=team).order_by(Squad.Name).all()
-    return render_template('squad.html', team=team, sq=sq, fn=full_name[team], clr=clr[team], sqclr=sqclr[team], team_dt=teams_data[team], champions=champions)
+    # captain first inside whichever role block he belongs to, the rest alphabetical
+    sq = sorted(sq, key=lambda p: (p.Captain != 'Y', p.Name or ''))
+
+    current_date = datetime.now(tz).replace(tzinfo=None)
+    ages = {p.id: current_date.year - p.DOB.year -
+                  ((current_date.month, current_date.day) < (p.DOB.month, p.DOB.day))
+            for p in sq if p.DOB}
+
+    # The hero carries the same season line as the standings page, so it has to
+    # come from the same query in the same order.
+    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(), Pointstable.W.desc(),
+                                        Pointstable.NRR.desc(), Pointstable.id.asc()).all()
+    st = None
+    for index, i in enumerate(dataPT):
+        if i.team_name != team:
+            continue
+        wl = list(eval(i.Win_List).values()) if i.Win_List else []
+        st = {'pos': index + 1, 'P': i.P, 'W': i.W, 'L': i.L, 'NR': i.NR, 'Pts': i.Points,
+              'NRR': i.NRR, 'qed': i.qed, 'form': ''.join(wl[-5:]),
+              'played': sum(j.P for j in dataPT)}
+
+    finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
+    return render_template('squad.html', team=team, sq=sq, fn=full_name, clr=clr, sqclr=sqclr,
+                           td=teams_data, champions=champions, ages=ages, st=st,
+                           social=teams_social.get(team, {}),
+                           nxt=getNextOpponents([team]).get(team, '--'),
+                           champion=finalsData.Win_T if finalsData else None)
 
 @main.route('/team-<team>/squad_details/<name>')
 def squad_details(team, name):

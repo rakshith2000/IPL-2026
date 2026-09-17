@@ -1,9 +1,11 @@
 {#  ==========================================================================
-    Points-table building blocks — shared by displayPT.html (standings) and
-    index.html (the home-page standings strip), so the two always agree.
+    Shared building blocks — used by displayPT.html (standings), index.html
+    (the home-page strip), teams.html and squad.html, so they always agree.
 
-    Styling lives in static/css/pointstable.css; any page that imports these
-    macros has to load that stylesheet.
+    Styling for everything above crest_grad lives in static/css/pointstable.css;
+    any page that imports those macros has to load that stylesheet. The colour
+    macros at the bottom only emit custom properties, so they carry no styling
+    of their own.
     ========================================================================== #}
 
 {# Rank number + movement indicator, or the trophy for the champions #}
@@ -101,4 +103,33 @@
     {%- elif abv in ['MI', 'GT'] -%}--team-a: {{ c['c3'] }}; --team-b: {{ c['c2'] }};
     {%- else -%}--team-a: {{ c['c1'] }}; --team-b: {{ c['c2'] }};
     {%- endif -%}
+{%- endmacro %}
+
+{#  Card-art gradient — the per-team colour pairs the squad cut-outs were
+    tuned against. Behind the players on the team cards and the squad hero.
+    `clr` is the brand triples, `sqclr` the two-colour squad pairs. #}
+{% macro stage_grad(abv, clr, sqclr) -%}
+    {%- if abv == 'RCB' -%}--stage-1: {{ clr[abv]['c1'] }}; --stage-2: {{ clr[abv]['c3'] }};
+    {%- elif abv == 'LSG' -%}--stage-1: {{ sqclr[abv]['c1'] }}; --stage-2: {{ sqclr[abv]['c2'] }};
+    {%- elif abv == 'CSK' -%}--stage-1: {{ clr[abv]['c1'] }}; --stage-2: {{ clr[abv]['c2'] }};
+    {%- elif abv in ['GT', 'MI', 'KKR'] -%}--stage-1: {{ clr[abv]['c2'] }}; --stage-2: {{ clr[abv]['c3'] }};
+    {%- else -%}--stage-1: {{ clr[abv]['c2'] }}; --stage-2: {{ clr[abv]['c1'] }};
+    {%- endif -%}
+{%- endmacro %}
+
+{#  Accent colour for the dark pages. The points-table colour (ptclr) is a
+    brand colour picked for white cards and several are near-black against
+    this background, so these are the readable stand-ins. #}
+{% macro brand(abv) -%}
+    {{- {'CSK': '#f9cd05', 'DC': '#4f8cff', 'GT': '#dbbe6e', 'KKR': '#c9a6ff',
+         'LSG': '#ff4d7e', 'MI': '#4aa8ff', 'PBKS': '#ff4d55', 'RR': '#ff69b4',
+         'RCB': '#ff3b45', 'SRH': '#ff8a24'}.get(abv, '#4cc9f0') -}}
+{%- endmacro %}
+
+{#  The identity word behind the card art: the half of the name that is not
+    on the crest, so a card still says who it is at a glance. #}
+{% macro team_word(abv) -%}
+    {{- {'CSK': 'Chennai', 'DC': 'Delhi', 'GT': 'Gujarat', 'KKR': 'Kolkata',
+         'LSG': 'Lucknow', 'MI': 'Mumbai', 'PBKS': 'Punjab', 'RR': 'Rajasthan',
+         'RCB': 'Bengaluru', 'SRH': 'Hyderabad'}.get(abv, abv) -}}
 {%- endmacro %}

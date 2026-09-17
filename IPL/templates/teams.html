@@ -14,28 +14,12 @@
 
 {% block content %}
 
-{% from "macros/points.html" import form_pills, next_chip, win_pct, delta_pill, crest_grad %}
+{% from "macros/points.html" import form_pills, next_chip, win_pct, delta_pill,
+                                    crest_grad, stage_grad, brand, team_word %}
 
 {#  ------------------------------------------------------------------ data #}
 
 {% set TEAMS = fn.keys() | reject('equalto', 'TBA') | list %}
-
-{#  The identity word behind each squad photo — the half of the name that is
-    not on the crest, so the card still says who it is at a glance. #}
-{% set WORD = {
-    'CSK': 'Chennai', 'DC': 'Delhi', 'GT': 'Gujarat', 'KKR': 'Kolkata',
-    'LSG': 'Lucknow', 'MI': 'Mumbai', 'PBKS': 'Punjab', 'RR': 'Rajasthan',
-    'RCB': 'Bengaluru', 'SRH': 'Hyderabad'
-} %}
-
-{#  Accent per team. ptclr is picked for white surfaces and several of those
-    are near-black, which disappears on this page — these are the same brand
-    colours chosen for contrast against the dark background. #}
-{% set ACC = {
-    'CSK': '#f9cd05', 'DC': '#4f8cff', 'GT': '#dbbe6e', 'KKR': '#c9a6ff',
-    'LSG': '#ff4d7e', 'MI': '#4aa8ff', 'PBKS': '#ff4d55', 'RR': '#ff69b4',
-    'RCB': '#ff3b45', 'SRH': '#ff8a24'
-} %}
 
 {#  Champions whose franchise no longer competes, so they are not in
     `champions` (which is keyed by the current ten) but did win the season.
@@ -86,16 +70,6 @@
 {% set HOLDER = champion if champion in TEAMS else (ROLL[0].abv if ROLL else none) %}
 
 {#  ---------------------------------------------------------------- macros #}
-
-{#  Stage gradient — the per-team colour pairs the card art was tuned with #}
-{% macro stage_grad(t) -%}
-    {%- if t == 'RCB' -%}--stage-1: {{ mclr[t]['c1'] }}; --stage-2: {{ mclr[t]['c3'] }};
-    {%- elif t == 'LSG' -%}--stage-1: {{ sqclr[t]['c1'] }}; --stage-2: {{ sqclr[t]['c2'] }};
-    {%- elif t == 'CSK' -%}--stage-1: {{ mclr[t]['c1'] }}; --stage-2: {{ mclr[t]['c2'] }};
-    {%- elif t in ['GT', 'MI', 'KKR'] -%}--stage-1: {{ mclr[t]['c2'] }}; --stage-2: {{ mclr[t]['c3'] }};
-    {%- else -%}--stage-1: {{ mclr[t]['c2'] }}; --stage-2: {{ mclr[t]['c1'] }};
-    {%- endif -%}
-{%- endmacro %}
 
 {% macro crest(t, size) -%}
     <span class="tm-crest {{ size }}" style="{{ crest_grad(t, mclr) if t in mclr }}">
@@ -185,9 +159,9 @@
                  data-pos="{{ r.pos }}"
                  data-titles="{{ titles }}"
                  data-latest="{{ r.latest }}"
-                 data-search="{{ [t, fn[t], WORD[t], info.get('Captain', ''), info.get('Coach', ''),
+                 data-search="{{ [t, fn[t], team_word(t), info.get('Captain', ''), info.get('Coach', ''),
                                   info.get('Venue', ''), info.get('Owner', '')] | join(' ') | lower }}"
-                 style="{{ stage_grad(t) }} {{ crest_grad(t, mclr) }} --brand: {{ ACC[t] }};
+                 style="{{ stage_grad(t, mclr, sqclr) }} {{ crest_grad(t, mclr) }} --brand: {{ brand(t) }};
                         --motif: url('/static/images/headers/{{ t }}.png');"
                  aria-labelledby="tmName{{ t }}">
 
@@ -198,7 +172,7 @@
 
                     <div class="tm-stage">
                         <span class="tm-stage__motif" aria-hidden="true"></span>
-                        <span class="tm-stage__word" aria-hidden="true">{{ WORD[t] }}</span>
+                        <span class="tm-stage__word" aria-hidden="true">{{ team_word(t) }}</span>
                         <img class="tm-stage__squad" src="/static/images/team_players/{{ t }}.png"
                              alt="{{ fn[t] }} players" loading="lazy">
 
@@ -426,7 +400,7 @@
                 {% else %}
                 <a class="tm-roll__item {{ 'tm-roll__item--now' if loop.first }}"
                    href="#tm-{{ e.abv }}" data-jump="{{ e.abv }}"
-                   style="{{ crest_grad(e.abv, mclr) }} --brand: {{ ACC[e.abv] }};"
+                   style="{{ crest_grad(e.abv, mclr) }} --brand: {{ brand(e.abv) }};"
                    title="{{ e.name }} — champions {{ e.y }}">
                     <span class="tm-roll__year">{{ e.y }}</span>
                     <span class="tm-roll__crest">
