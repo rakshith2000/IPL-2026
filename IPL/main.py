@@ -1491,17 +1491,21 @@ def get_stats():
     tp = {row[0]: row[1] for row in tp}
     return serialize({'stats': tp})
 
+#  The leaderboards themselves are fetched from /api/stats by static/js/stats.js;
+#  the brand colours go out with the page so the crests in the table match the
+#  ones everywhere else.
+
 @main.route('/battingstats')
 def battingstats():
-    return render_template('battingStat.html')
+    return render_template('battingStat.html', clr=clr)
 
 @main.route('/bowlingstats')
 def bowlingstats():
-    return render_template('bowlingStat.html')
+    return render_template('bowlingStat.html', clr=clr)
 
 @main.route('/awards')
 def awards():
-    return render_template('awards.html')
+    return render_template('awards.html', clr=clr)
 
 @main.route('/update')
 @login_required
