@@ -74,7 +74,7 @@ function renderTabInfo(data) {
                     'TATA Indian Premier League 2026') +
                 row('event', 'Date', esc(dateStr), timeStr) +
                 row('place', 'Venue', esc(dt1.Venue || dt2[1] || 'TBA')) +
-                row('casino', 'Toss', toss) +
+                row('toll', 'Toss', toss) +
                 row('sports', 'On-field umpires', esc(onField)) +
                 row('videocam', 'Third umpire', esc(third)) +
                 row('gavel', 'Match referee', esc(dt3.referee || 'TBA')) +

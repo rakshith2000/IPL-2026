@@ -399,23 +399,21 @@
     var tid = data.tid || {};
     var info = String(dt3.info || '');
     var state = matchState(data);
-    var chip = stateChip(state, info);
     var sides = sidesOf(data);
     var winner = state === 'done' ? winnerOf(info, sides) : null;
     var colours = data.clr2 && typeof data.clr2 === 'object' ? data.clr2 : data.clr;
     var html = '';
 
-    /* --- header: what the match is doing, and what the toss decided ------ */
-    var toss = '';
+    /* --- what the toss decided (the state pill lives up in the masthead) - */
     if (dt3.toss_won_by && tid[dt3.toss_won_by]) {
-      toss = '<span class="mx-board__toss"><b>' + esc(tid[dt3.toss_won_by][0]) + '</b> won the toss' +
-             (dt3.toss_decision ? ' &amp; chose to ' + esc(dt3.toss_decision) : '') + '</span>';
+      html += '<div class="mx-board__top">' +
+                '<span class="mx-board__toss">' +
+                  '<span class="material-icons-round">toll</span>' +
+                  '<b>' + esc(tid[dt3.toss_won_by][0]) + '</b> won the toss' +
+                  (dt3.toss_decision ? ' and chose to ' + esc(dt3.toss_decision) : '') +
+                '</span>' +
+              '</div>';
     }
-
-    html += '<div class="mx-board__top">' +
-              '<span class="mx-state ' + chip.cls + '"><span class="mx-state__dot"></span>' + chip.text + '</span>' +
-              toss +
-            '</div>';
 
     /* --- the two innings lines ------------------------------------------ */
     html += '<div class="mx-sides">';
@@ -503,8 +501,21 @@
            '</div>';
   }
 
+  /* The status pill sits in the masthead, outside the board's own markup, so
+     it is kept in step here rather than rebuilt with the score. */
+  function renderState(data) {
+    var el = document.getElementById('mxState');
+    if (!el) return;
+    var chip = stateChip(matchState(data), data.dt3.info);
+    var html = '<span class="mx-state__dot"></span>' + chip.text;
+    el.className = 'mx-state ' + chip.cls;
+    if (el.innerHTML !== html) el.innerHTML = html;
+  }
+
   function renderBoard(data) {
     if (!boardEl || !data || !data.dt3) return;
+
+    renderState(data);
 
     var html = boardHTML(data);
     if (boardEl.getAttribute('data-sig') === html) return;   /* nothing moved */

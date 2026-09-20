@@ -53,8 +53,20 @@
 <div class="mx-wrap">
 
     {# ============================================================== hero #}
+    {#- the masthead is the top half of the scoreboard card: identity and
+        meta here, the score itself in #scoreboard-root right underneath -#}
     <header class="mx-hero"
             style="--ha: {{ sqclr.get(A, {}).get('c1', '#4f8cff') }}; --hb: {{ sqclr.get(B, {}).get('c1', '#a758ff') }};">
+
+        {#- both crests bleed out of the side edges, turned right down: the
+            header carries the two teams without competing with the score -#}
+        <span class="mx-hero__ghost mx-hero__ghost--l" aria-hidden="true">
+            <img src="/static/images/squad_logos/{{ A }}.png" alt="" onerror="this.remove();">
+        </span>
+        <span class="mx-hero__ghost mx-hero__ghost--r" aria-hidden="true">
+            <img src="/static/images/squad_logos/{{ B }}.png" alt="" onerror="this.remove();">
+        </span>
+
         <div class="mx-hero__bar">
             <!--
             <a class="mx-back" href="{{ back_href }}" title="Back to {{ back_text | lower }}">
@@ -63,7 +75,12 @@
             -->
 
             <span class="mx-tag {{ 'mx-tag--playoff' if playoff }}">{{ title }}</span>
-            <span class="mx-tag__match-details">{{ A }} vs {{ B }}</span>
+            <h1 class="mx-hero__title">{{ A }}<i>vs</i>{{ B }}</h1>
+
+            {#- match.js keeps this in step with the feed -#}
+            <span class="mx-state mx-state--{{ 'done' if ended else 'soon' }}" id="mxState">
+                <span class="mx-state__dot"></span>{{ 'Result' if ended else 'Scheduled' }}
+            </span>
 
             <span class="mx-hero__tools">
                 <button type="button" class="mx-icon-btn" id="mxShare" title="Share this match"
@@ -73,33 +90,25 @@
             </span>
         </div>
 
-        <!--
         <div class="mx-hero__meta">
             <span>
                 <span class="material-icons-round">event</span>
                 <b>{{ start.strftime('%a, %d %b %Y') }}</b>
-                &middot; {{ start.strftime('%I:%M %p') }} IST
+                &middot; {{ start.strftime('%I:%M %p').lstrip('0') }} IST
             </span>
-            <span>
-                <span class="material-icons-round">place</span>{{ matchDT.Venue }}
+            <span class="mx-hero__venue">
+                <span class="material-icons-round">place</span><span>{{ matchDT.Venue }}</span>
             </span>
-            <span>
+            <span class="mx-hero__tv">
                 <span class="material-icons-round">live_tv</span>Star Sports &middot; JioHotstar
             </span>
         </div>
-        -->
     </header>
 
     {# ============================================================= board #}
     {#- server-rendered so the matchup is on screen before the feed answers;
         match.js swaps in the live scores as soon as the first poll lands -#}
     <section id="scoreboard-root" class="mx-board" aria-live="polite" aria-label="Scoreboard">
-        <div class="mx-board__top">
-            <span class="mx-state mx-state--{{ 'done' if ended else 'soon' }}">
-                <span class="mx-state__dot"></span>{{ 'Result' if ended else 'Scheduled' }}
-            </span>
-        </div>
-
         <div class="mx-sides">
             <div class="mx-side">
                 {{ crest(A, '') }}
