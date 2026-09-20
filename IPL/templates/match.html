@@ -1,159 +1,206 @@
-{% extends "base.html" %} {% block head %} {{ super() }}
-<title>IPL 2026 | Match {{ match }}: {{ matchDT['Team_A'] }} vs {{ matchDT['Team_B'] }}</title>
-	<meta name="robots" content="noindex,nofollow" />
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}" rel="stylesheet" >
-	 <link href="{{ url_for('static', filename= 'fonts/css/fontawesome.min.css') }}" rel="stylesheet" >
-	<link href="{{ url_for('static', filename= 'fonts/css/brands.min.css') }}" rel="stylesheet" />
-    <link href="{{ url_for('static', filename= 'fonts/css/solid.min.css') }}" rel="stylesheet" />
-	<link href="{{ url_for('static', filename= 'css/global.css') }}" rel="stylesheet">
-	<link href="{{ url_for('static', filename= 'css/live.css') }}" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-	<link href="{{ url_for('static', filename= 'css/flag-icons.css') }}" rel="stylesheet">
-    <script>
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<title>IPL 2026 | {{ ('Match ' ~ matchDT.Match_No) if matchDT.Match_No.isdigit() else matchDT.Match_No }}: {{ matchDT.Team_A }} vs {{ matchDT.Team_B }}</title>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bottom-nav.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/match-modern.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<script>
   var match = "{{ match }}";
   var source = "{{ source }}";
   var fteam = "{{ fteam }}";
 </script>
-    <style>
-    body {
-    	font-family: 'Exo 2', sans-serif;
-        background: url('/static/images/headers/rounded-bg.png'), linear-gradient(90deg, #134E5E, #71B280);
-  background-size: 100%, cover;
-  background-position: center top 30px, center top;
-  background-repeat: repeat, repeat;
-    }
-    nav.navbar {
-        background-position: left 26px top -40px, center;
-    }
-    </style>
 {% endblock %}
-{% block nav_class %}extra-pr-60 pl-40{% endblock %}
 
 {% block content %}
 
-<div style="padding-top: 55px;"></div>
-<section id="center" class="pt-3 pb-3 center_live">
- <div class="container-xl">
-  <div class="row schedule2">
-    <div class="col-md-9">
-	  <div id="liveContainer" class="live">
-        <div id="scoreboard-root" class="live_2 rounded_10 box-shadow-4 mt-2" style="background-color: #25478A;"></div>
-        <div id="tab-content">
-        <div id="loadingSpinner" style="text-align:center; padding:40px 0;">
-            <span class="spinner-border text-white" role="status"></span><br>
-            <span style="color:#ffffff; font-weight:bold;">Loading...</span>
-        </div>
-        </div>
-    </div>
-    </div>
-    </div>
- </div>
-</section>
+{#  ------------------------------------------------------------------ data #}
+{% set A, B = matchDT.Team_A, matchDT.Team_B %}
+{% set playoff = not matchDT.Match_No.isdigit() %}
+{% set title = matchDT.Match_No if playoff else ('Match ' ~ matchDT.Match_No) %}
+{% set ended = matchDT.Win_T is not none %}
 
-<!-- Floating Back Button -->
-<style>
-.floating-back-btn {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 9999;
-  background: #fff;
-  color: #003c8a;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.floating-back-btn:hover {
-  background: #e6e6e6;
-}
-@media (max-width: 600px) {
-  .floating-back-btn {
-    top: 10px;
-    left: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-}
-/* Floating Move to Top Button */
-.floating-move-top-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 9999;
-  background: linear-gradient(90deg, hsl(324 100% 46%), #009fbe);
-  color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.floating-move-top-btn:hover {
-  background: #e6e6e6;
-  color: #25478A;
-}
-@media (max-width: 600px) {
-  .floating-move-top-btn {
-    bottom: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-}
-</style>
-{% if source == 'displayFR' %}
-  <a href="{{ url_for('main.displayFR', fteam=fteam) }}" class="floating-back-btn" title="Back to Fixtures">
-    <i class="fa fa-arrow-left"></i>
-  </a>
-{% elif source == 'liveMatches' %}
-  <a href="{{ url_for('main.todayMatch') }}" class="floating-back-btn" title="Back to Live Matches">
-    <i class="fa fa-arrow-left"></i>
-  </a>
-{% endif %}
+{#  Two brand colours per team, same picks the fixtures list uses for its
+    crests. Anything outside the ten franchises (a guest fixture, TBA) falls
+    back to the page accents rather than blowing up the lookup. #}
+{% macro grad(t) -%}
+    {%- set c = clr.get(t) -%}
+    {%- if not c -%}--c1: #4f8cff; --c2: #a758ff;
+    {%- elif t in ['RCB', 'ZIM'] -%}--c1: {{ c['c3'] }}; --c2: {{ c['c1'] }};
+    {%- elif t in ['GT', 'MI'] -%}--c1: {{ c['c3'] }}; --c2: {{ c['c2'] }};
+    {%- elif t == 'PBKS' -%}--c1: {{ c['c2'] }}; --c2: {{ c['c1'] }};
+    {%- elif t == 'KKR' -%}--c1: {{ c['c2'] }}; --c2: {{ c['c3'] }};
+    {%- else -%}--c1: {{ c['c1'] }}; --c2: {{ c['c2'] }};
+    {%- endif -%}
+{%- endmacro %}
 
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/theme.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{#  The crest prints the abbreviation underneath the logo, so teams without a
+    squad_logos file (women's internationals, TBA) still read as a badge. #}
+{% macro crest(t, extra) -%}
+    <span class="mx-crest {{ extra }}" style="{{ grad(t) }}">
+        <img src="/static/images/squad_logos/{{ t }}.png" alt="{{ fn.get(t, t) }} logo"
+             onerror="this.remove();">
+    </span>
+{%- endmacro %}
+
+{% set back_href = url_for('main.todayMatch') if source == 'liveMatches'
+                   else (url_for('main.displayFR', fteam=fteam) if fteam and fteam != 'None'
+                         else url_for('main.displayFR')) %}
+{% set back_text = 'Live' if source == 'liveMatches' else 'Matches' %}
+
+<div class="mx-wrap">
+
+    {# ============================================================== hero #}
+    <header class="mx-hero"
+            style="--ha: {{ sqclr.get(A, {}).get('c1', '#4f8cff') }}; --hb: {{ sqclr.get(B, {}).get('c1', '#a758ff') }};">
+        <div class="mx-hero__bar">
+            <!--
+            <a class="mx-back" href="{{ back_href }}" title="Back to {{ back_text | lower }}">
+                <span class="material-icons-round">arrow_back</span><span>{{ back_text }}</span>
+            </a>
+            -->
+
+            <span class="mx-tag {{ 'mx-tag--playoff' if playoff }}">{{ title }}</span>
+            <span class="mx-tag__match-details">{{ A }} vs {{ B }}</span>
+
+            <span class="mx-hero__tools">
+                <button type="button" class="mx-icon-btn" id="mxShare" title="Share this match"
+                        data-title="{{ title }}: {{ fn.get(A, A) }} vs {{ fn.get(B, B) }}">
+                    <span class="material-icons-round">share</span>
+                </button>
+            </span>
+        </div>
+
+        <!--
+        <div class="mx-hero__meta">
+            <span>
+                <span class="material-icons-round">event</span>
+                <b>{{ start.strftime('%a, %d %b %Y') }}</b>
+                &middot; {{ start.strftime('%I:%M %p') }} IST
+            </span>
+            <span>
+                <span class="material-icons-round">place</span>{{ matchDT.Venue }}
+            </span>
+            <span>
+                <span class="material-icons-round">live_tv</span>Star Sports &middot; JioHotstar
+            </span>
+        </div>
+        -->
+    </header>
+
+    {# ============================================================= board #}
+    {#- server-rendered so the matchup is on screen before the feed answers;
+        match.js swaps in the live scores as soon as the first poll lands -#}
+    <section id="scoreboard-root" class="mx-board" aria-live="polite" aria-label="Scoreboard">
+        <div class="mx-board__top">
+            <span class="mx-state mx-state--{{ 'done' if ended else 'soon' }}">
+                <span class="mx-state__dot"></span>{{ 'Result' if ended else 'Scheduled' }}
+            </span>
+        </div>
+
+        <div class="mx-sides">
+            <div class="mx-side">
+                {{ crest(A, '') }}
+                <span class="mx-side__id">
+                    <span class="mx-side__abv">{{ A }}</span>
+                    <span class="mx-side__full">{{ fn.get(A, A) }}</span>
+                </span>
+                <span class="mx-side__score"><span class="mx-wait">&mdash;</span></span>
+            </div>
+            <div class="mx-side">
+                {{ crest(B, '') }}
+                <span class="mx-side__id">
+                    <span class="mx-side__abv">{{ B }}</span>
+                    <span class="mx-side__full">{{ fn.get(B, B) }}</span>
+                </span>
+                <span class="mx-side__score"><span class="mx-wait">&mdash;</span></span>
+            </div>
+        </div>
+
+        <p class="mx-board__info {{ 'mx-board__info--done' if ended and matchDT.Result }}">{{
+            matchDT.Result if ended and matchDT.Result else 'Fetching the latest score…' }}</p>
+    </section>
+
+    {# ========================================================== tab strip #}
+    <div class="mx-tabbar" id="mxTabs">
+        <div class="mx-tabs" role="tablist" aria-label="Match sections">
+            <button type="button" class="mx-tab" role="tab" data-tab="matchInfo"
+                    id="mxTab-matchInfo" aria-controls="tab-content" aria-selected="false">Info</button>
+            <button type="button" class="mx-tab" role="tab" data-tab="liveScore"
+                    id="mxTab-liveScore" aria-controls="tab-content" aria-selected="false">{{ 'Commentary' if ended else 'Live' }}</button>
+            <button type="button" class="mx-tab" role="tab" data-tab="scoreCard"
+                    id="mxTab-scoreCard" aria-controls="tab-content" aria-selected="false">Scorecard</button>
+            <button type="button" class="mx-tab" role="tab" data-tab="Overs"
+                    id="mxTab-Overs" aria-controls="tab-content" aria-selected="false">Overs</button>
+            <button type="button" class="mx-tab" role="tab" data-tab="liveSquad"
+                    id="mxTab-liveSquad" aria-controls="tab-content" aria-selected="false">Squad</button>
+        </div>
+
+        {#- only meaningful while the feed is moving; match.js hides it otherwise -#}
+        <div class="mx-live" id="mxRefresh" hidden>
+            <span class="mx-live__age" id="mxAge">just now</span>
+            <button type="button" class="mx-live__btn" id="mxToggle"
+                    aria-pressed="true" title="Pause auto-refresh">
+                <span class="material-icons-round">pause</span>
+            </button>
+        </div>
+    </div>
+
+    {# ============================================================ panels #}
+    <div id="tab-content" class="mx-panel" role="tabpanel" aria-live="polite">
+        <div class="mx-card mx-skel--pad">
+            <div class="mx-skel mx-skel--row"></div>
+            <div class="mx-skel mx-skel--line" style="width: 70%"></div>
+            <div class="mx-skel mx-skel--line" style="width: 45%"></div>
+        </div>
+    </div>
+
+    <p class="mx-note">
+        Scores refresh automatically while the match is on. All times are IST.
+    </p>
+</div>
+
+<nav class="bottom-nav">
+    <div class="bottom-nav-item">
+        <a href="{{ url_for('main.displayFR') }}">
+      <span class="material-icons-round">event</span>
+      <span class="bottom-nav-label">MATCHES</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item">
+        <a href="{{ url_for('main.displayPT') }}">
+      <span class="material-icons-round">table_chart</span>
+      <span class="bottom-nav-label">STANDINGS</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item live">
+        <a href="{{ url_for('main.displayFR', filter='live') }}">
+      <div class="live-circle"></div>
+      <div class="live-content">
+        <span class="material-icons-round zoomInOut">play_arrow</span>
+        <span class="bottom-nav-label">LIVE</span>
+      </div>
+      </a>
+    </div>
+    <div class="bottom-nav-item spacer"></div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.teams') }}">
+      <span class="material-icons-round">groups</span>
+      <span class="bottom-nav-label">TEAMS</span>
+      </a>
+    </div>
+    <div class="bottom-nav-item">
+      <a href="{{ url_for('main.battingstats') }}">
+      <span class="material-icons-round">bar_chart</span>
+      <span class="bottom-nav-label">STATS</span>
+      </a>
+    </div>
+  </nav>
+
+<div class="mx-toast" id="mxToast" role="status" aria-live="polite"></div>
+
 <script defer src="{{ url_for('static', filename='js/match.js') }}"></script>
-<script>
-  // Example starter JavaScript for disabling form submissions if there are invalid fields
-(function () {
-  'use strict'
-
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
-
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
-</script>
 {% endblock %}

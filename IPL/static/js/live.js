@@ -1,524 +1,257 @@
+/* ==========================================================================
+   IPL 2026 · Match centre — Live panel
+   Recent overs strip, win probability, who is at the crease, then ball-by-ball
+   commentary per innings. Once there is a winner it becomes the commentary
+   archive, with the awards on top.
+
+   Ball maths (what a delivery scored, what an over came to, who faced it)
+   lives on window.MX in js/match.js, shared with the Overs panel.
+   ========================================================================== */
+
+/* Bold everything up to and including the first "...!" — the feed uses that
+   word as the headline of a commentary line ("FOUR! ..."). */
 function boldSubstring(value) {
-    // Bold everything from the start up to and including the first '!'
-    return value.replace(/(\b\w+!)/, '<b>$1</b>');
+    return String(value).replace(/(\b\w+!)/, '<b>$1</b>');
 }
 
-// --- Overs Bar Scroll and Fade Logic ---
-function scrollOversBarToEnd(smooth = true) {
-    const oversBar = document.querySelector('.overs-bar');
-    if (oversBar) {
-        oversBar.scrollTo({ left: oversBar.scrollWidth, behavior: smooth ? 'smooth' : 'auto' });
-    }
-}
-
-function updateOversBarFade() {
-    const oversSection = document.querySelector('.overs-section');
-    const oversBar = document.querySelector('.overs-bar');
-    if (!oversSection || !oversBar) return;
-    const scrollLeft = oversBar.scrollLeft;
-    const maxScroll = oversBar.scrollWidth - oversBar.clientWidth;
-    if (scrollLeft <= 0) {
-        oversSection.classList.add('at-start');
-    } else {
-        oversSection.classList.remove('at-start');
-    }
-    if (scrollLeft >= maxScroll - 1) {
-        oversSection.classList.add('at-end');
-    } else {
-        oversSection.classList.remove('at-end');
-    }
-}
-
-function getBallScore(ball) {
-    if (ball.isWicket) {
-        if (ball.isByes) return `${ball.runsByes || 0}b+W`;
-        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+W`;
-        else if (ball.isWide) return `${ball.runsWide || 0}wd+W`;
-        else if ((ball.teamRuns || 0) > 0) return `${ball.teamRuns || 0}W`;
-        else return "W";
-    } else if (ball.isWide) {
-        return (ball.runsWide || 0) > 1 ? `${ball.runsWide - 1 || 0}wd` : "wd";
-    } else if (ball.isNoBall) {
-        if (ball.isByes) return `${ball.runsByes || 0}b+nb`;
-        else if (ball.isLegByes) return `${ball.runsLegByes || 0}lb+nb`;
-        else return `${(ball.runsScored || 0) > 0 ? ball.runsScored : ""}nb`;
-    } else if (ball.isLegByes) {
-        return `${(ball.runsLegByes || 0) > 0 ? ball.runsLegByes : ""}lb`;
-    } else if (ball.isByes) {
-        return `${(ball.runsByes || 0) > 0 ? ball.runsByes : ""}b`;
-    } else if (ball.teamRuns === 0) {
-        return "0";
-    } else {
-        return ball.teamRuns || 0;
-    }
-}
-
-function getScoreStyle(score) {
-    if (score.includes('W')) {
-        return 'filled wicket';
-    } else if (score.includes('4')) {
-        return 'filled four';
-    } else if (score.includes('6')) {
-        return 'filled six';
-    } else if (score === 'x') {
-        return 'filled empty';
-    } else {
-        return 'filled';
-    }
-}
-
-function getScoreWithCol(score) {
-    if (score.includes('W')) {
-        return `<span class="ball-wicket">${score}</span>`;
-    } else if (score.includes('4')) {
-        return `<span class="ball-four">${score}</span>`;
-    } else if (score.includes('6')) {
-        return `<span class="ball-six">${score}</span>`;
-    } else {
-        return score;
-    }
-}
-
-function getLiveOversBallScore(score) {
-        if (score.includes('wd') || score.includes('nb')) {
-            const match = score.match(/^(\d+)([a-zA-Z]+)$/);
-            if (!match) return score;
-            let num = parseInt(match[1], 10) - 1;
-            let text = match[2];
-
-            return num >= 1 ? `${num}${text}` : text;
-        }
-        else {
-            return score;
-        }
-}
-
-function getBallBgColor(score) {
-    score = String(score);
-    if (score.includes('4')) {
-        return 'bg-four';
-    } else if (score.includes('6')) {
-        return 'bg-six';
-    } else if (score.includes('wd') || score.includes('b') || score.includes('lb') || score.includes('nb')) {
-        return 'bg-extra';
-    } else if (score === '0') {
-        return 'bg-dot';
-    } else if (['1', '2', '3'].includes(score)) {
-        return 'bg-normal';
-    } else if (score.includes('W')) {
-        return 'bg-wicket';
-    } else {
-        return 'bg-normal';
-    }
-}
-
-function getBatsmen(over) {
-    const batsmen = [];
-    for (let i = over.balls.length - 1; i >= 0; i--) {
-        const ball = over.balls[i];
-        const comments = ball.comments;
-        if (comments && comments.length > 0) {
-            const message = comments[comments.length - 1].message;
-            const batsman = message.split(' to ')[1]?.split('.')[0]?.trim();
-            if (batsman && !batsmen.includes(batsman)) {
-                batsmen.push(batsman);
-            }
-        }
-    }
-    return batsmen.join('<span>,</span> ');
-}
-
-function getRuns(over) {
-    let runs = 0;
-    for (const ball of over.balls) {
-        if (ball.isWicket) {
-            if (ball.isByes) runs += ball.runsByes || 0;
-            else if (ball.isLegByes) runs += ball.runsLegByes || 0;
-            else if (ball.isWide) runs += ball.runsWide || 0;
-            else if ((ball.teamRuns || 0) > 0) runs += ball.teamRuns || 0;
-            else runs += 0;
-        } else if (ball.isWide) {
-            runs += (ball.runsWide || 0) > 1 ? ball.runsWide || 0 : 1;
-        } else if (ball.isNoBall) {
-            if (ball.isByes) runs += (ball.runsByes || 0) + 1;
-            else if (ball.isLegByes) runs += (ball.runsLegByes || 0) + 1;
-            else runs += ((ball.runsScored || 0) > 0 ? ball.runsScored : 0) + (ball.extras || 1);
-        } else if (ball.isLegByes) {
-            runs += (ball.runsLegByes || 0) > 0 ? ball.runsLegByes : 0;
-        } else if (ball.isByes) {
-            runs += (ball.runsByes || 0) > 0 ? ball.runsByes : 0;
-        } else if (ball.teamRuns === 0) {
-            runs += 0;
-        } else {
-            runs += ball.teamRuns || 0;
-        }
-    }
-    return runs;
-}
-
-// Handles rendering for Info tab
 function renderTabLive(data) {
-    let dt1 = data.dt1;
-    let dt2 = data.dt2;
-    let dt3 = data.dt3;
-    let cd = new Date(data.cd);
-    let dttm = data.dttm ? new Date(data.dttm) : null;
-    let tid = data.tid;
-    let fn = data.fn;
-    let clr = data.clr;
-    let clr2 = data.clr2;
-    let inn1 = data.inn1;
-    let inn2 = data.inn2;
-    let winprob = data.winprob;
+    const MX = window.MX;
+    const esc = MX.esc;
+    const dt1 = (data.dt1 || [{}])[0];
+    const dt3 = data.dt3 || {};
+    const tid = data.tid || {};
+    const fn = data.fn || {};
+    const clr = data.clr || {};        /* one brand colour per team */
+    const clr2 = data.clr2 || {};      /* the full c1/c2/c3 set */
+    const innSrc = [data.inn1, data.inn2];
+    const strip = dt3.score_strip || [];
+    const info = String(dt3.info || '');
+    const over = /\b(won|abandoned|no result|tied)\b/i.test(info);
 
-    const activeTab = document.querySelector('#inningsTabs .active');
-    const activeTabHref = activeTab ? activeTab.getAttribute('href') : null;
+    let html = '';
 
-    let tabHTML = '';
+    /* --- recent overs ---------------------------------------------------- */
+    if (Array.isArray(dt3.overs_timeline_v2) && dt3.overs_timeline_v2.length) {
+        let bar = '';
+        /* the feed sends newest first; the strip reads left to right */
+        dt3.overs_timeline_v2.slice().reverse().forEach(ov => {
+            let balls = '';
+            (ov.summary || []).forEach(b => { balls += MX.ball(MX.stripBallScore(b)); });
+            bar += '<div class="mx-over-group">' +
+                     '<span class="mx-over-group__label">Ov ' + esc(String(ov.over).split('.')[0]) + '</span>' +
+                     '<span class="mx-over-group__balls">' + balls + '</span>' +
+                     '<span class="mx-over-group__label">= ' +
+                     '<span class="mx-over-group__total">' + esc(ov.runs) + '</span>' +
+                   '</div>';
+        });
 
-    // Live Overs Bar
-    if (dt3.overs_timeline_v2 && dt3.overs_timeline_v2.length > 0) {
-        tabHTML += `<div class="overs overs-section box-shadow-4 rounded_10 mt-3">
-            <div class="overs-bar">`;
-            dt3.overs_timeline_v2.reverse().forEach(over => {
-                tabHTML += `<div class="over-group">
-                    <span class="over-label no-wrap">Over ${over.over.split('.')[0]}</span>
-                    <div class="over-balls">`;
-                    over.summary.forEach(ball => {
-                        let ballScore = getLiveOversBallScore(ball);
-                        tabHTML += `<div class="over-ball ${getScoreStyle(ballScore)}" style="width: ${22 + (String(ballScore).length * 4)}px">${ballScore !== '0' ? ballScore : '<span class="club-icon">♣</span>'}</div>`;
-                    });
-                tabHTML += `</div>
-                <span class="over-total no-wrap">=&nbsp;${over.runs}</span>
-                </div>`;
-            });
-
-        tabHTML += `</div>
-                    </div>`;
+        html += '<div class="mx-card">' +
+                  '<div class="mx-card__head"><span class="material-icons-round">timeline</span>' +
+                    'Recent overs<small>Latest at the end</small></div>' +
+                  '<div class="mx-timeline"><div class="mx-timeline__bar">' + bar + '</div></div>' +
+                '</div>';
     }
 
-    // Win Probability Bar
-    if (
-        !dt3.info.toLowerCase().includes('won') &&
-        !dt3.info.toLowerCase().includes('abandoned') &&
-        !dt3.info.toLowerCase().includes('no result') &&
-        dt3.team_win_probability &&
-        Object.keys(dt3.team_win_probability).length !== 0
-    ) {
-        tabHTML += `
-        <div class="live_4 border rounded_10 bg-white mt-3 pt-3 pb-3">
-            <div class="container1">
-                <div class="label-container">
-                    <img src="/static/images/squad_logos/${dt1[0].Team_A}${dt1[0].Team_A === 'RR' ? '1' : ''}.png" width="40px" height="40px">
-                    <span><b>Win Probability %</b></span>
-                    <img src="/static/images/squad_logos/${dt1[0].Team_B}${dt1[0].Team_B === 'RR' ? '1' : ''}.png" width="40px" height="40px">
-                </div>
-                <div class="progress-bar">
-                    <div class="l-bar" style="--c: ${clr[dt1[0].Team_A]}; width: ${parseFloat(dt3.team_win_probability[dt1[0].Team_A]).toFixed(1)}%"></div>
-                    <div class="r-bar" style="--c: ${clr[dt1[0].Team_B]}; width: ${parseFloat(dt3.team_win_probability[dt1[0].Team_B]).toFixed(1)}%"></div>
-                </div>
-                <div class="text-container">
-                    <span style="color: ${clr[dt1[0].Team_A]};"><b>${parseFloat(dt3.team_win_probability[dt1[0].Team_A]).toFixed(1)}%</b></span>
-                    <span style="color: ${clr[dt1[0].Team_B]};"><b>${parseFloat(dt3.team_win_probability[dt1[0].Team_B]).toFixed(1)}%</b></span>
-                </div>
-            </div>
-        </div>`;
+    /* --- win probability -------------------------------------------------- */
+    const prob = dt3.team_win_probability;
+    if (!over && prob && Object.keys(prob).length) {
+        const a = parseFloat(prob[dt1.Team_A]);
+        const b = parseFloat(prob[dt1.Team_B]);
+        if (!isNaN(a) && !isNaN(b)) {
+            const ca = esc(clr[dt1.Team_A] || '#4cc9f0');
+            const cb = esc(clr[dt1.Team_B] || '#a758ff');
+            html += '<div class="mx-card">' +
+                      '<div class="mx-card__head"><span class="material-icons-round">insights</span>Win probability</div>' +
+                      '<div class="mx-prob">' +
+                        '<div class="mx-prob__head">' +
+                          MX.crest(dt1.Team_A, clr2, 'mx-crest--sm') +
+                          '<span class="mx-prob__mid">Chance of winning</span>' +
+                          MX.crest(dt1.Team_B, clr2, 'mx-crest--sm') +
+                        '</div>' +
+                        '<div class="mx-prob__bar">' +
+                          '<span class="mx-prob__seg mx-prob__seg--a" style="--c: ' + ca + '; width: ' + a.toFixed(1) + '%"></span>' +
+                          '<span class="mx-prob__seg mx-prob__seg--b" style="--c: ' + cb + '; width: ' + b.toFixed(1) + '%"></span>' +
+                        '</div>' +
+                        '<div class="mx-prob__foot">' +
+                          '<span style="color: ' + ca + '">' + a.toFixed(1) + '%</span>' +
+                          '<span style="color: ' + cb + '">' + b.toFixed(1) + '%</span>' +
+                        '</div>' +
+                      '</div>' +
+                    '</div>';
+        }
     }
 
-    // Player of the Match section
-    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
-    if (dt3.player_of_match.player_name !== '') {
-        let name = dt3.player_of_match.player_name;
-        let team = dt3.player_of_match.team_name;
-        let c1, c2;
-        if (team === 'RCB') {
-            c1 = clr2[team].c3; c2 = clr2[team].c1;
-        } else if (team === 'GT') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'MI') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'PBKS') {
-            c1 = clr2[team].c2; c2 = clr2[team].c1;
-        } else if (team === 'KKR') {
-            c1 = clr2[team].c2; c2 = clr2[team].c3;
-	    } else if (team === 'NA') {
-            c1 = "#fff"; c2 = "#fff"; 
-        } else {
-            c1 = clr2[team].c1; c2 = clr2[team].c2;
-        }
-
-        tabHTML += `
-        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3">
-            <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Match</b>
-            <div class="potm-content">
-                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
-                <div class="potm-image" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_match.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
-                </div></a>
-                <div class="potm-details">
-                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
-                    <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
-                        ${fn[team]}
-                    </div>
-                    <div class="potm-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Bat</div>
-                            <div class="stat-value">${dt3.player_of_match.batting_stat === '' ? '-' : dt3.player_of_match.batting_stat}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Bowl</div>
-                            <div class="stat-value">${dt3.player_of_match.bowling_stat === '' ? '-' : dt3.player_of_match.bowling_stat}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-       }
+    /* --- awards, once there is a winner ---------------------------------- */
+    if (over) {
+        html += MX.awardCard(dt3.player_of_match, 'Player of the match', 'military_tech', fn, clr2, true);
+        html += MX.awardCard(dt3.player_of_series, 'Player of the series', 'workspace_premium', fn, clr2, false);
     }
 
-    // Player of the Series section
-    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
-    if (dt3.player_of_series.player_name !== '') {
-        let name = dt3.player_of_series.player_name;
-        let team = dt3.player_of_series.team_name;
-        let c1, c2;
-        if (team === 'RCB') {
-            c1 = clr2[team].c3; c2 = clr2[team].c1;
-        } else if (team === 'GT') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'MI') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'PBKS') {
-            c1 = clr2[team].c2; c2 = clr2[team].c1;
-        } else if (team === 'KKR') {
-            c1 = clr2[team].c2; c2 = clr2[team].c3;
-	    } else if (team === 'NA') {
-            c1 = "#fff"; c2 = "#fff"; 
-        } else {
-            c1 = clr2[team].c1; c2 = clr2[team].c2;
-        }
+    /* --- at the crease ---------------------------------------------------- */
+    if (!over && (dt3.innings || []).length) {
+        const bat = dt3.now_batting || {};
+        const bowl = dt3.now_bowling || {};
+        let batRows = '';
+        let bowlRows = '';
 
-        tabHTML += `
-        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 mb-3">
-            <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Series</b>
-            <div class="potm-content">
-                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
-                <div class="potm-image text-blue" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
-                </div></a>
-                <div class="potm-details">
-                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
-                    <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
-                        ${fn[team]}
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-       }
+        ['b1', 'b2'].forEach((k, i) => {
+            const p = bat[k];
+            if (!p || !p.name) return;
+            const s = p.stats || {};
+            batRows += '<tr>' +
+                         '<td>' + MX.playerLink(p, i === 0 ? '/static/images/Bat.svg' : '') + '</td>' +
+                         '<td><b>' + esc(s.runs) + '</b></td><td>' + esc(s.balls) + '</td>' +
+                         '<td>' + esc(s.fours) + '</td><td>' + esc(s.sixes) + '</td>' +
+                         '<td>' + esc(s.strike_rate) + '</td>' +
+                       '</tr>';
+        });
+
+        ['b1', 'b2'].forEach((k, i) => {
+            const p = bowl[k];
+            if (!p || !p.name) return;
+            const s = p.stats || {};
+            bowlRows += '<tr>' +
+                          '<td>' + MX.playerLink(p, i === 0 ? '/static/images/Ball.svg' : '') + '</td>' +
+                          '<td>' + esc(s.overs) + '</td><td>' + esc(s.maiden_overs) + '</td>' +
+                          '<td>' + esc(s.runs) + '</td><td><b>' + esc(s.wickets) + '</b></td>' +
+                          '<td>' + esc(s.economy) + '</td>' +
+                        '</tr>';
+        });
+
+        if (batRows || bowlRows) {
+            html += '<div class="mx-card">' +
+                      '<div class="mx-card__head"><span class="material-icons-round">sports_cricket</span>At the crease</div>' +
+                      '<div class="mx-tablewrap"><table class="mx-table">' +
+                        (batRows ? '<thead><tr><th class="mx-col-main">Batters</th><th>R</th><th>B</th>' +
+                                   '<th>4s</th><th>6s</th><th>SR</th></tr></thead><tbody>' + batRows + '</tbody>' : '') +
+                        (bowlRows ? '<thead><tr><th class="mx-col-main">Bowlers</th><th>O</th><th>M</th>' +
+                                    '<th>R</th><th>W</th><th>ER</th></tr></thead><tbody>' + bowlRows + '</tbody>' : '') +
+                      '</table></div>' +
+                    '</div>';
+        }
     }
 
-    //Current Batting and Bowling Section
-    if (
-        !dt3.info.toLowerCase().includes('won') &&
-        !dt3.info.toLowerCase().includes('abandoned') &&
-        !dt3.info.toLowerCase().includes('no result') &&
-        dt3.innings.length !== 0
-    ) {
-        tabHTML += `<div class="live_3 box-shadow-4 rounded_10 bg-white mt-3" style="overflow: hidden;">
-		  <div class="table-responsive">
-		    <table class="table font_12 mb-0">
-            <thead class="border-0">
-                <tr class="bg-bluelight">
-                <th class="text-muted" style="width: 55%;">BATTERS</th>
-                <th class="px-2 text-muted">R</th>
-                <th class="px-2 text-muted">B</th>
-                <th class="px-2 text-muted">4s</th>
-                <th class="px-2 text-muted">6s</th>
-                <th class="px-2 text-muted">SR</th>
-                </tr>
-            </thead>
-            <tbody>`;
-        if (dt3.now_batting.b1.name !== '') {
-            let name = dt3.now_batting.b1.name;
-            let team = dt3.now_batting.b1.team;
-            tabHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Bat.svg" width="18px" height="18px"></b></td>
-                <td class="px-2 fw-bold">${dt3.now_batting.b1.stats.runs}</td>
-                <td class="px-2">${dt3.now_batting.b1.stats.balls}</td>
-                <td class="px-2">${dt3.now_batting.b1.stats.fours}</td>
-                <td class="px-2">${dt3.now_batting.b1.stats.sixes}</td>
-                <td class="px-2">${dt3.now_batting.b1.stats.strike_rate}</td>
-                </tr>`;
-        }
-        if (dt3.now_batting.b2.name !== '') {
-            let name = dt3.now_batting.b2.name;
-            let team = dt3.now_batting.b2.team;
-            tabHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
-                <td class="px-2 fw-bold">${dt3.now_batting.b2.stats.runs}</td>
-                <td class="px-2">${dt3.now_batting.b2.stats.balls}</td>
-                <td class="px-2">${dt3.now_batting.b2.stats.fours}</td>
-                <td class="px-2">${dt3.now_batting.b2.stats.sixes}</td>
-                <td class="px-2">${dt3.now_batting.b2.stats.strike_rate}</td>
-                </tr>`;
-        }
-        tabHTML += `<tr class="bg-bluelight">
-                    <th class="text-muted" style="width: 55%;">BOWLERS</th>
-                    <th class="px-2 text-muted">O</th>
-                    <th class="px-2 text-muted">M</th>
-                    <th class="px-2 text-muted">R</th>
-                    <th class="px-2 text-muted">W</th>
-                    <th class="px-2 text-muted">ER</th>
-                    </tr>`;
-        if (dt3.now_bowling.b1.name !== '') {
-            let name = dt3.now_bowling.b1.name;
-            let team = dt3.now_bowling.b1.team;
-            tabHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.onerror=null;this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>&nbsp;<img src="/static/images/Ball.svg" width="14px" height="14px" onerror="this.onerror=null; this.src='/static/images/ball.svg'"></b></td>
-                <td class="px-2">${dt3.now_bowling.b1.stats.overs}</td>
-                <td class="px-2">${dt3.now_bowling.b1.stats.maiden_overs}</td>
-                <td class="px-2">${dt3.now_bowling.b1.stats.runs}</td>
-                <td class="px-2 fw-bold">${dt3.now_bowling.b1.stats.wickets}</td>
-                <td class="px-2">${dt3.now_bowling.b1.stats.economy}</td>
-                </tr>`;
-        }
-        if (dt3.now_bowling.b2.name !== '') {
-            let name = dt3.now_bowling.b2.name;
-            let team = dt3.now_bowling.b2.team;
-            tabHTML += `<tr>
-                <td class="text-blue pl-2" style="text-wrap: nowrap;"><img src="/static/images/squads/${team}-MICRO/${name.replace(/ /g, '-')}.png" width="20px" height="20px" alt="${name}" onerror="this.src='/static/images/Default.png';">&nbsp;<b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
-                <td class="px-2">${dt3.now_bowling.b2.stats.overs}</td>
-                <td class="px-2">${dt3.now_bowling.b2.stats.maiden_overs}</td>
-                <td class="px-2">${dt3.now_bowling.b2.stats.runs}</td>
-                <td class="px-2 fw-bold">${dt3.now_bowling.b2.stats.wickets}</td>
-                <td class="px-2">${dt3.now_bowling.b2.stats.economy}</td>
-                </tr>`;
-        }
-        tabHTML += `</tbody></table></div></div>`;
-    }
-
-    //Innings Tabs Buttons
-    tabHTML += `<div class="score_1 mt-3">
-    <ul class="d-flex flex-wrap font_12 fw-bold nav nav-tabs border-0" id="inningsTabs">`;
-    for (let idx = 0; idx < Math.min(dt3.innings.length, 2); idx++) {
-        const i = dt3.innings[idx];
-        const is_active = dt3.score_strip[idx].currently_batting;
-        tabHTML += `
-        <li class="me-2 mt-1 mb-1">
-            <a class="d-block p-1 px-3 rounded-pill${is_active ? ' active' : ''}" 
-            data-bs-toggle="tab" aria-expanded="true" 
-            href="#profile${idx + 1}">
-            ${tid[i.batting_team_id][1]} Innings <i class="fa fa-chevron-right font_10 ms-1"></i>
-            </a>
-        </li>
-        `;
-    }
-    tabHTML += `</ul></div>`;
-
-    // Innings Tabs
-    // Tab 1
-    tabHTML += `<div class="tab-content">`;
-    const is_active2 = dt3.score_strip[1].currently_batting;
-    tabHTML += `<div class="tab-pane ${is_active2 ? 'active' : ''}" id="profile2">
-	<div class="live_4 box-shadow-4 rounded_10 overflow-hidden bg-white mt-3">`;
-    if (inn2 && inn2.inning) {
-        inn2.inning.overs.forEach(over => {
-            if (over.overNumber === 0) return;
-            over.balls.forEach(ball => {
-                if (ball.comments && ball.comments[0].commentTypeId === 'EndOfOver') {
-                    tabHTML += `<div class="d-flex gap-3 px-3 py-2 over-entry">
-                    <div class="d-flex flex-column gap-1 align-items-center" style="width: 20%;">
-                    <div class="font_14 fw-bold text-center">OVER ${over.overNumber}</div>
-                    <div class="font_13 text-center">${tid[dt3.score_strip[1].team_id][0]}<br>${over.totalInningRuns}/${over.totalInningWickets}</div>
-                    </div>
-                    <div class="d-flex flex-column gap-1" style="width: 80%;">
-                    <div class="font_13 border-bottom pb-1 fw-bold">`;
-                    over.balls.slice().reverse().forEach(bl => {
-                        var score = getBallScore(bl);
-                        var scoreWithColor = getScoreWithCol(score.toString());
-                        tabHTML += `${scoreWithColor}&nbsp;`;
-                    });
-                    tabHTML += `&nbsp;=>&nbsp;<b>${getRuns(over)} Runs</b></div>`;
-                    const bowlerMsg = ball.comments[0].message;
-                    const bowler = bowlerMsg.split('Bowler: ')[1]?.split('.')[0] || '';
-                    tabHTML += `<div class="font_13">Bowler: <b>${bowler}</b></div>`;
-                    tabHTML += `<div class="font_13">Batsmen: <b>${getBatsmen(over)}</b></div>`;
-                    tabHTML += `</div></div>`;
-                }
-                tabHTML += `<div class="d-flex gap-3 px-3 py-2 ball-entry">
-                <div class="d-flex flex-column gap-2 align-items-center">
-                <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
-                const score = getBallScore(ball);
-                tabHTML += `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
-                tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
-            });
+    /* --- commentary, one pane per innings --------------------------------- */
+    const panes = [];
+    for (let idx = 0; idx < Math.min((dt3.innings || []).length, 2); idx++) {
+        const team = tid[dt3.innings[idx].batting_team_id] || [];
+        panes.push({
+            key: 'inn' + (idx + 1),
+            abv: team[0] || '',
+            label: (team[0] || 'Innings ' + (idx + 1)) + ' innings',
+            live: !!(strip[idx] && strip[idx].currently_batting),
+            src: innSrc[idx]
         });
     }
-    tabHTML += `</div></div>`;
 
-    //Tab 2
-    const is_active1 = dt3.score_strip[0].currently_batting;
-    tabHTML += `<div class="tab-pane ${is_active1 ? 'active' : ''}" id="profile1">
-    <div class="live_4 box-shadow-4 rounded_10 overflow-hidden bg-white mt-3">`;
-    if (inn1 && inn1.inning) {
-        inn1.inning.overs.forEach(over => {
-            if (over.overNumber === 0) return;
-            over.balls.forEach(ball => {
-                if (ball.comments && ball.comments[0].commentTypeId === 'EndOfOver') {
-                    tabHTML += `<div class="d-flex gap-3 px-3 py-2 over-entry">
-                    <div class="d-flex flex-column gap-1 align-items-center" style="width: 20%;">
-                    <div class="font_14 fw-bold text-center">OVER ${over.overNumber}</div>
-                    <div class="font_13 text-center">${tid[dt3.score_strip[0].team_id][0]}<br>${over.totalInningRuns}/${over.totalInningWickets}</div>
-                    </div>
-                    <div class="d-flex flex-column gap-1" style="width: 80%;">
-                    <div class="font_13 border-bottom pb-1 fw-bold">`;
-                    over.balls.slice().reverse().forEach(bl => {
-                        var score = getBallScore(bl);
-                        var scoreWithColor = getScoreWithCol(score.toString());
-                        tabHTML += `${scoreWithColor}&nbsp;`;
-                    });
-                    tabHTML += `&nbsp;=>&nbsp;<b>${getRuns(over)} Runs</b></div>`;
-                    const bowlerMsg = ball.comments[0].message;
-                    const bowler = bowlerMsg.split('Bowler: ')[1]?.split('.')[0] || '';
-                    tabHTML += `<div class="font_13">Bowler: <b>${bowler}</b></div>`;
-                    tabHTML += `<div class="font_13">Batsmen: <b>${getBatsmen(over)}</b></div>`;
-                    tabHTML += `</div></div>`;
-                }
-                tabHTML += `<div class="d-flex gap-3 px-3 py-2 ball-entry">
-                <div class="d-flex flex-column gap-2 align-items-center">
-                <div class="font_14 fw-bold text-center">${over.overNumber - 1}.${ball.ballNumber}</div>`;
-                const score = getBallScore(ball);
-                tabHTML += `<div class="over-center-balls ${getBallBgColor(score)}" style="width: ${20 + (String(score).length * 3)}px;">${score !== '0' ? score : '<span class="club-icon">♣</span>'}</div>`;
-                tabHTML += `</div><div class="font_14">${boldSubstring(ball.comments[ball.comments.length - 1].message)}</div></div>`;
-            });
+    if (panes.length) {
+        const active = MX.activePane(panes);
+        let tabs = '';
+        let bodies = '';
+        panes.forEach(p => {
+            const on = p === active;
+            tabs += MX.subtab(p, on, clr2);
+            bodies += '<div class="mx-card mx-pane" data-inn="' + esc(p.key) + '"' + (on ? '' : ' hidden') + '>' +
+                        commentary(p, MX) +
+                      '</div>';
         });
-    }
-    tabHTML += `</div></div>`;
-    tabHTML += `</div>`;
-    
-    document.getElementById('tab-content').innerHTML = tabHTML;
 
-    // Restore previously active tab after HTML update
-    if (activeTabHref) {
-        const tabLink = document.querySelector(`#inningsTabs a[href="${activeTabHref}"]`);
-        if (tabLink) {
-            new bootstrap.Tab(tabLink).show();
-        }
+        html += '<div class="mx-subtabs" role="tablist" aria-label="Innings">' + tabs + '</div>' + bodies;
     }
 
-    // --- Overs Bar Scroll and Fade Logic: Attach after DOM update ---
-    scrollOversBarToEnd(false); // On initial load or refresh, jump to end
-    updateOversBarFade();
-    const oversBar = document.querySelector('.overs-bar');
-    if (oversBar) {
-        oversBar.addEventListener('scroll', updateOversBarFade);
-        window.addEventListener('resize', updateOversBarFade);
+    if (!html) {
+        html = '<div class="mx-empty"><span class="material-icons-round">hourglass_empty</span>' +
+               '<b>Nothing to show yet</b><p>Commentary starts once the first ball is bowled.</p></div>';
     }
-    // Optionally, dispatch statsReady event for any other listeners
+
+    const root = document.getElementById('tab-content');
+    root.innerHTML = html;
+
+    MX.wireSubtabs(root);
+    wireTimeline(root);
+
     window.dispatchEvent(new Event('statsReady'));
+}
 
+/* ------------------------------------------------------------------ pieces */
+
+/* One innings of commentary. The feed hands the overs back newest first, and
+   marks the end of an over on the first comment of its last ball — so the
+   summary band is emitted just before that ball's line. */
+function commentary(pane, MX) {
+    const esc = MX.esc;
+    const inn = pane.src && pane.src.inning;
+    if (!inn || !Array.isArray(inn.overs) || !inn.overs.length) {
+        return '<div class="mx-empty"><span class="material-icons-round">chat_bubble_outline</span>' +
+               '<b>No commentary yet</b><p>Ball-by-ball updates appear here once the innings begins.</p></div>';
+    }
+
+    let html = '<div class="mx-comm">';
+
+    inn.overs.forEach(ov => {
+        if (ov.overNumber === 0) return;
+        (ov.balls || []).forEach(ball => {
+            const comments = ball.comments || [];
+
+            if (comments[0] && comments[0].commentTypeId === 'EndOfOver') {
+                let chips = '';
+                ov.balls.slice().reverse().forEach(b => { chips += MX.ball(MX.ballScore(b)); });
+
+                const msg = String(comments[0].message || '');
+                const bowler = msg.split('Bowler: ')[1] ? msg.split('Bowler: ')[1].split('.')[0] : '';
+
+                html += '<div class="mx-comm__over">' +
+                          '<span class="mx-comm__ovno">Over ' + esc(ov.overNumber) + '</span>' +
+                          '<span class="mx-comm__ovscore">' + esc(ov.totalInningRuns) + '/' +
+                            esc(ov.totalInningWickets) + '</span>' +
+                          '<span class="mx-comm__ovballs">' + chips + '</span>' +
+                          '<span class="mx-comm__ovruns">' + MX.overRuns(ov) + ' runs</span>' +
+                          '<span class="mx-comm__who"><b>' + esc(bowler) + '</b> to ' +
+                            MX.overBatsmen(ov).map(esc).join(', ') + '</span>' +
+                        '</div>';
+            }
+
+            const score = String(MX.ballScore(ball));
+            const tone = MX.ballClass(score).replace('mx-ball--', '');
+            const line = comments.length ? comments[comments.length - 1].message : '';
+
+            html += '<div class="mx-comm__ball' + (tone ? ' is-' + tone : '') + '">' +
+                      '<span class="mx-comm__mark">' +
+                        '<span class="mx-comm__no">' + esc((ov.overNumber - 1) + '.' + ball.ballNumber) + '</span>' +
+                        MX.ball(score) +
+                      '</span>' +
+                      '<span class="mx-comm__text">' + boldSubstring(esc(line)) + '</span>' +
+                    '</div>';
+        });
+    });
+
+    return html + '</div>';
+}
+
+/* ------------------------------------------------------------------ wiring */
+
+/* The overs strip opens on the latest over, but a reader who has scrolled
+   back through it keeps their place across a refresh. */
+function wireTimeline(root) {
+    const wrap = root.querySelector('.mx-timeline');
+    const bar = root.querySelector('.mx-timeline__bar');
+    if (!wrap || !bar) return;
+
+    function fade() {
+        const max = bar.scrollWidth - bar.clientWidth;
+        wrap.classList.toggle('at-start', bar.scrollLeft <= 0);
+        wrap.classList.toggle('at-end', bar.scrollLeft >= max - 1);
+    }
+
+    const keep = window.__mxTimeline;
+    bar.scrollLeft = keep && keep.atEnd === false ? keep.left : bar.scrollWidth;
+
+    bar.addEventListener('scroll', () => {
+        const max = bar.scrollWidth - bar.clientWidth;
+        window.__mxTimeline = { left: bar.scrollLeft, atEnd: bar.scrollLeft >= max - 8 };
+        fade();
+    }, { passive: true });
+
+    window.addEventListener('resize', fade);
+    fade();
 }

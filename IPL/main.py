@@ -140,6 +140,8 @@ full_name = {'CSK':'Chennai Super Kings',
              'RR':'Rajasthan Royals',
              'RCB':'Royal Challengers Bengaluru',
              'SRH':'Sunrisers Hyderabad',
+             'AUS': 'Australia',
+             'ZIM': 'Zimbabwe',
              'TBA':'TBA'}
 
 teamID = {610:['CSK','Chennai Super Kings'],
@@ -152,6 +154,8 @@ teamID = {610:['CSK','Chennai Super Kings'],
              629:['RR','Rajasthan Royals'],
              646:['RCB','Royal Challengers Bengaluru'],
              658:['SRH','Sunrisers Hyderabad'],
+             5:['AUS', 'Australia'],
+             493:['ZIM', 'Zimbabwe'],
              127770:['TBA','TBA'],
              127775:['TBA','TBA']}
 
@@ -165,6 +169,8 @@ clr = {'CSK':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},  #fdcd05 f15c19,
         'RR':{'c1':'#ff69b4', 'c2':'#074ea2', 'c3':'#cba92b'},
         'RCB':{'c1':'#20285d', 'c2':'#444444', 'c3':'hsl(356, 99%, 45%)'},
         'SRH':{'c1':'#f26522', 'c2':'#ed1a37', 'c3':'#221f21'},
+        'AUS':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},
+        'ZIM':{'c1':'#20285d', 'c2':'#444444', 'c3':'hsl(356, 99%, 45%)'},
         'TBA':{'c1':'#ffffff', 'c2':'#ffffff', 'c3':'#ffffff'}}
 
 ptclr = {'CSK':'#f9cd05',
@@ -176,6 +182,8 @@ ptclr = {'CSK':'#f9cd05',
         'PBKS':'#ed1b24',
         'RR':'#e60693',
         'RCB':'#ec1c24',
+        'AUS':'#f9cd05',
+        'ZIM':"#ec1c24",
         'SRH':'#ff822a'}
 
 sqclr = {
@@ -188,7 +196,9 @@ sqclr = {
     'PBKS': {'c1': '#eb222d', 'c2': '#ffdead'},    # Red to Gold
     'RR': {'c1': '#df238f', 'c2': '#294096'},   # Pink to Blue
     'GT': {'c1': '#0b1c31', 'c2': '#e3ca7c'},   # Navy to Gold
-    'LSG': {'c1': '#aa003b', 'c2': '#002554'}     # Light Blue to Gold
+    'LSG': {'c1': '#aa003b', 'c2': '#002554'},     # Light Blue to Gold
+    'AUS': {'c1': '#fcee21', 'c2': '#0b67b2'},
+    'ZIM': {'c1': 'hsl(356, 99%, 45%)', 'c2': '#20285d'}
 }
 
 def _mills_ratio(a):
@@ -660,6 +670,7 @@ def update_toppers():
                 return
     
 def get_innings_data(matID):
+    #matID = '40966'
     innings = []
     for inn in (1, 2):
         try:
@@ -965,6 +976,20 @@ def concat_DT(D, T):
                      T.strftime('%H:%M:%S')
     return datetime.strptime(dttm, '%Y-%m-%d %H:%M:%S')
 
+def start_DT(D, T):
+    """A fixture's Date and Time as one datetime, whichever driver read them.
+
+    Postgres hands back date/time objects; a raw text() SELECT against SQLite
+    hands back the ISO strings it stored, microseconds and all. Both reach
+    the templates through here so a page renders the same either way.
+    """
+    if not isinstance(D, date):
+        D = datetime.strptime(str(D)[:10], '%Y-%m-%d').date()
+    if not isinstance(T, time):
+        S = str(T)
+        T = datetime.strptime(S, '%H:%M:%S.%f' if '.' in S else '%H:%M:%S').time()
+    return datetime.combine(D, T)
+
 def num_suffix(num):
     if num % 100 in [11, 12, 13]:
         return str(num) + "th"
@@ -987,6 +1012,9 @@ def render_live_URL(tA, tB, mn, dt):
         matchNo = mn.lower().replace(' ','-') + "-ipl-2026t20"
     dt = dt.strftime("%d-%B-%Y").lower()
     URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
+    if mn == "71":
+        URL = "https://cmc2.sportskeeda.com/live-cricket-score/zimbabwe-vs-australia-3rd-odi-20-september-2026/ajax"
+    #URL = "https://cmc2.sportskeeda.com/live-cricket-score/bangladesh-women-vs-india-women-2nd-semi-final-20-september-2026/ajax"
     print(URL)
     return URL
 
@@ -1227,7 +1255,8 @@ def get_matchInfo(match):
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
-    return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm})
+    return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT,
+                      'tid': teamID, 'dttm': dttm, 'clr2': clr, 'fn': full_name})
 
 def get_matchOvers(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
@@ -1412,23 +1441,32 @@ def get_liveSquad(match):
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
     SquadDT = [dict(row._mapping) for row in SquadDT]
-    return serialize({'match': match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'sqd':SquadDT})
+    return serialize({'match': match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID,
+                      'dttm':dttm, 'sqd':SquadDT, 'clr2': clr, 'fn': full_name})
 
 @main.route('/match-<match>')
 def match(match):
+    """Match centre: the shell around the live feed.
+
+    Everything that moves is fetched by js/match.js from /api/match-<no>/...,
+    but the fixture itself is known here, so the header and the matchup are
+    rendered server side - the page is useful before the first poll lands.
+    """
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),
                                  {'matchno': match}).fetchall()
     MatchDT = MatchDT[0]
     source = request.args.get('source', None)
     team = request.args.get('fteam', None)
-    return render_template('match.html', match=match, source=source, fteam=team, matchDT=MatchDT)
+    return render_template('match.html', match=match, source=source, fteam=team, matchDT=MatchDT,
+                           start=start_DT(MatchDT.Date, MatchDT.Time),
+                           fn=full_name, clr=clr, sqclr=sqclr)
 
 @main.route('/match-<match>/FRScore')
 def FRScore(match):
     MatchFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),
                                  {'matchno': match}).fetchall()
     MatchFR = MatchFR[0]
-    matchDT = datetime.combine(MatchFR.Date, MatchFR.Time)
+    matchDT = start_DT(MatchFR.Date, MatchFR.Time)
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     source = request.args.get('source', None)

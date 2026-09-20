@@ -1,364 +1,220 @@
+/* ==========================================================================
+   IPL 2026 · Match centre — Scorecard panel
+   Awards and top performers once the match is settled, then the full card for
+   each innings: batting, extras, total, bowling and the fall of wickets.
+   Shared helpers come from window.MX (js/match.js).
+   ========================================================================== */
+
 function parseOvers(oversStr) {
-  // Converts "3.2" to balls: 3*6 + 2 = 20
-  const [whole, part] = oversStr.split('.').map(Number);
-  return whole * 6 + (isNaN(part) ? 0 : part);
+    /* "3.2" -> 20 balls, so part-overs sort correctly */
+    const [whole, part] = String(oversStr).split('.').map(Number);
+    return (whole || 0) * 6 + (isNaN(part) ? 0 : part);
 }
 
-function getTopBatters(batting) {
-    const allBatting = batting[0].batting.concat(batting[1].batting);
-    return allBatting.slice().sort((a, b) => {
-        const runsA = Number(a.runs);
-        const runsB = Number(b.runs);
-        const ballsA = Number(a.balls);
-        const ballsB = Number(b.balls);
-
-    if (runsA !== runsB) {
-      return runsB - runsA; // Descending runs
-    }
-    return ballsA - ballsB; // Ascending balls
-  });
+function getTopBatters(innings) {
+    const all = (innings[0].batting || []).concat(innings[1] ? innings[1].batting || [] : []);
+    return all.slice().sort((a, b) => {
+        if (Number(a.runs) !== Number(b.runs)) return Number(b.runs) - Number(a.runs);
+        return Number(a.balls) - Number(b.balls);   /* fewer balls for the same runs */
+    });
 }
 
-function getTopBowlers(bowling) {
-    const allBowling = bowling[0].bowling.concat(bowling[1].bowling);
-    return allBowling.slice().sort((a, b) => {
-        const wicketsA = Number(a.wickets);
-        const wicketsB = Number(b.wickets);
-        const runsA = Number(a.runs);
-        const runsB = Number(b.runs);
-        const ballsA = parseOvers(a.overs);
-        const ballsB = parseOvers(b.overs);
-
-    if (wicketsA !== wicketsB) {
-      return wicketsB - wicketsA; // Descending wickets
-    }
-    if (runsA !== runsB) {
-      return runsA - runsB; // Ascending runs
-    }
-    return ballsA - ballsB; // Ascending balls
-  });
+function getTopBowlers(innings) {
+    const all = (innings[0].bowling || []).concat(innings[1] ? innings[1].bowling || [] : []);
+    return all.slice().sort((a, b) => {
+        if (Number(a.wickets) !== Number(b.wickets)) return Number(b.wickets) - Number(a.wickets);
+        if (Number(a.runs) !== Number(b.runs)) return Number(a.runs) - Number(b.runs);
+        return parseOvers(a.overs) - parseOvers(b.overs);
+    });
 }
 
-// Handles rendering for Info tab
 function renderTabScorecard(data) {
-    let dt1 = data.dt1;
-    let dt2 = data.dt2;
-    let dt3 = data.dt3;
-    let cd = new Date(data.cd);
-    let dttm = data.dttm ? new Date(data.dttm) : null;
-    let tid = data.tid;
-    let fn = data.fn;
-    let clr2 = data.clr2;
+    const MX = window.MX;
+    const esc = MX.esc;
+    const dt3 = data.dt3 || {};
+    const tid = data.tid || {};
+    const fn = data.fn || {};
+    const clr2 = data.clr2 || {};
+    const strip = dt3.score_strip || [];
+    const innings = (dt3.innings || []).slice(0, 2);
+    const info = String(dt3.info || '');
+    const settled = /\b(won|tied)\b/i.test(info);
 
-    const activeTab = document.querySelector('#inningsTabs .active');
-    const activeTabHref = activeTab ? activeTab.getAttribute('href') : null;
+    let html = '';
 
-    let tabHTML = '';
-
-    // Player of the Match section
-    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
-    if (dt3.player_of_match.player_name !== '') {
-        let name = dt3.player_of_match.player_name;
-        let team = dt3.player_of_match.team_name;
-        let c1, c2;
-        if (team === 'RCB') {
-            c1 = clr2[team].c3; c2 = clr2[team].c1;
-        } else if (team === 'GT') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'MI') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'PBKS') {
-            c1 = clr2[team].c2; c2 = clr2[team].c1;
-        } else if (team === 'KKR') {
-            c1 = clr2[team].c2; c2 = clr2[team].c3;
-	    } else if (team === 'NA') {
-            c1 = "#fff"; c2 = "#fff"; 
-        } else {
-            c1 = clr2[team].c1; c2 = clr2[team].c2;
-        }
-
-        tabHTML += `
-        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3">
-            <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Match</b>
-            <div class="potm-content">
-                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
-                <div class="potm-image" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_match.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
-                </div></a>
-                <div class="potm-details">
-                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
-                    <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
-                        ${fn[team]}
-                    </div>
-                    <div class="potm-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Bat</div>
-                            <div class="stat-value">${dt3.player_of_match.batting_stat === '' ? '-' : dt3.player_of_match.batting_stat}</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Bowl</div>
-                            <div class="stat-value">${dt3.player_of_match.bowling_stat === '' ? '-' : dt3.player_of_match.bowling_stat}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-       }
+    /* --- awards ----------------------------------------------------------- */
+    if (settled) {
+        html += MX.awardCard(dt3.player_of_match, 'Player of the match', 'military_tech', fn, clr2, true);
+        html += MX.awardCard(dt3.player_of_series, 'Player of the series', 'workspace_premium', fn, clr2, false);
     }
 
-    // Player of the Series section
-    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
-    if (dt3.player_of_series.player_name !== '') {
-        let name = dt3.player_of_series.player_name;
-        let team = dt3.player_of_series.team_name;
-        let c1, c2;
-        if (team === 'RCB') {
-            c1 = clr2[team].c3; c2 = clr2[team].c1;
-        } else if (team === 'GT') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'MI') {
-            c1 = clr2[team].c3; c2 = clr2[team].c2;
-        } else if (team === 'PBKS') {
-            c1 = clr2[team].c2; c2 = clr2[team].c1;
-        } else if (team === 'KKR') {
-            c1 = clr2[team].c2; c2 = clr2[team].c3;
-	    } else if (team === 'NA') {
-            c1 = "#fff"; c2 = "#fff"; 
-        } else {
-            c1 = clr2[team].c1; c2 = clr2[team].c2;
-        }
+    /* --- top performers --------------------------------------------------- */
+    if (settled && innings.length) {
+        const bats = getTopBatters(innings).slice(0, 2);
+        const bowls = getTopBowlers(innings).slice(0, 2);
 
-        tabHTML += `
-        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 mb-3">
-            <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Player of the Series</b>
-            <div class="potm-content">
-                <a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">
-                <div class="potm-image text-blue" style="--c1: ${c1}; --c2: ${c2};">
-                    <img src="/static/images/squads/${team}-MICRO/${dt3.player_of_series.player_name.replace(/ /g, '-')}.png" alt="${name}" onerror="this.onerror=null; this.src='/static/images/squads/${team}/${name.replace(/ /g, '-')}.png'">
-                </div></a>
-                <div class="potm-details">
-                    <div class="potm-name"><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></div>
-                    <div class="potm-team fw-bold">
-                        <img src="/static/images/squad_logos/${team}${team === 'RR' ? '1' : ''}.png" alt="Team Logo" class="team-logo">
-                        ${fn[team]}
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-       }
+        const batRows = bats.map(b => topRow(MX, b,
+            esc(b.runs) + (b.out_str === 'Not out' ? '*' : ''), '(' + esc(b.balls) + ')')).join('');
+        const bowlRows = bowls.map(b => topRow(MX, b,
+            esc(b.wickets) + '/' + esc(b.runs), '(' + esc(b.overs) + ')')).join('');
+
+        html += '<div class="mx-card">' +
+                  '<div class="mx-card__head"><span class="material-icons-round">star</span>Top performers</div>' +
+                  '<div class="mx-top">' +
+                    '<div class="mx-top__col"><div class="mx-top__head">Batters</div>' + batRows + '</div>' +
+                    '<div class="mx-top__col"><div class="mx-top__head">Bowlers</div>' + bowlRows + '</div>' +
+                  '</div>' +
+                '</div>';
     }
 
-    //Top performers section
-    if (dt3.info && dt3.info.toLowerCase().includes('won')) {
-        let topBatters = getTopBatters(dt3.innings).slice(0, 2);
-        let topBowlers = getTopBowlers(dt3.innings).slice(0, 2);
-
-        tabHTML += `
-        <div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3 mb-3">
-        <b class="bg-blue-grad font_18 d-block px-3 text-white text-center pt-2 pb-2 rounded_top">Top Performers</b>
-            <div class="tp-innings-info">
-                <div class="tp-player-details batter">
-                    <div class="tp-head">Batters</div>
-                    <div class="tp-body">
-                        <div class="tp-player-data">
-                            ${topBatters.map(b => `
-                                <div class="tp-player-info">
-                                    <div class="tp-player-thumbnail">
-                                        <img src="/static/images/squads/${b.team}/${b.name.replace(/ /g, "-")}.png" alt="${b.name}" class="image">
-                                    </div>
-                                    <div class="tp-player-info-content">
-                                        <div class="tp-player-name"><a href="/team-${encodeURIComponent(b.team)}/squad_details/${encodeURIComponent(b.name)}">${b.name}</a></div>
-                                        <div class="tp-player-score"><span class="runs">${b.runs}${b.out_str === 'Not out' ? '*' : ''}</span><span>&nbsp;(${b.balls})</span></div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-                <div class="tp-player-details bowler">
-                    <div class="tp-head">Bowlers</div>
-                    <div class="tp-body">
-                        <div class="tp-player-data">
-                            ${topBowlers.map(b => `
-                                <div class="tp-player-info">
-                                    <div class="tp-player-thumbnail">
-                                        <img src="/static/images/squads/${b.team}/${b.name.replace(/ /g, "-")}.png" alt="${b.name}" class="image">
-                                    </div>
-                                    <div class="tp-player-info-content">
-                                        <div class="tp-player-name"><a href="/team-${encodeURIComponent(b.team)}/squad_details/${encodeURIComponent(b.name)}">${b.name}</a></div>
-                                        <div class="tp-player-score"><span class="runs">${b.wickets}/${b.runs}</span><span>&nbsp;(${b.overs})</span></div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
+    /* --- one pane per innings --------------------------------------------- */
+    if (!innings.length) {
+        document.getElementById('tab-content').innerHTML = html ||
+            '<div class="mx-empty"><span class="material-icons-round">list_alt</span>' +
+            '<b>No scorecard yet</b><p>The card fills in as soon as the first innings is under way.</p></div>';
+        return;
     }
 
-    //Innings Tabs Buttons
-    tabHTML += `<div class="score_1 mt-3">
-    <ul class="d-flex flex-wrap font_12 fw-bold nav nav-tabs border-0" id="inningsTabs">`;
-    for (let idx = 0; idx < Math.min(dt3.innings.length, 2); idx++) {
-        const i = dt3.innings[idx];
-        const is_active = dt3.score_strip[idx].currently_batting;
-        tabHTML += `
-        <li class="me-2 mt-1 mb-1">
-            <a class="d-block p-1 px-3 rounded-pill${is_active ? ' active' : ''}" 
-            data-bs-toggle="tab" aria-expanded="true" 
-            href="#profile${idx + 1}">
-            ${tid[i.batting_team_id][1]} Innings <i class="fa fa-chevron-right font_10 ms-1"></i>
-            </a>
-        </li>
-        `;
-    }
-    tabHTML += `</ul></div>`;
+    const panes = innings.map((inn, idx) => {
+        const team = tid[inn.batting_team_id] || [];
+        return {
+            key: 'inn' + (idx + 1),
+            abv: team[0] || '',
+            label: (team[0] || 'Innings ' + (idx + 1)) + ' innings',
+            live: !!(strip[idx] && strip[idx].currently_batting),
+            inn: inn,
+            idx: idx
+        };
+    });
 
-    // Innings Tabs
-    tabHTML += `<div class="score_2"><div class="tab-content">`;
+    const active = MX.activePane(panes);
+    let tabs = '';
+    let bodies = '';
 
-    for (let idx = 0; idx < Math.min(dt3.innings.length, 2); idx++) {
-        const i = dt3.innings[idx];
-        const is_active = dt3.score_strip[idx].currently_batting;
-        tabHTML += `<div class="tab-pane${is_active ? ' active' : ''}" id="profile${idx + 1}">`;
-        tabHTML += `<div class="score_2_inner box-shadow-4 rounded_10 bg-white mt-3">
-            <b class="bg-blue-grad font_14 d-block px-3 text-white pt-2 pb-2 rounded_top">${tid[i.batting_team_id][1]} <span class="font_12">Innings</span></b>
-            <div class="table-responsive">
-            <table class="table font_12 mb-0">
-            <thead class="border-0">
-                <tr class="bg-bluelight">
-                    <th class="text-muted" style="width: 55%;">BATTER</th>
-                    <th class="px-0 text-muted">R</th>
-                    <th class="px-0 text-muted">B</th>
-                    <th class="px-0 text-muted">4s</th>
-                    <th class="px-0 text-muted">6s</th>
-                    <th class="px-0 text-muted">SR</th>
-                </tr>
-            </thead>
-            <tbody>`;
+    panes.forEach(p => {
+        const on = p === active;
+        tabs += MX.subtab(p, on, clr2);
+        bodies += '<div class="mx-pane" data-inn="' + esc(p.key) + '"' + (on ? '' : ' hidden') + '>' +
+                    inningsCard(p, dt3, MX, clr2) +
+                  '</div>';
+    });
 
-        // Batting rows
-        i.batting.forEach(batsmen => {
-            const bgcolor = batsmen.out_str === "Not out" ? '#2E7D32db' : '#666666b0';
-            const team = batsmen.team;
-            const name = batsmen.name;
-            let imagePath = dt3.player_images[batsmen.slug];
-            tabHTML += `<tr class="border-0">
-                <td class="pb-0 text-blue" style="text-wrap: nowrap;">
-                    <b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a>${batsmen.is_captain ? '&nbsp;<span class="text-muted">(C)</span>' : ''}</b>
-                </td>
-                <td class="px-0 pb-0"><b>${batsmen.runs}</b></td>
-                <td class="px-0 pb-0">${batsmen.balls}</td>
-                <td class="px-0 pb-0">${batsmen.fours}</td>
-                <td class="px-0 pb-0">${batsmen.sixes}</td>
-                <td class="px-0 pb-0">${batsmen.strike_rate}</td>
-            </tr>
-            <tr class="border-bottom">
-                <td class="pt-0 fw-bold font_11" colspan="6" style="color: ${bgcolor}">${batsmen.out_str}</td>
-            </tr>`;
-        });
+    html += '<div class="mx-subtabs" role="tablist" aria-label="Innings">' + tabs + '</div>' + bodies;
 
-        // Not batted
-        tabHTML += `<tr class="border-0">
-            <td class="pb-0" colspan="6"><b class="font_13 fw-bold">${
-                dt3.match_status === "post" ? "Didn't bat:" :
-                dt3.score_strip[idx].currently_batting ? "Yet to bat:" : "Didn't bat:"
-            }</b></td>
-        </tr>`;
+    const root = document.getElementById('tab-content');
+    root.innerHTML = html;
+    MX.wireSubtabs(root);
+}
 
-        // Sort not batted by order
-        tabHTML += `<tr class="border-bottom"><td class="pt-0 fw-bold" colspan="6">`;
-        i.not_batted.forEach((nb, nbIdx) => {
-            const name = nb.name;
-            const team = nb.team;
-            tabHTML += `<a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}"><span class="text-blue">${name}</span></a>${nbIdx < i.not_batted.length - 1 ? ', ' : ''}`;
-        });
-        tabHTML += `</td></tr>`;
+/* ------------------------------------------------------------------ pieces */
 
-        tabHTML += `</tbody></table>`;
+function topRow(MX, player, figure, sub) {
+    const team = player.team || 'NA';
+    return '<a class="mx-top__row' + (team === 'NA' ? ' is-off' : '') + '" href="' +
+             MX.playerHref(team, player.name) + '">' +
+             MX.playerPic(team, player.name, 'mx-top__pic', false) +
+             '<span class="mx-top__id">' +
+               '<span class="mx-top__name">' + MX.esc(player.name) + '</span>' +
+               '<span class="mx-top__fig">' + figure + ' <span>' + sub + '</span></span>' +
+             '</span>' +
+           '</a>';
+}
 
-        // Extras and Total
-        tabHTML += `<table class="table font_12 mb-0"><tbody>
-            <tr class="border-bottom">
-                <td>Extras</td>
-                <td colspan="6"><b>${i.extras}</b> (b ${i.bye}, lb ${i.legbye}, w ${i.wide}, nb ${i.noball}, p ${i.penalties})</td>
-            </tr>
-            <tr class="bg-light">
-                <td><b class="font_14">TOTAL</b></td>
-                <td colspan="6"><b class="font_14">${i.runs}/${i.wickets} (${i.overs} Ov) CRR: ${i.run_rate}</b></td>
-            </tr>
-        </tbody></table>`;
+function inningsCard(pane, dt3, MX, clr2) {
+    const esc = MX.esc;
+    const i = pane.inn;
 
-        // Bowling
-        tabHTML += `<div class="table-responsive"><table class="table font_12 mb-0">
-            <thead class="border-0">
-                <tr class="bg-bluelight">
-                    <th class="text-muted" style="width: 55%;">BOWLER</th>
-                    <th class="px-2 text-muted">O</th>
-                    <th class="px-2 text-muted">M</th>
-                    <th class="px-2 text-muted">R</th>
-                    <th class="px-2 text-muted">W</th>
-                    <th class="px-2 text-muted">ER</th>
-                    <th class="px-2 text-muted">Ext</th>
-                </tr>
-            </thead>
-            <tbody>`;
-        i.bowling.forEach(bowler => {
-            const team = bowler.team;
-            const name = bowler.name;
-            tabHTML += `<tr class="border-top">
-                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
-                <td class="px-2">${bowler.overs}</td>
-                <td class="px-2">${bowler.maiden_overs}</td>
-                <td class="px-2">${bowler.runs}</td>
-                <td class="px-2"><b>${bowler.wickets}</b></td>
-                <td class="px-2">${bowler.economy}</td>
-                <td class="px-2">${bowler.extras}</td>
-            </tr>`;
-        });
-        tabHTML += `</tbody></table></div>`;
+    /* --- batting ---------------------------------------------------------- */
+    let batRows = '';
+    (i.batting || []).forEach(b => {
+        const notOut = b.out_str === 'Not out';
+        batRows += '<tr>' +
+                     '<td>' + MX.playerLink(b, '') +
+                       (b.is_captain ? '<span class="mx-plr__badge">(C)</span>' : '') +
+                       '<span class="mx-out' + (notOut ? ' mx-out--not' : '') + '">' + esc(b.out_str) + '</span>' +
+                     '</td>' +
+                     '<td><b>' + esc(b.runs) + '</b></td><td>' + esc(b.balls) + '</td>' +
+                     '<td>' + esc(b.fours) + '</td><td>' + esc(b.sixes) + '</td>' +
+                     '<td>' + esc(b.strike_rate) + '</td>' +
+                   '</tr>';
+    });
 
-        // Fall of wickets
-        tabHTML += `<div class="table-responsive"><table class="table font_12 mb-0">
-            <thead class="border-0">
-                <tr class="bg-bluelight">
-                    <th class="text-muted" style="width: 55%;">Fall of Wickets</th>
-                    <th class="px-0 text-muted">Score</th>
-                    <th class="px-0 text-muted">Over</th>
-                </tr>
-            </thead>
-            <tbody>`;
-        i.fall_of_wickets.forEach(wicket => {
-            const team = wicket.team;
-            const name = wicket.name;
-            const score = wicket.score;
-            const over = wicket.over;
-            tabHTML += `<tr class="border-top">
-                <td class="text-blue" style="text-wrap: nowrap;"><b><a href="/team-${encodeURIComponent(team)}/squad_details/${encodeURIComponent(name)}" class="${team === 'NA' ? 'disabled' : ''}">${name}</a></b></td>
-                <td class="px-0 fw-bold">${score}</td>
-                <td class="px-0">${over}</td>
-            </tr>`;
-        });
-        tabHTML += `</tbody></table></div>`;
-
-        tabHTML += `</div></div></div>`;
+    /* --- yet to bat / did not bat ----------------------------------------- */
+    let rest = '';
+    const notBatted = i.not_batted || [];
+    if (notBatted.length) {
+        const label = dt3.match_status === 'post' ? "Didn't bat"
+                    : (pane.live ? 'Yet to bat' : "Didn't bat");
+        rest = '<div class="mx-inn__yet"><b>' + label + '</b>' +
+                 notBatted.map(nb => {
+                     const team = nb.team || 'NA';
+                     return '<a class="' + (team === 'NA' ? 'is-off' : '') + '" href="' +
+                            MX.playerHref(team, nb.name) + '">' + esc(nb.name) + '</a>';
+                 }).join(', ') +
+               '</div>';
     }
 
-    tabHTML += `</div></div>`;
-    
-    document.getElementById('tab-content').innerHTML = tabHTML;
+    /* --- bowling ---------------------------------------------------------- */
+    let bowlRows = '';
+    (i.bowling || []).forEach(b => {
+        bowlRows += '<tr>' +
+                      '<td>' + MX.playerLink(b, '') + '</td>' +
+                      '<td>' + esc(b.overs) + '</td><td>' + esc(b.maiden_overs) + '</td>' +
+                      '<td>' + esc(b.runs) + '</td><td><b>' + esc(b.wickets) + '</b></td>' +
+                      '<td>' + esc(b.economy) + '</td><td>' + esc(b.extras) + '</td>' +
+                    '</tr>';
+    });
 
-    // Restore previously active tab after HTML update
-    if (activeTabHref) {
-        const tabLink = document.querySelector(`#inningsTabs a[href="${activeTabHref}"]`);
-        if (tabLink) {
-            new bootstrap.Tab(tabLink).show();
-        }
-    }
-   
+    /* --- fall of wickets --------------------------------------------------- */
+    let fowRows = '';
+    (i.fall_of_wickets || []).forEach((w, n) => {
+        fowRows += '<tr>' +
+                     '<td>' + MX.playerLink(w, '') + '</td>' +
+                     '<td><b>' + esc(w.score) + '</b></td>' +
+                     '<td>' + esc(w.over) + '</td>' +
+                     '<td>' + (n + 1) + '</td>' +
+                   '</tr>';
+    });
+
+    return '<div class="mx-card">' +
+             '<div class="mx-card__head mx-card__head--team" style="' + MX.tint(pane.abv, clr2) + '">' +
+               '<span class="material-icons-round">sports_cricket</span>' + esc(pane.label) +
+               (pane.live ? '' : '') +
+             '</div>' +
+
+             '<div class="mx-tablewrap"><table class="mx-table">' +
+               '<thead><tr><th class="mx-col-main">Batter</th><th>R</th><th>B</th>' +
+               '<th>4s</th><th>6s</th><th>SR</th></tr></thead>' +
+               '<tbody>' + batRows + '</tbody>' +
+             '</table></div>' +
+
+             rest +
+
+             '<div class="mx-inn__extras">Extras <b>' + esc(i.extras) + '</b> ' +
+               '(b ' + esc(i.bye) + ', lb ' + esc(i.legbye) + ', w ' + esc(i.wide) +
+               ', nb ' + esc(i.noball) + ', p ' + esc(i.penalties) + ')</div>' +
+
+             '<div class="mx-inn__total">' +
+               '<b>' + esc(i.runs) + '/' + esc(i.wickets) + '</b>' +
+               '<span>' + esc(i.overs) + ' overs</span>' +
+               '<span class="mx-inn__crr">Run rate <b>' + esc(i.run_rate) + '</b></span>' +
+             '</div>' +
+
+             (bowlRows
+               ? '<div class="mx-sub">Bowling</div>' +
+                 '<div class="mx-tablewrap"><table class="mx-table">' +
+                   '<thead><tr><th class="mx-col-main">Bowler</th><th>O</th><th>M</th><th>R</th>' +
+                   '<th>W</th><th>ER</th><th>Ext</th></tr></thead>' +
+                   '<tbody>' + bowlRows + '</tbody>' +
+                 '</table></div>'
+               : '') +
+
+             (fowRows
+               ? '<div class="mx-sub">Fall of wickets</div>' +
+                 '<div class="mx-tablewrap"><table class="mx-table">' +
+                   '<thead><tr><th class="mx-col-main">Batter</th><th>Score</th><th>Over</th><th>Wkt</th></tr></thead>' +
+                   '<tbody>' + fowRows + '</tbody>' +
+                 '</table></div>'
+               : '') +
+           '</div>';
 }
