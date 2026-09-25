@@ -792,6 +792,7 @@ body::-webkit-scrollbar-thumb {
   gap: 4px;
   overflow-x: auto;
   scrollbar-width: none;
+  justify-content: space-evenly;
 }
 
 .mx-tabs::-webkit-scrollbar { display: none; }

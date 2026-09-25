@@ -140,8 +140,8 @@ full_name = {'CSK':'Chennai Super Kings',
              'RR':'Rajasthan Royals',
              'RCB':'Royal Challengers Bengaluru',
              'SRH':'Sunrisers Hyderabad',
-             'AUS': 'Australia',
-             'ZIM': 'Zimbabwe',
+             'JPN': 'Japan',
+             'NEP': 'Nepal',
              'TBA':'TBA'}
 
 teamID = {610:['CSK','Chennai Super Kings'],
@@ -154,8 +154,8 @@ teamID = {610:['CSK','Chennai Super Kings'],
              629:['RR','Rajasthan Royals'],
              646:['RCB','Royal Challengers Bengaluru'],
              658:['SRH','Sunrisers Hyderabad'],
-             5:['AUS', 'Australia'],
-             493:['ZIM', 'Zimbabwe'],
+             15698:['JPN', 'Japan'],
+             10814:['NEP', 'Nepal'],
              127770:['TBA','TBA'],
              127775:['TBA','TBA']}
 
@@ -169,8 +169,8 @@ clr = {'CSK':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},  #fdcd05 f15c19,
         'RR':{'c1':'#ff69b4', 'c2':'#074ea2', 'c3':'#cba92b'},
         'RCB':{'c1':'#20285d', 'c2':'#444444', 'c3':'hsl(356, 99%, 45%)'},
         'SRH':{'c1':'#f26522', 'c2':'#ed1a37', 'c3':'#221f21'},
-        'AUS':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},
-        'ZIM':{'c1':'#20285d', 'c2':'#444444', 'c3':'hsl(356, 99%, 45%)'},
+        'JPN':{'c1':'#ffff3c', 'c2':'#fdcd05', 'c3':'#00adef'},
+        'NEP':{'c1':'#20285d', 'c2':'#444444', 'c3':'hsl(356, 99%, 45%)'},
         'TBA':{'c1':'#ffffff', 'c2':'#ffffff', 'c3':'#ffffff'}}
 
 ptclr = {'CSK':'#f9cd05',
@@ -182,8 +182,8 @@ ptclr = {'CSK':'#f9cd05',
         'PBKS':'#ed1b24',
         'RR':'#e60693',
         'RCB':'#ec1c24',
-        'AUS':'#f9cd05',
-        'ZIM':"#ec1c24",
+        'JPN':'#f9cd05',
+        'NEP':'#ec1c24',
         'SRH':'#ff822a'}
 
 sqclr = {
@@ -197,8 +197,8 @@ sqclr = {
     'RR': {'c1': '#df238f', 'c2': '#294096'},   # Pink to Blue
     'GT': {'c1': '#0b1c31', 'c2': '#e3ca7c'},   # Navy to Gold
     'LSG': {'c1': '#aa003b', 'c2': '#002554'},     # Light Blue to Gold
-    'AUS': {'c1': '#fcee21', 'c2': '#0b67b2'},
-    'ZIM': {'c1': 'hsl(356, 99%, 45%)', 'c2': '#20285d'}
+    'JPN': {'c1': '#fcee21', 'c2': '#0b67b2'},
+    'NEP': {'c1': 'hsl(356, 99%, 45%)', 'c2': '#20285d'}
 }
 
 def _mills_ratio(a):
@@ -1013,7 +1013,7 @@ def render_live_URL(tA, tB, mn, dt):
     dt = dt.strftime("%d-%B-%Y").lower()
     URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
     if mn == "71":
-        URL = "https://cmc2.sportskeeda.com/live-cricket-score/zimbabwe-vs-australia-3rd-odi-20-september-2026/ajax"
+        URL = "https://cmc2.sportskeeda.com/live-cricket-score/japan-vs-nepal-5th-match-26-september-2026/ajax"
     #URL = "https://cmc2.sportskeeda.com/live-cricket-score/bangladesh-women-vs-india-women-2nd-semi-final-20-september-2026/ajax"
     print(URL)
     return URL
@@ -1141,6 +1141,7 @@ def displayFR():
         dtt.append(B) #TB_Scr
         if i[10] is None:
             dtt.append('TBA') #Win-Team
+            dtt.append('TBA')
             dtt.append('TBA')
             dtt.append('TBA')
             dtt.append(['TBA','TBA'])
