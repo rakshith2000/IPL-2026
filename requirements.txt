@@ -6,6 +6,7 @@ requests
 gunicorn
 pytz
 psycopg2
+psycopg[binary]
 APScheduler
 flask_apscheduler
 newrelic
