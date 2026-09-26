@@ -1784,6 +1784,359 @@ a:hover .mx-potm__name { color: var(--mx-cyan); }
 .mx-over.is-big .mx-over__runs { color: var(--mx-green); }
 .mx-over.is-wkt .mx-over__runs { color: var(--mx-red); }
 
+/* ============================================================= GRAPHS panel
+   Manhattan, worm and the phase breakdown. js/graphs.js builds the two plots
+   as inline SVG sized to the container's real pixel width, so there is no
+   aspect-ratio box here: the card is as tall as the drawing it was handed.
+   --mxg-c is the colour of whichever innings is selected, set by the panel so
+   the chrome around a chart (the wicket key, the disclosure marker) can follow
+   it without the stylesheet knowing a thing about team colours. */
+
+.mxg-wrap { --mxg-surface: #1a2438; }
+
+/* the innings filter — one row, above everything it scopes */
+.mxg-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 14px;
+}
+
+.mxg-filter__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mx-ink-3);
+}
+
+.mxg-filter .mx-subtabs { margin-top: 0; }
+
+.mxg-card .mx-card__head small {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--mx-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- legend: always there for two series, never colour on its own --------- */
+
+.mxg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 10px 16px 0;
+}
+
+.mxg-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--mx-ink-2);
+  transition: opacity 180ms var(--mx-ease);
+}
+
+.mxg-legend__item.is-quiet { opacity: 0.5; }
+.mxg-legend__item img { width: 16px; height: 16px; object-fit: contain; }
+
+.mxg-legend__line {
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c, var(--mx-cyan));
+}
+
+/* --- the plot itself ------------------------------------------------------ */
+
+.mxg-fig {
+  margin: 0;
+  padding: 12px 14px 6px;
+}
+
+.mxg-fig--flat { padding: 4px 0 6px; }
+
+.mxg-stage { position: relative; }
+
+.mxg-plot {
+  display: block;
+  width: 100%;
+  border-radius: var(--mx-r-sm);
+  outline-offset: 3px;
+  touch-action: pan-y;               /* a swipe still scrolls the page */
+}
+
+.mxg-plot:focus-visible { outline: 2px solid var(--mx-cyan); }
+
+.mxg-svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.mxg-cursor { pointer-events: none; }
+.mxg-cross { pointer-events: none; }
+
+/* --- tooltip: values lead, the series name follows ----------------------- */
+
+.mxg-tip {
+  position: absolute;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 11px;
+  border: 1px solid var(--mx-line-2);
+  border-radius: var(--mx-r-sm);
+  background: rgba(9, 16, 31, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 30px rgba(2, 8, 22, 0.55);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.mxg-tip__head {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mx-ink-3);
+}
+
+.mxg-tip__row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--mx-ink-3);
+}
+
+/* a short stroke of the series colour, not a filled block */
+.mxg-tip__row i {
+  align-self: center;
+  width: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c, var(--mx-ink-3));
+}
+
+.mxg-tip__row b {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--mx-ink);
+}
+
+/* --- caption + the wicket key -------------------------------------------- */
+
+.mxg-cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--mx-ink-3);
+}
+
+.mxg-fig--flat .mxg-cap { padding-inline: 16px; }
+
+.mxg-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.mxg-key__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--mxg-c, var(--mx-ink-3));
+  box-shadow: 0 0 0 2px var(--mxg-surface);
+}
+
+/* A pointer discovers the readout by hovering; a finger has to be told it is
+   there, so the hint only shows where there is no hover to rely on. */
+.mxg-hint { display: none; }
+
+@media (hover: none) {
+  .mxg-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    padding: 2px 8px;
+    border: 1px solid var(--mx-line);
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: var(--mx-ink-3);
+  }
+}
+
+/* --- innings progression -------------------------------------------------- */
+
+.mxg-prog { display: flex; flex-direction: column; }
+
+.mxg-prog__inn {
+  padding: 4px 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  transition: opacity 180ms var(--mx-ease);
+}
+
+.mxg-prog__inn:last-child { border-bottom: 0; padding-bottom: 4px; }
+.mxg-prog__inn.is-quiet { opacity: 0.52; }
+
+.mxg-prog__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 10px 16px 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.mxg-prog__head img { width: 18px; height: 18px; object-fit: contain; }
+
+.mxg-prog__head small {
+  margin-left: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mx-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.mxg-phase {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 16px;
+}
+
+.mxg-phase__ov {
+  flex: none;
+  width: 44px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--mx-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.mxg-phase__track {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 10px;
+  border-radius: 0 5px 5px 0;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+/* grows from the baseline at the left: square there, 4px rounded data-end */
+.mxg-phase__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 0 4px 4px 0;
+  background: var(--c, var(--mx-cyan));
+}
+
+.mxg-pip {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 99px;
+  background: var(--c, var(--mx-cyan));
+  box-shadow: 0 0 0 2px var(--mxg-surface);   /* the surface ring, not a border */
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--ink, #fff);
+  transform: translate(-50%, -50%);
+}
+
+.mxg-phase__runs {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 86px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mx-ink-3);
+}
+
+.mxg-phase__runs b {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: var(--mx-ink);
+}
+
+.mxg-phase__runs small {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--mx-ink-3);
+  opacity: 0.85;
+}
+
+/* --- the table twin ------------------------------------------------------- */
+
+.mxg-data { border-top: 1px solid var(--mx-line); }
+
+.mxg-data > summary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--mx-ink-3);
+  cursor: pointer;
+  list-style: none;
+  transition: color 180ms var(--mx-ease), background 180ms var(--mx-ease);
+}
+
+.mxg-data > summary::-webkit-details-marker { display: none; }
+
+.mxg-data > summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-left-color: var(--mxg-c, var(--mx-ink-3));
+  transition: transform 180ms var(--mx-ease);
+}
+
+.mxg-data[open] > summary::before { transform: rotate(90deg) translateX(1px); }
+.mxg-data > summary:hover { color: var(--mx-ink); background: rgba(255, 255, 255, 0.04); }
+
+.mxg-table { font-size: 12px; }
+.mxg-table tbody td { font-variant-numeric: tabular-nums; }
+
 /* ============================================================== SQUAD panel */
 
 .mx-sq {
@@ -1997,10 +2350,10 @@ a:hover .mx-potm__name { color: var(--mx-cyan); }
   .mx-clock { padding: 4px 12px 12px; }
   .mx-clock__n { font-size: 1.15rem; }
 
-  /* all five tabs have to fit a 360px phone before the strip has to scroll */
+  /* all six tabs have to fit a 360px phone before the strip has to scroll */
   .mx-tabbar { border-radius: var(--mx-r-lg); padding: 6px; gap: 6px; }
   .mx-tabs { gap: 2px; }
-  .mx-tab { flex: 0 0 auto; padding: 0 11px; font-size: 11.5px; }
+  .mx-tab { flex: 0 0 auto; padding: 0 9px; font-size: 11px; }
 
   .mx-comm__ball { gap: 10px; padding: 11px 12px; }
   .mx-comm__over { padding: 11px 12px; }
@@ -2008,6 +2361,21 @@ a:hover .mx-potm__name { color: var(--mx-cyan); }
   .mx-over__left { width: 54px; }
   .mx-over__mid { padding-inline: 9px; }
   .mx-over__right { width: 42px; }
+
+  /* the phase card's subtitle is the one that pushes its head onto two lines */
+  .mxg-card[data-chart="prog"] .mx-card__head small { display: none; }
+
+  .mxg-fig { padding: 10px 10px 6px; }
+  .mxg-fig--flat .mxg-cap { padding-inline: 12px; }
+  .mxg-legend { gap: 6px 14px; padding: 9px 12px 0; }
+  .mxg-cap { font-size: 10.5px; }
+  .mxg-prog__head { padding: 9px 12px 0; }
+  .mxg-phase { gap: 9px; padding: 6px 12px; }
+  .mxg-phase__ov { width: 38px; font-size: 11px; }
+  .mxg-phase__runs { min-width: 72px; font-size: 9px; }
+  .mxg-phase__runs b { font-size: 0.95rem; }
+  .mxg-data > summary { padding: 9px 12px; }
+  .mxg-table { font-size: 11.5px; }
   .mx-potm { gap: 12px; padding: 13px; }
   .mx-table { font-size: 12px; }
   .mx-table thead th,
@@ -2017,6 +2385,23 @@ a:hover .mx-potm__name { color: var(--mx-cyan); }
   .mx-sq__pic { width: 28px; height: 28px; border-radius: 9px; }
   .mx-sq__name { font-size: 11.5px; }
   .mx-sq__role { font-size: 9.5px; }
+}
+
+/* Small phones. The phase row is the first thing to get cramped: the runs
+   column drops its "down" note and the bars take the space back. */
+@media (max-width: 420px) {
+  .mx-tab { padding: 0 8px; font-size: 10.5px; }
+
+  .mxg-filter { gap: 5px 9px; }
+  .mxg-filter__label { font-size: 9px; letter-spacing: 0.1em; }
+  .mxg-fig { padding: 8px 6px 6px; }
+  .mxg-phase { gap: 7px; padding: 6px 10px; }
+  .mxg-phase__ov { width: 33px; font-size: 10px; }
+  .mxg-phase__runs { min-width: 56px; }
+  .mxg-phase__runs small { display: none; }
+  .mxg-pip { min-width: 16px; height: 16px; font-size: 8px; }
+  .mxg-tip { padding: 7px 9px; }
+  .mxg-tip__row b { font-size: 12px; }
 }
 
 /* the bottom nav only shows on phones — keep the last card clear of it */

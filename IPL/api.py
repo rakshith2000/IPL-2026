@@ -42,6 +42,16 @@ def api_match_overs(match):
     """Return JSON for the match overs (used by API)."""
     return jsonify(get_matchOvers(match))
 
+@api.route('/api/match-<match>/Graphs')
+def api_match_graphs(match):
+    """Manhattan / worm / phase charts.
+
+    They are drawn from the same ball-by-ball innings feed the overs list
+    reads, so this is get_matchOvers under a second name rather than its own
+    fetch — one upstream call either way, and the two tabs can never disagree.
+    """
+    return jsonify(get_matchOvers(match))
+
 @api.route('/api/match-<match>/liveSquad')
 def api_liveSquad(match):
     """Return JSON for the liveSquad (used by API)."""

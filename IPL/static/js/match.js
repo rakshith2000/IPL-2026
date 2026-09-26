@@ -15,13 +15,14 @@
 
   /* ------------------------------------------------------------- constants */
 
-  var TABS = ['matchInfo', 'liveScore', 'scoreCard', 'Overs', 'liveSquad'];
+  var TABS = ['matchInfo', 'liveScore', 'scoreCard', 'Overs', 'Graphs', 'liveSquad'];
 
   var PANEL = {
     matchInfo: { file: 'info.js', fn: 'renderTabInfo' },
     liveScore: { file: 'live.js', fn: 'renderTabLive' },
     scoreCard: { file: 'scorecard.js', fn: 'renderTabScorecard' },
     Overs: { file: 'overs.js', fn: 'renderTabOvers' },
+    Graphs: { file: 'graphs.js', fn: 'renderTabGraphs' },
     liveSquad: { file: 'livesquad.js', fn: 'renderTabSquad' }
   };
 
@@ -161,29 +162,29 @@
     return String(b.teamRuns || 0);
   }
 
+  /* What one delivery put on the board, extras included. The graphs panel
+     walks a worm ball by ball, so the sum below is built from this rather
+     than the two carrying separate copies of the same branch list. */
+  function ballRuns(b) {
+    if (b.isWicket) {
+      if (b.isByes) return b.runsByes || 0;
+      if (b.isLegByes) return b.runsLegByes || 0;
+      if (b.isWide) return b.runsWide || 0;
+      return (b.teamRuns || 0) > 0 ? b.teamRuns || 0 : 0;
+    }
+    if (b.isWide) return (b.runsWide || 0) > 1 ? (b.runsWide || 0) : 1;
+    if (b.isNoBall) {
+      if (b.isByes) return (b.runsByes || 0) + 1;
+      if (b.isLegByes) return (b.runsLegByes || 0) + 1;
+      return ((b.runsScored || 0) > 0 ? b.runsScored : 0) + (b.extras || 1);
+    }
+    if (b.isLegByes) return (b.runsLegByes || 0) > 0 ? b.runsLegByes : 0;
+    if (b.isByes) return (b.runsByes || 0) > 0 ? b.runsByes : 0;
+    return b.teamRuns || 0;
+  }
+
   function overRuns(over) {
-    var runs = 0;
-    (over.balls || []).forEach(function (b) {
-      if (b.isWicket) {
-        if (b.isByes) runs += b.runsByes || 0;
-        else if (b.isLegByes) runs += b.runsLegByes || 0;
-        else if (b.isWide) runs += b.runsWide || 0;
-        else if ((b.teamRuns || 0) > 0) runs += b.teamRuns || 0;
-      } else if (b.isWide) {
-        runs += (b.runsWide || 0) > 1 ? (b.runsWide || 0) : 1;
-      } else if (b.isNoBall) {
-        if (b.isByes) runs += (b.runsByes || 0) + 1;
-        else if (b.isLegByes) runs += (b.runsLegByes || 0) + 1;
-        else runs += ((b.runsScored || 0) > 0 ? b.runsScored : 0) + (b.extras || 1);
-      } else if (b.isLegByes) {
-        runs += (b.runsLegByes || 0) > 0 ? b.runsLegByes : 0;
-      } else if (b.isByes) {
-        runs += (b.runsByes || 0) > 0 ? b.runsByes : 0;
-      } else {
-        runs += b.teamRuns || 0;
-      }
-    });
-    return runs;
+    return (over.balls || []).reduce(function (runs, b) { return runs + ballRuns(b); }, 0);
   }
 
   /* The striker is only named in the commentary line, so the list of batters
@@ -296,7 +297,7 @@
     esc: esc, tint: tint, crest: crest, ball: ball, ballClass: ballClass,
     playerHref: playerHref, playerImg: playerImg, playerPic: playerPic,
     toast: toast, istNow: istNow,
-    ballScore: ballScore, overRuns: overRuns, overBatsmen: overBatsmen,
+    ballScore: ballScore, ballRuns: ballRuns, overRuns: overRuns, overBatsmen: overBatsmen,
     stripBallScore: stripBallScore,
     playerLink: playerLink, awardCard: awardCard,
     subtab: subtab, wireSubtabs: wireSubtabs, activePane: activePane
@@ -624,7 +625,11 @@
       var on = btn.getAttribute('data-tab') === currentTab;
       btn.setAttribute('aria-selected', String(on));
       btn.tabIndex = on ? 0 : -1;
-      if (on) panelEl.setAttribute('aria-labelledby', btn.id);
+      if (!on) return;
+      panelEl.setAttribute('aria-labelledby', btn.id);
+      /* the strip scrolls on a narrow phone, so the tab that is on has to
+         bring itself into view — otherwise nothing on screen says which */
+      if (btn.scrollIntoView) btn.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     });
   }
 
