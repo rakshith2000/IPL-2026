@@ -1,11 +1,12 @@
 /* ==========================================================================
    IPL 2026 · Match centre — Graphs panel
    --------------------------------------------------------------------------
-   Three reads of the same innings the Overs tab lists: a Manhattan of runs per
-   over, a worm with both innings laid over each other, and the phase
-   breakdown. Everything is derived from the ball-by-ball feed already on the
-   payload — /api/match-<no>/Graphs is the overs route under a second name, so
-   the two tabs can never disagree about a score.
+   Four reads of the same innings the Overs tab lists: a Manhattan of runs per
+   over, a worm with both innings laid over each other, the same worm divided
+   by the overs it took (the run rate), and the phase breakdown. Everything is
+   derived from the ball-by-ball feed already on the payload —
+   /api/match-<no>/Graphs is the overs route under a second name, so the two
+   tabs can never disagree about a score.
 
    The charts are inline SVG built against the container's real pixel width and
    redrawn on resize, rather than one drawing stretched to fit by a viewBox.
@@ -236,9 +237,10 @@
     if (!overs.length) return null;
 
     var rows = [];                        /* one per over */
-    var trail = [{ x: 0, y: 0 }];         /* cumulative, a point per delivery */
+    var trail = [{ x: 0, y: 0 }];         /* cumulative runs, a point per delivery */
+    var rates = [];                       /* cumulative run rate, a point per over */
     var falls = [];                       /* every wicket, in order */
-    var byOver = [{ runs: 0, wkts: 0 }];  /* what the crosshair reads */
+    var byOver = [{ runs: 0, wkts: 0, rate: 0 }];   /* what the crosshair reads */
     var running = 0, down = 0;
 
     overs.forEach(function (o) {
@@ -264,8 +266,17 @@
       trail[trail.length - 1].y = end;     /* pin the over back onto the feed */
       running = end;
       down += wkts;
-      rows.push({ over: o.overNumber, runs: runs, wkts: wkts, end: end, down: down });
-      byOver[o.overNumber] = { runs: end, wkts: down };
+
+      /* Overs actually faced, not the over number: the last over of a live
+         innings is part-bowled, and dividing by a whole over there would
+         understate the rate by up to a sixth. */
+      var faced = trail[trail.length - 1].x;
+      var rate = faced > 0 ? end / faced : 0;
+
+      rows.push({ over: o.overNumber, runs: runs, wkts: wkts, end: end, down: down,
+                  faced: faced, rate: rate });
+      rates.push({ x: faced, y: rate });
+      byOver[o.overNumber] = { runs: end, wkts: down, rate: rate };
     });
 
     /* a hole in the feed must not read as an over where the score went to zero */
@@ -273,12 +284,15 @@
 
     return {
       abv: abv, full: full || abv,
-      rows: rows, trail: trail, falls: falls, byOver: byOver,
+      rows: rows, trail: trail, rates: rates, falls: falls, byOver: byOver,
       total: running, wkts: down,
+      peakRate: rates.reduce(function (a, p) { return Math.max(a, p.y); }, 0),
       lastOver: rows[rows.length - 1].over,
       lastX: trail[trail.length - 1].x
     };
   }
+
+  function runRate(m) { return m.lastX > 0 ? m.total / m.lastX : 0; }
 
   /* "9" for nine complete overs, "9.3" three balls into the tenth. */
   function oversText(x) {
@@ -393,13 +407,13 @@
   /* The axis furniture both plots share: the horizontal grid, its value
      labels, and the "Runs" / "Ov" captions. "Ov" rides the same baseline as
      the over numbers so the card never has to grow a second label row. */
-  function frame(g, M, scale, plot) {
+  function frame(g, M, scale, plot, axis) {
     var out = '';
     scale.ticks.forEach(function (v) {
       out += rule(g.padL, plot.y(v), g.padL + g.plotW, plot.y(v), v === 0 ? AXIS : GRID);
       out += label(g.padL - 7, plot.y(v) + M.font * 0.36, String(v), { anchor: 'end', size: M.font });
     });
-    out += label(g.padL - 7, M.font + 1, 'Runs', { anchor: 'start', size: M.font });
+    out += label(g.padL - 7, M.font + 1, axis || 'Runs', { anchor: 'start', size: M.font });
     out += label(g.w - 2, g.padT + g.plotH + M.font + 9, 'Ov',
                  { anchor: 'end', size: M.font * 0.92 });
     return out;
@@ -482,7 +496,46 @@
 
   /* ------------------------------------------------------------------ worm */
 
-  function worm(models, colours, pick, w, M) {
+  /* The worm and the run-rate chart are one drawing read two ways: same x, same
+     two innings, same emphasis and crosshair — only the y differs. A spec says
+     what to plot, what to mark on it, and how to say a value out loud. */
+  var LINES = {
+    worm: {
+      axis: 'Runs',
+      caption: 'Cumulative runs by over',
+      series: function (m) { return m.trail; },
+      marks: function (m) { return m.falls; },        /* a dot per wicket */
+      peak: function (m) { return m.total; },
+      floor: 10, ticks: 5,
+      endAt: function (m) { return { x: m.lastX, y: m.total }; },
+      endText: function (m) { return m.abv + ' ' + score(m); },
+      valueAt: function (m, ov) { return ov > m.lastOver ? null : m.byOver[ov].runs; },
+      readAt: function (m, ov) {
+        return ov < 1 ? '0-0' : m.byOver[ov].runs + '-' + m.byOver[ov].wkts;
+      },
+      tell: function (m) { return m.abv + ' ' + score(m) + ' off ' + oversText(m.lastX) + ' overs'; }
+    },
+    rate: {
+      axis: 'RPO',
+      caption: 'Run rate by over',
+      series: function (m) { return m.rates; },
+      /* no wicket dots here: the rate chart is about the shape of the scoring,
+         and the worm above it already carries where the wickets fell */
+      marks: function () { return []; },
+      peak: function (m) { return m.peakRate; },
+      /* a run rate lives in a narrow band, so it gets a finer grid than the
+         worm — at five ticks a 0–15 axis lands on fives and buries the 6-to-13
+         stretch that every over of the match actually happens in */
+      floor: 6, ticks: 6,
+      endAt: function (m) { return { x: m.lastX, y: runRate(m) }; },
+      endText: function (m) { return m.abv + ' ' + runRate(m).toFixed(2); },
+      valueAt: function (m, ov) { return ov < 1 || ov > m.lastOver ? null : m.byOver[ov].rate; },
+      readAt: function (m, ov) { return ov < 1 ? '—' : m.byOver[ov].rate.toFixed(2) + ' rpo'; },
+      tell: function (m) { return m.abv + ' at ' + runRate(m).toFixed(2) + ' an over'; }
+    }
+  };
+
+  function lineChart(models, colours, pick, w, M, spec) {
     /* padR clears the "Ov" caption, which rides the over-number baseline */
     var padL = M.padL, padR = 30;
     var padT = Math.round(M.dot + M.font + 16);
@@ -491,14 +544,14 @@
     var plotH = Math.max(60, M.h - padT - padB);
 
     var xMax = Math.max(1, Math.ceil(models.reduce(function (a, m) { return Math.max(a, m.lastX); }, 0)));
-    var peak = models.reduce(function (a, m) { return Math.max(a, m.total); }, 0);
-    var scale = ticksTo(Math.max(peak, 10), 5);
+    var peak = models.reduce(function (a, m) { return Math.max(a, spec.peak(m)); }, 0);
+    var scale = ticksTo(Math.max(peak, spec.floor), spec.ticks);
     var x = function (v) { return padL + (v / xMax) * plotW; };
     var y = function (v) { return padT + plotH - (v / scale.max) * plotH; };
     var geo = { padL: padL, padT: padT, plotW: plotW, plotH: plotH, w: w,
                 xMax: xMax, yMax: scale.max };
 
-    var g = frame(geo, M, scale, { y: y });
+    var g = frame(geo, M, scale, { y: y }, spec.axis);
 
     var stride = Math.max(1, Math.ceil(xMax / Math.max(2, Math.floor(plotW / M.tick))));
     for (var ov = 0; ov <= xMax; ov += stride) {
@@ -514,7 +567,10 @@
     order.forEach(function (i) {
       var m = models[i], colour = colours[i];
       var on = models.length < 2 || i === pick;
-      var d = m.trail.map(function (p, k) {
+      var pts = spec.series(m);
+      if (!pts.length) return;
+
+      var d = pts.map(function (p, k) {
         return (k ? 'L' : 'M') + n2(x(p.x)) + ' ' + n2(y(p.y));
       }).join('');
 
@@ -522,12 +578,13 @@
                          'stroke-linejoin': 'round', 'stroke-linecap': 'round',
                          opacity: on ? 1 : 0.42 });
 
+      var tip = spec.endAt(m);
       var marks = '';
-      m.falls.forEach(function (f) { marks += dot(x(f.x), y(f.y), M.dot, colour); });
-      marks += dot(x(m.lastX), y(m.total), M.dot + 1.5, colour);
+      spec.marks(m).forEach(function (f) { marks += dot(x(f.x), y(f.y), M.dot, colour); });
+      marks += dot(x(tip.x), y(tip.y), M.dot + 1.5, colour);
       g += tag('g', { opacity: on ? 1 : 0.42 }, marks);
 
-      ends.push({ x: x(m.lastX), y: y(m.total), m: m, on: on });
+      ends.push({ x: x(tip.x), y: y(tip.y), m: m, on: on });
     });
 
     /* Direct end labels, but only while the two ends are far enough apart to
@@ -540,7 +597,7 @@
       ends.forEach(function (e) {
         var near = e.x > padL + plotW - 56;
         g += label(near ? e.x - M.dot - 4 : e.x + M.dot + 4, e.y - M.dot - 6,
-                   e.m.abv + ' ' + score(e.m),
+                   spec.endText(e.m),
                    { anchor: near ? 'end' : 'start', size: M.font, weight: 700,
                      fill: e.on ? INK2 : INK3 });
       });
@@ -557,9 +614,7 @@
     g += tag('rect', { x: n2(padL), y: n2(padT), width: n2(plotW), height: n2(plotH),
                        fill: 'transparent' });
 
-    var aria = 'Cumulative runs by over — ' + models.map(function (m) {
-      return m.abv + ' ' + score(m) + ' off ' + oversText(m.lastX) + ' overs';
-    }).join(', ') + '.';
+    var aria = spec.caption + ' — ' + models.map(spec.tell).join(', ') + '.';
 
     return { svg: svgOpen(w, M.h, aria) + g + '</svg>', geo: geo };
   }
@@ -678,8 +733,8 @@
     if (!models.length) {
       root.innerHTML =
         '<div class="mx-empty"><span class="material-icons-round">insights</span>' +
-        '<b>No graphs yet</b><p>The Manhattan, the worm and the phase breakdown ' +
-        'draw themselves as soon as the first over is bowled.</p></div>';
+        '<b>No graphs yet</b><p>The Manhattan, the worm, the run rate and the ' +
+        'phase breakdown draw themselves as soon as the first over is bowled.</p></div>';
       live = null;
       return;
     }
@@ -762,6 +817,19 @@
         '<div data-table></div>' +
       '</section>' +
 
+      /* the same two innings again, divided by the overs they took: the worm
+         says who is ahead, this says who is going faster */
+      '<section class="mx-card mxg-card" data-chart="rate">' +
+        '<div class="mx-card__head"><span class="material-icons-round">speed</span>' +
+          'Run rate<small data-readout></small></div>' + legend +
+        '<figure class="mxg-fig">' + stage('Run rate by over.') +
+          '<figcaption class="mxg-cap">Runs per over as the innings stood at the end of ' +
+            'each over — the worm above, divided by the overs it took.' +
+            '<span class="mxg-hint">Tap or drag for any over</span></figcaption>' +
+        '</figure>' +
+        '<div data-table></div>' +
+      '</section>' +
+
       '<section class="mx-card mxg-card" data-chart="prog">' +
         '<div class="mx-card__head"><span class="material-icons-round">splitscreen</span>' +
           'Innings progression<small>Powerplay · Middle · Death</small></div>' +
@@ -803,29 +871,39 @@
       ['Over', 'Runs', 'Wkts', 'Score'],
       sel.rows.map(function (r) { return [r.over, r.runs, r.wkts || '—', r.end + '-' + r.down]; }));
 
-    /* --- worm ------------------------------------------------------------- */
-    var wCard = live.root.querySelector('[data-chart="worm"]');
-    var wPlot = wCard.querySelector('.mxg-plot');
-    var wW = wPlot.clientWidth || live.root.clientWidth || 320;
-    var wDrawn = worm(models, colours, pick, wW, metrics(wW));
-    wPlot.innerHTML = wDrawn.svg;
-    wPlot.__chart = { kind: 'worm', geo: wDrawn.geo, models: models, colours: colours };
-    wCard.querySelector('[data-readout]').textContent =
-      models.map(function (m) { return m.abv + ' ' + score(m); }).join('  ·  ');
-    wCard.querySelectorAll('.mxg-legend__item').forEach(function (el) {
-      el.classList.toggle('is-quiet', models.length > 1 && +el.getAttribute('data-s') !== pick);
-    });
+    /* --- worm, then the same picture read as a rate ------------------------ */
+    [
+      { id: 'worm', spec: LINES.worm,
+        readout: models.map(function (m) { return m.abv + ' ' + score(m); }).join('  ·  '),
+        summary: 'View the innings over by over',
+        cell: function (m, ov) { return m.byOver[ov].runs + '-' + m.byOver[ov].wkts; } },
+      { id: 'rate', spec: LINES.rate,
+        readout: models.map(function (m) { return m.abv + ' ' + runRate(m).toFixed(2); }).join('  ·  '),
+        summary: 'View the run rate over by over',
+        cell: function (m, ov) { return m.byOver[ov].rate.toFixed(2); } }
+    ].forEach(function (chart) {
+      var card = live.root.querySelector('[data-chart="' + chart.id + '"]');
+      var plot = card.querySelector('.mxg-plot');
+      var width = plot.clientWidth || live.root.clientWidth || 320;
+      var drawn = lineChart(models, colours, pick, width, metrics(width), chart.spec);
 
-    var wRows = [];
-    for (var ov = 1; ov <= wDrawn.geo.xMax; ov++) {
-      wRows.push([ov].concat(models.map(function (m) {
-        if (ov > m.lastOver) return '—';
-        var at = m.byOver[ov];
-        return at.runs + '-' + at.wkts;
-      })));
-    }
-    setTable(wCard.querySelector('[data-table]'), 'View the innings over by over',
-      ['Over'].concat(models.map(function (m) { return m.abv; })), wRows);
+      plot.innerHTML = drawn.svg;
+      plot.__chart = { kind: chart.id, spec: chart.spec, geo: drawn.geo,
+                       models: models, colours: colours };
+      card.querySelector('[data-readout]').textContent = chart.readout;
+      card.querySelectorAll('.mxg-legend__item').forEach(function (el) {
+        el.classList.toggle('is-quiet', models.length > 1 && +el.getAttribute('data-s') !== pick);
+      });
+
+      var rows = [];
+      for (var ov = 1; ov <= drawn.geo.xMax; ov++) {
+        rows.push([ov].concat(models.map(function (m) {
+          return ov > m.lastOver ? '—' : chart.cell(m, ov);
+        })));
+      }
+      setTable(card.querySelector('[data-table]'), chart.summary,
+        ['Over'].concat(models.map(function (m) { return m.abv; })), rows);
+    });
 
     /* --- progression ------------------------------------------------------ */
     var pCard = live.root.querySelector('[data-chart="prog"]');
@@ -868,7 +946,7 @@
       rows: chart.models.map(function (m, i) {
         return {
           c: chart.colours[i], name: m.abv,
-          value: ov > m.lastOver ? 'all out / innings closed' : m.byOver[ov].runs + '-' + m.byOver[ov].wkts
+          value: ov > m.lastOver ? 'innings closed' : chart.spec.readAt(m, ov)
         };
       })
     };
@@ -925,11 +1003,12 @@
     var r = metrics(plot.clientWidth || 320).dot + 1;
     cross.querySelectorAll('.mxg-cross__dot').forEach(function (d) {
       var m = chart.models[+d.getAttribute('data-s')];
-      if (!m || ov > m.lastOver) { d.setAttribute('r', 0); return; }
+      var v = m ? chart.spec.valueAt(m, ov) : null;
+      if (v === null || v === undefined) { d.setAttribute('r', 0); return; }
       d.setAttribute('r', n2(r));
       d.setAttribute('cx', n2(info.x));
       d.setAttribute('cy', n2(chart.geo.padT + chart.geo.plotH -
-                             (m.byOver[ov].runs / chart.geo.yMax) * chart.geo.plotH));
+                             (v / chart.geo.yMax) * chart.geo.plotH));
     });
   }
 

@@ -45,6 +45,16 @@
     </span>
 {%- endmacro %}
 
+{#  The masthead tint. GT and MI lead with a near-black first colour, so they
+    take their second one here — the same pick the fixtures list makes. #}
+{% macro hue(t) -%}
+    {%- set c = sqclr.get(t) -%}
+    {%- if not c -%}#4f8cff
+    {%- elif t in ['GT', 'MI'] -%}{{ c['c2'] }}
+    {%- else -%}{{ c['c1'] }}
+    {%- endif -%}
+{%- endmacro %}
+
 {% set back_href = url_for('main.todayMatch') if source == 'liveMatches'
                    else (url_for('main.displayFR', fteam=fteam) if fteam and fteam != 'None'
                          else url_for('main.displayFR')) %}
@@ -56,7 +66,7 @@
     {#- the masthead is the top half of the scoreboard card: identity and
         meta here, the score itself in #scoreboard-root right underneath -#}
     <header class="mx-hero"
-            style="--ha: {{ sqclr.get(A, {}).get('c1', '#4f8cff') }}; --hb: {{ sqclr.get(B, {}).get('c1', '#a758ff') }};">
+            style="--ha: {{ hue(A) | trim }}; --hb: {{ hue(B) | trim }};">
 
         {#- both crests bleed out of the side edges, turned right down: the
             header carries the two teams without competing with the score -#}
@@ -91,10 +101,13 @@
         </div>
 
         <div class="mx-hero__meta">
-            <span>
+            {#- the when-chip carries the colour in this row; venue and TV stay quiet -#}
+            <span class="mx-hero__when">
                 <span class="material-icons-round">event</span>
                 <b>{{ start.strftime('%a, %d %b %Y') }}</b>
-                &middot; {{ start.strftime('%I:%M %p').lstrip('0') }} IST
+                <i class="mx-hero__dot">&middot;</i>
+                <em class="mx-hero__time">{{ start.strftime('%I:%M %p').lstrip('0') }}</em>
+                <small>IST</small>
             </span>
             <span class="mx-hero__venue">
                 <span class="material-icons-round">place</span><span>{{ matchDT.Venue }}</span>
