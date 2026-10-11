@@ -91,19 +91,35 @@
     return '/team-' + encodeURIComponent(team) + '/squad_details/' + encodeURIComponent(name);
   }
 
+  var DEFAULT_PIC = '/static/images/Default.png';
+
   /* MICRO is the small headshot set; the full-size one is the fallback, then
      the shared silhouette. */
   function playerImg(team, name, micro) {
-    return '/static/images/squads/' + encodeURIComponent(team) + (micro ? '-MICRO' : '') +
-           '/' + encodeURIComponent(String(name).replace(/ /g, '-')) + '.png';
+    return ('/static/images/squads/' + encodeURIComponent(team) + (micro ? '-MICRO' : '') +
+            '/' + encodeURIComponent(String(name).replace(/ /g, '-')) + '.png')
+           /* encodeURIComponent leaves the apostrophe alone, and these URLs get
+              embedded in a single-quoted string inside the onerror attribute, so
+              a "D'Arcy" would otherwise close it early. */
+           .replace(/'/g, '%27');
   }
 
+  /* Walk the whole chain, not just one step: a player the feed names but the
+     squad table does not have arrives here with team 'NA', so the MICRO and the
+     full-size path both 404. Clearing onerror on the first miss stopped the
+     silhouette from ever loading and left those as broken-image icons. */
   function playerPic(team, name, cls, micro) {
-    var alt = esc(name);
-    var fallback = micro ? playerImg(team, name, false) : '/static/images/Default.png';
+    var steps = micro !== false
+      ? [playerImg(team, name, false), DEFAULT_PIC]
+      : [DEFAULT_PIC];
+    var onerr = "this.onerror=null;this.src='" + DEFAULT_PIC +
+                "';this.classList.add('is-fallback');";
+    for (var i = steps.length - 2; i >= 0; i--) {
+      onerr = 'this.onerror=function(){' + onerr + "};this.src='" + steps[i] + "';";
+    }
     return '<img class="' + (cls || '') + '" src="' + playerImg(team, name, micro !== false) + '" ' +
-           'alt="' + alt + '" loading="lazy" ' +
-           'onerror="this.onerror=null;this.src=\'' + fallback + '\';">';
+           'alt="' + esc(name) + '" loading="lazy" ' +
+           'onerror="' + onerr + '">';
   }
 
   /* A ball's colour is decided by what it did, not by who bowled it. */

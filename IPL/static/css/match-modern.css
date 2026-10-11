@@ -1769,6 +1769,10 @@ a:hover .mx-potm__name { color: var(--mx-cyan); }
   color: var(--mx-ink-3);
 }
 
+/* The squad panel heads a head-to-head pair of columns, so its title belongs
+   over the gap between them rather than against the left edge. */
+.mx-sub--mid { text-align: center; }
+
 /* top performers */
 .mx-top {
   display: grid;

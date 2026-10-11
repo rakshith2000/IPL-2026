@@ -68,7 +68,8 @@ function renderTabSquad(data) {
         const left = (squads[0][key] || []).map(p => row(squads[0], p)).join('');
         const right = (squads[1][key] || []).map(p => row(squads[1], p)).join('');
         if (!left && !right) return '';
-        return '<div class="mx-sub">' + esc(title) + '</div>' +
+        /* centred, because the title sits over two columns rather than one */
+        return '<div class="mx-sub mx-sub--mid">' + esc(title) + '</div>' +
                '<div class="mx-sq">' +
                  '<div class="mx-sq__col">' + left + '</div>' +
                  '<div class="mx-sq__col mx-sq__col--r">' + right + '</div>' +

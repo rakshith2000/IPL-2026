@@ -708,6 +708,9 @@ body::-webkit-scrollbar-thumb {
   height: 100%;
   object-fit: contain;
   border-radius: 2px;
+  position: relative;
+  top: 0;
+  left: 13px;
 }
 
 .pl-tags {
