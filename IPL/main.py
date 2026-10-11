@@ -765,7 +765,7 @@ def get_player_stats(URL_ID):
 
 STUB_PLAYER_STATS = True
 
-_STUB_SEASONS = ('2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018')
+_STUB_SEASONS = ('2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009', '2008')
 
 _STUB_SHAPES = {
     'all':  _STUB_SEASONS,                               # ever-present
@@ -1725,8 +1725,20 @@ def squad_details(team, name):
     stats = stub_player_stats(request.args.get('stats'), sq.Role, sq.URL_ID)
     if stats is None:
         stats = get_player_stats(sq.URL_ID)
-    print(json.dumps(stats, indent=4))
-    return render_template('squad_details.html', sq=sq, clr=clr[team], team=team, age=age, sqclr=sqclr[team], stats=stats)
+
+    # Team-mates in the order the squad page lists them, so the prev/next arrows
+    # walk the squad the same way the reader just saw it. Wraps at both ends.
+    mates = sorted(Squad.query.filter_by(Team=team).order_by(Squad.Name).all(),
+                   key=lambda p: (p.Captain != 'Y', p.Name or ''))
+    here = next((i for i, p in enumerate(mates) if p.id == sq.id), None)
+    step = (lambda d: mates[(here + d) % len(mates)]) if here is not None and len(mates) > 1 else (lambda d: None)
+
+    # clr/sqclr go through whole: the shared points.html colour macros take the
+    # full maps, not one team's slice.
+    return render_template('squad_details.html', sq=sq, team=team, age=age, stats=stats,
+                           fn=full_name, clr=clr, sqclr=sqclr,
+                           prev_p=step(-1), next_p=step(1),
+                           squad_n=len(mates), squad_i=(here + 1) if here is not None else 0)
 
 def get_matchInfo(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
