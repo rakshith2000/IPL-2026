@@ -6,20 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests, uuid
 from datetime import datetime, timedelta
 
-liveURL_Prefix = "https://cmc2.sportskeeda.com/live-cricket-score/"
-liveURL_Suffix = "/ajax"
-
-full_name = {'CSK':'Chennai Super Kings',
-             'DC':'Delhi Capitals',
-             'KKR':'Kolkata Knight Riders',
-             'GT':'Gujarat Titans',
-             'LSG':'Lucknow Super Giants',
-             'MI':'Mumbai Indians',
-             'PBKS':'Punjab Kings',
-             'RR':'Rajasthan Royals',
-             'RCB':'Royal Challengers Bengaluru',
-             'SRH':'Sunrisers Hyderabad',
-             'TBA':'TBA'}
+# Same season reference data main.py reads, out of config.json
+from .config import liveURL_Prefix, liveURL_Suffix, full_name
 
 def render_live_URL(tA, tB, mn, dt):
     teamAB = full_name[tA].replace(" ", "-").lower() + "-vs-" + full_name[tB].replace(" ", "-").lower()

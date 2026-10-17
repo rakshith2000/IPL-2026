@@ -67,7 +67,7 @@ def seed_squad():
 
 
 def seed_toppers():
-    from .main import statsList          # local import avoids a circular import
+    from .config import statsList
     wanted = ['Most POTM'] + [name for group in statsList.values() for name in group]
     have = {c for (c,) in db.session.query(Toppers.category)}
     new = [Toppers(category=c, stats=None) for c in wanted if c not in have]

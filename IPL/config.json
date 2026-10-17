@@ -1,0 +1,194 @@
+{
+  "playoffs": {
+    "Q1": "Qualifier 1",
+    "E": "Eliminator",
+    "Q2": "Qualifier 2",
+    "F": "Final"
+  },
+
+  "urls": {
+    "live": {
+      "prefix": "https://cmc2.sportskeeda.com/live-cricket-score/",
+      "suffix": "/ajax"
+    },
+    "stats": "https://ipl-stats-sports-mechanic.s3.ap-south-1.amazonaws.com/ipl/feeds/stats/",
+    "player_stats": "https://ipl-stats-sports-mechanic.s3.ap-south-1.amazonaws.com/ipl/feeds/stats/player/",
+    "toppers": {
+      "orange": "https://www.sportskeeda.com/go/ipl/orange-cap",
+      "purple": "https://www.sportskeeda.com/go/ipl/purple-cap",
+      "sr": "https://www.sportskeeda.com/go/ipl/best-strike-rate",
+      "6s": "https://www.sportskeeda.com/go/ipl/most-sixes",
+      "hs": "https://www.sportskeeda.com/go/ipl/highest-scores",
+      "bbi": "https://www.sportskeeda.com/go/ipl/best-bowling-average"
+    }
+  },
+
+  "stats_list": {
+    "batting_stats": {
+      "Most Runs": "toprunsscorers",
+      "Most Sixes": "mostsixes",
+      "Most Sixes (Innings)": "mostsixesinnings",
+      "Most Fours": "mostfours",
+      "Most Fours (Innings)": "mostfoursinnings",
+      "Most 50s": "mostfifties",
+      "Most 100s": "mostcenturies",
+      "Fastest 50s": "fastestfifties",
+      "Fastest 100s": "fastestcenturies",
+      "Highest Scores": "highestindividualscorers",
+      "Best Strike Rate": "higheststrikeratetournament",
+      "Best Strike Rate (Innings)": "higheststrikerateinnings",
+      "Best Batting Averages": "highestaverages"
+    },
+    "bowling_stats": {
+      "Most Wickets": "mostwickets",
+      "Most Maidens": "mostmaidenoversbowledtournament",
+      "Most Dot Balls": "mostdotballsbowledtournament",
+      "Most Dot Balls (Innings)": "mostdotballsbowledinnings",
+      "Best Bowling Averages": "bestaverages",
+      "Best Bowling Economy": "besteconomyrates",
+      "Best Bowling Economy (Innings)": "besteconomyratesinnings",
+      "Best Bowling Strike Rate": "beststrikeratestournament",
+      "Best Bowling Strike Rate (Innings)": "beststrikeratesinnings",
+      "Best Bowling Figures": "bestbowlingfigures",
+      "Most Runs Conceded (Innings)": "mostrunsconceededinnings",
+      "Most Hat-tricks": "mosthattricks"
+    },
+    "awards": {
+      "Most Valuable Players": "mvpPlayersList",
+      "Fair Play Award": "fairplayList"
+    }
+  },
+
+  "teams": {
+    "full_name": {
+      "CSK": "Chennai Super Kings",
+      "DC": "Delhi Capitals",
+      "KKR": "Kolkata Knight Riders",
+      "GT": "Gujarat Titans",
+      "LSG": "Lucknow Super Giants",
+      "MI": "Mumbai Indians",
+      "PBKS": "Punjab Kings",
+      "RR": "Rajasthan Royals",
+      "RCB": "Royal Challengers Bengaluru",
+      "SRH": "Sunrisers Hyderabad",
+      "TBA": "TBA"
+    },
+
+    "ids": {
+      "610": ["CSK", "Chennai Super Kings"],
+      "612": ["DC", "Delhi Capitals"],
+      "123216": ["GT", "Gujarat Titans"],
+      "591": ["KKR", "Kolkata Knight Riders"],
+      "123214": ["LSG", "Lucknow Super Giants"],
+      "593": ["MI", "Mumbai Indians"],
+      "627": ["PBKS", "Punjab Kings"],
+      "629": ["RR", "Rajasthan Royals"],
+      "646": ["RCB", "Royal Challengers Bengaluru"],
+      "658": ["SRH", "Sunrisers Hyderabad"],
+      "127770": ["TBA", "TBA"],
+      "127775": ["TBA", "TBA"]
+    },
+
+    "champions": {
+      "MI": ["2013", "2015", "2017", "2019", "2020"],
+      "KKR": ["2012", "2014", "2024"],
+      "CSK": ["2010", "2011", "2018", "2021", "2023"],
+      "RR": ["2008"],
+      "DC": [],
+      "RCB": ["2025", "2026"],
+      "SRH": ["2016"],
+      "GT": ["2022"],
+      "PBKS": [],
+      "LSG": []
+    },
+
+    "info": {
+      "CSK": {"Captain": "Ruturaj Gaikwad", "Coach": "Stephen Fleming", "Owner": "Chennai Super Kings Cricket Ltd", "Venue": "M. A. Chidambaram Stadium"},
+      "DC": {"Captain": "Axar Patel", "Coach": "Hemang Badani", "Owner": "JSW GMR Cricket Pvt Ltd", "Venue": "Arun Jaitley Stadium"},
+      "GT": {"Captain": "Shubman Gill", "Coach": "Ashish Nehra", "Owner": "Irelia Sports India Pvt Ltd", "Venue": "Narendra Modi Stadium"},
+      "KKR": {"Captain": "Ajinkya Rahane", "Coach": "Abhishek Nayar", "Owner": "Knight Riders Sports Pvt Ltd", "Venue": "Eden Gardens"},
+      "LSG": {"Captain": "Rishabh Pant", "Coach": "Justin Langer", "Owner": "RPSG Sports Pvt Ltd", "Venue": "BRSABV Ekana Cricket Stadium"},
+      "MI": {"Captain": "Hardik Pandya", "Coach": "Mahela Jayawardene", "Owner": "Indiawin Sports Pvt Ltd", "Venue": "Wankhede Stadium"},
+      "PBKS": {"Captain": "Shreyas Iyer", "Coach": "Ricky Ponting", "Owner": "KPH Dream Cricket Pvt Ltd", "Venue": "Punjab Cricket Association Stadium"},
+      "RR": {"Captain": "Riyan Parag", "Coach": "Kumar Sangakkara", "Owner": "Royal Multisport Pvt Ltd", "Venue": "Sawai Mansingh Stadium"},
+      "RCB": {"Captain": "Rajat Patidar", "Coach": "Andy Flower", "Owner": "Royal Challengers Sports Pvt Ltd", "Venue": "M. Chinnaswamy Stadium"},
+      "SRH": {"Captain": "Pat Cummins", "Coach": "Daniel Vettori", "Owner": "Sun TV Network Ltd", "Venue": "Rajiv Gandhi Intl. Cricket Stadium"}
+    },
+
+    "social": {
+      "CSK":  {"web": "https://www.chennaisuperkings.com",  "x": "https://x.com/ChennaiIPL",
+               "ig": "https://www.instagram.com/chennaiipl", "fb": "https://www.facebook.com/ChennaiIPL"},
+      "DC":   {"web": "https://www.delhicapitals.in",       "x": "https://x.com/DelhiCapitals",
+               "ig": "https://www.instagram.com/delhicapitals", "fb": "https://www.facebook.com/DelhiCapitals"},
+      "GT":   {"web": "https://www.gujarattitansipl.com",   "x": "https://x.com/gujarat_titans",
+               "ig": "https://www.instagram.com/gujarat_titans", "fb": "https://www.facebook.com/GujaratTitans"},
+      "KKR":  {"web": "https://www.kkr.in",                 "x": "https://x.com/KKRiders",
+               "ig": "https://www.instagram.com/kkriders",  "fb": "https://www.facebook.com/KolkataKnightRiders"},
+      "LSG":  {"web": "https://www.lucknowsupergiants.in",  "x": "https://x.com/LucknowIPL",
+               "ig": "https://www.instagram.com/lucknowsupergiants", "fb": "https://www.facebook.com/lucknowsupergiants"},
+      "MI":   {"web": "https://www.mumbaiindians.com",      "x": "https://x.com/mipaltan",
+               "ig": "https://www.instagram.com/mumbaiindians", "fb": "https://www.facebook.com/mumbaiindians"},
+      "PBKS": {"web": "https://www.punjabkingsipl.in",      "x": "https://x.com/PunjabKingsIPL",
+               "ig": "https://www.instagram.com/punjabkingsipl", "fb": "https://www.facebook.com/PunjabKingsIPL"},
+      "RR":   {"web": "https://www.rajasthanroyals.com",    "x": "https://x.com/rajasthanroyals",
+               "ig": "https://www.instagram.com/rajasthanroyals", "fb": "https://www.facebook.com/rajasthanroyals"},
+      "RCB":  {"web": "https://www.royalchallengers.com",   "x": "https://x.com/RCBTweets",
+               "ig": "https://www.instagram.com/royalchallengers.bengaluru",
+               "fb": "https://www.facebook.com/royalchallengers.bengaluru"},
+      "SRH":  {"web": "https://www.sunrisershyderabad.in",  "x": "https://x.com/SunRisers",
+               "ig": "https://www.instagram.com/sunrisershyd", "fb": "https://www.facebook.com/SunRisersHyderabad"}
+    }
+  },
+
+  "colors": {
+    "match": {
+      "CSK":  {"c1": "#ffff3c", "c2": "#fdcd05", "c3": "#00adef"},
+      "DC":   {"c1": "#d71921", "c2": "#2561ae", "c3": "#282968"},
+      "GT":   {"c1": "#dbbe6e", "c2": "#242b64", "c3": "#1b2133"},
+      "KKR":  {"c1": "#F9E278", "c2": "#64517C", "c3": "#3a225d"},
+      "LSG":  {"c1": "#002554", "c2": "#aa003b", "c3": "#3A5FAC"},
+      "MI":   {"c1": "#d1ab3e", "c2": "#0077b6", "c3": "#004ba0"},
+      "PBKS": {"c1": "#ed1d24", "c2": "#f2d1a0", "c3": "#4960b6"},
+      "RR":   {"c1": "#ff69b4", "c2": "#074ea2", "c3": "#cba92b"},
+      "RCB":  {"c1": "#20285d", "c2": "#444444", "c3": "hsl(356, 99%, 45%)"},
+      "SRH":  {"c1": "#f26522", "c2": "#ed1a37", "c3": "#221f21"},
+      "TBA":  {"c1": "#ffffff", "c2": "#ffffff", "c3": "#ffffff"}
+    },
+
+    "points_table": {
+      "CSK": "#f9cd05",
+      "DC": "#282968",
+      "GT": "#1d2247",
+      "KKR": "#3a225d",
+      "LSG": "#aa003b",
+      "MI": "#004ba0",
+      "PBKS": "#ed1b24",
+      "RR": "#e60693",
+      "RCB": "#ec1c24",
+      "SRH": "#ff822a"
+    },
+
+    "squad": {
+      "CSK":  {"c1": "#fcee21", "c2": "#0b67b2"},
+      "MI":   {"c1": "hsl(32 24% 56%)", "c2": "hsl(208 100% 31%)"},
+      "RCB":  {"c1": "hsl(356, 99%, 45%)", "c2": "#20285d"},
+      "KKR":  {"c1": "#3a225d", "c2": "#f1c025"},
+      "SRH":  {"c1": "#f26332", "c2": "#ffcc06"},
+      "DC":   {"c1": "hsl(346 100% 44%)", "c2": "hsl(213 100% 25%)"},
+      "PBKS": {"c1": "#eb222d", "c2": "#ffdead"},
+      "RR":   {"c1": "#df238f", "c2": "#294096"},
+      "GT":   {"c1": "#0b1c31", "c2": "#e3ca7c"},
+      "LSG":  {"c1": "#aa003b", "c2": "#002554"}
+    }
+  },
+
+  "notes": {
+    "teams.social": "Official channels, linked from each team's squad page. Franchises do rename their handles after a rebrand (RCB did in 2024), so these are worth a look whenever a team changes its name.",
+    "teams.info": "Key order here is the team order calibrate_match_model() fits its ratings in, and the order the /teams squad make-up counts are built in. Keep all ten franchises listed.",
+    "teams.ids": "Feed team id -> [abbreviation, full name]. Written as strings because JSON object keys always are; config.py casts them back to int for team_abbr(). The two TBA ids are the placeholder sides the feed uses for unresolved playoff fixtures.",
+    "colors.match": "Brand triple per team. CSK c2 has also been run as #fdcd05 and #f15c19.",
+    "colors.squad": "Squad-page gradient pairs, c1 -> c2: CSK yellow to navy blue, MI blue to gold, RCB red to black, KKR purple to gold, SRH orange to black, DC blue to red, PBKS red to gold, RR pink to blue, GT navy to gold, LSG light blue to gold.",
+    "urls.stats": "Alternative feed that has been used before, currently unused: https://www.cricbuzz.com/api/cricket-series/series-stats/9241/",
+    "stats_list": "Key order sets the order the leaderboards are seeded into Toppers, and so the order they appear on the stats pages."
+  }
+}
