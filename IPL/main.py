@@ -15,7 +15,7 @@ import numpy as np
 from datetime import datetime, date, time, timedelta
 from collections import defaultdict, Counter
 import threading, lxml.etree
-
+from sqlalchemy.orm.attributes import flag_modified
 warnings.filterwarnings("ignore")
 
 scraper = cloudscraper.create_scraper()
@@ -1083,7 +1083,7 @@ def update_potm():
     potms = (db.session.execute(text('SELECT "POTM" FROM Fixture WHERE "POTM" IS NOT NULL')).fetchall())
     counts = Counter([(p[0]['name'], p[0]['team']) for p in potms])
     potms = [{"name": name, "team": team, "potm": count} for (name, team), count in counts.items()]
-
+    
     for potm in potms:
         sq = Squad.query.filter_by(Name=potm['name']).first()
         stats = get_player_stats(sq.URL_ID) if sq else None
@@ -1093,15 +1093,15 @@ def update_potm():
             potm['runs'] = int(stats['2026']['batting']['Runs']) if stats['2026']['batting']['Runs'] else 0
             potm['wickets'] = int(stats['2026']['bowling']['Wickets']) if stats['2026']['bowling']['Wickets'] else 0
 
-    potms = sorted(
-        potms,
-        key=lambda x: (x['potm'], x['runs'], x['wickets']),
-        reverse=True
-    )
-
-    toppers = Toppers.query.filter_by(category="Most POTM").first()
-    toppers.stats = potms
-    db.session.commit()
+    try:
+        potms = sorted(potms, key=lambda x: (x['potm'], x['runs'], x['wickets']), reverse=True)
+    except Exception as e:
+        print(f"Error while sorting the toppers for Most POTM: {e}")
+    finally:
+        potms = sorted(potms, key=lambda x: (x['potm']), reverse=True)
+        toppers = Toppers.query.filter_by(category="Most POTM").first()
+        toppers.stats = potms
+        db.session.commit()
 
 def update_toppers():
     """
@@ -1141,7 +1141,22 @@ def update_toppers():
                 db.session.commit()
             except Exception as e:
                 print(f"Error updating toppers for {stat_name}: {e}")
-                return
+                print(f"Mapping Player Name for exisiting for {stat_name} if any (Failure case)")
+                tp = Toppers.query.filter_by(category=stat_name).first()
+                if tp and tp.stats and stat_name != "Fair Play Award":
+                    playerKey = ("StrikerName" if stats_type == "batting_stats" else "BowlerName" if stats_type == "bowling_stats" else "PlayerName")
+                    for row in tp.stats:
+                        player_name = row.get(playerKey)
+                        if not player_name:
+                            continue
+                        player = find_player(player_name, SquadFull, team=row.get("TeamCode"))
+
+                        if player:
+                            row[playerKey] = player[2]
+                            row["TeamCode"] = player[3]
+
+                    flag_modified(tp, "stats")
+                    db.session.commit()
     
 def get_innings_data(matID):
     #matID = '40966'
@@ -2032,6 +2047,8 @@ def todayMatch():
 
 def get_stats():
     tp = db.session.execute(text('SELECT category, stats FROM Toppers ORDER BY id ASC')).fetchall()
+    if TOPPERS_DUMMY_FIND_PLAYER:
+        pass
     tp = {row[0]: row[1] for row in tp}
     return serialize({'stats': tp})
 
