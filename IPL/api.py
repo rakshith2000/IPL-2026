@@ -1,17 +1,9 @@
-from datetime import datetime, date, timedelta
-from . import db
-from .models import User, Pointstable, Fixture, Squad
-from .main import get_stats, get_matchInfo, get_scoreCard, get_liveScore, get_matchOvers, get_liveSquad, get_liveStrip
-import os, csv, re, pytz, requests, time
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Blueprint, jsonify, render_template, url_for, redirect, request, flash, Response, json, stream_with_context
-from flask_login import login_required, current_user
-from sqlalchemy import and_, or_
-from sqlalchemy.sql import text
-import requests, warnings
-from bs4 import BeautifulSoup
-from fuzzywuzzy import fuzz, process
-from urllib.request import Request, urlopen
+import warnings
+from flask import Blueprint, jsonify
+
+from .services.toppers import get_stats
+from .services.live import (get_matchInfo, get_scoreCard, get_liveScore,
+                            get_matchOvers, get_liveSquad, get_liveStrip)
 
 warnings.filterwarnings("ignore")
 

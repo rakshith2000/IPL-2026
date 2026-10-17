@@ -36,7 +36,8 @@ def seed_pointstable():
     have = {t for (t,) in db.session.query(Pointstable.team_name)}
     new = [Pointstable(team_name=t, P=0, W=0, L=0, NR=0, Points=0, NRR=0.0,
                        Win_List=str({}), logo_path=f'/static/images/{t}.png',
-                       For={'runs': 0, 'overs': 0.0}, Against={'runs': 0, 'overs': 0.0})
+                       For={'runs': 0, 'overs': 0.0}, Against={'runs': 0, 'overs': 0.0},
+                       Qual=0.0, Top2=0.0)
            for t in TEAMS if t not in have]
     db.session.add_all(new); db.session.commit()
     return len(new)

@@ -1,8 +1,14 @@
-IPL/__pycache__/*
-venv/*
-.idea/*
-__pycache__/*
+# Python bytecode. The trailing slash with no other slash in the pattern is
+# what makes this match at any depth - IPL/routes/, IPL/services/, IPL/utils/
+# and anything added later. The old "IPL/__pycache__/*" and "__pycache__/*"
+# both contained a slash, which anchors a pattern to the directory holding
+# this file, so neither ever matched a nested __pycache__.
+__pycache__/
+*.py[cod]
+
+venv/
+.idea/
 flask_start.sh
 git_start.sh
 qodana.yaml
-instance/*
+instance/
