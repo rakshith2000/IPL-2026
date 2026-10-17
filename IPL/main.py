@@ -2047,8 +2047,6 @@ def todayMatch():
 
 def get_stats():
     tp = db.session.execute(text('SELECT category, stats FROM Toppers ORDER BY id ASC')).fetchall()
-    if TOPPERS_DUMMY_FIND_PLAYER:
-        pass
     tp = {row[0]: row[1] for row in tp}
     return serialize({'stats': tp})
 
