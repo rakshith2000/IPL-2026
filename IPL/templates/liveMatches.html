@@ -182,7 +182,11 @@ body {
   </div>
   </div>
     <div class="match-info">{{ i[2] }}</div></a>
-    {% if 'Super over' not in i[10] %}
+    {#- a tie the super over could not settle is a no result, Win_T 'NA', and its
+        reason names the super over - so it is not a super-over result -#}
+    {% set tied_nr = i[7] == 'NA' and i[10].startswith('Match tied') %}
+    {% set decided_by_so = 'Super over' in i[10] and i[7] != 'NA' %}
+    {% if not decided_by_so %}
       {% if i[7] == i[3] and i[8] == "runs" %}
       {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
       {% elif i[7] == i[3] and i[8] == "wickets" %}
@@ -204,10 +208,14 @@ body {
       {% endif %}
     {% endif %}
 
+    {#- a tied super over is replayed, so each side can have more than one -#}
+    {% set TA_SO = super_overs(TA_S) if decided_by_so else [] %}
+    {% set TB_SO = super_overs(TB_S) if decided_by_so else [] %}
+
     <a href="{{ url_for('main.FRScore', match=i[0], source='liveMatches') }}" class="plain-link">
     <div class="score-container">
       <div class="team-new left-team">
-        {% if "Super over" not in i[10] %}
+        {% if not TA_SO %}
           {% if TA_S['overs'] == 0 and TA_S['runs'] == 0 and TA_S['wkts'] == 0 %}
             <div class="team-display" full="{{ fn[i[3]] }}" short="{{ i[3] }}">
             {{ fn[i[3]] }}
@@ -221,7 +229,10 @@ body {
         {% else %}
         <div class="score-board">
           <div class="score-new">{{ TA_S['runs'] }}{{ "" if TA_S['wkts'] == 10 else '/' ~ TA_S['wkts'] }}&nbsp;<span class="overs overs-so-font">({{ TA_S['overs'] }})</span></div>
-          <div class="score-new {% if TA == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TA == i[7] %}score-win{% endif %}">{{ TA_S['runsSO'] }}{{ "" if TA_S['wktsSO'] == 10 else '/' ~ TA_S['wktsSO'] }}&nbsp;<span class="overs overs-so-font {% if TA == i[7] %}overs-win{% endif %}">({{ TA_S['oversSO'] }})</span></div>
+          {# only the last super over settled the match, so only it wins the tone #}
+          {% for s in TA_SO %}
+          <div class="score-new {% if loop.last and TA == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif loop.last and TA == i[7] %}score-win{% endif %}">{{ s['runs'] }}{{ "" if s['wkts'] == 10 else '/' ~ s['wkts'] }}&nbsp;<span class="overs overs-so-font {% if loop.last and TA == i[7] %}overs-win{% endif %}">({{ s['overs'] }})</span></div>
+          {% endfor %}
         </div>
         {% endif %}
         <div class="team-logo">
@@ -241,7 +252,7 @@ body {
         <div class="team-logo">
           <img src="/static/images/squad_logos/{{ TB }}{{ '1' if TB == 'RR' else '' }}.png" alt="India Flag">
         </div>
-        {% if "Super over" not in i[10] %}
+        {% if not TB_SO %}
           {% if TB_S['overs'] == 0 and TB_S['runs'] == 0 and TB_S['wkts'] == 0 %}
           <div class="team-display" full="{{ fn[i[4]] }}" short="{{ i[4] }}">
             {{ fn[i[4]] }}
@@ -255,7 +266,9 @@ body {
         {% else %}
         <div class="score-board">
           <div class="score-new">{{ TB_S['runs'] }}{{ "" if TB_S['wkts'] == 10 else '/' ~ TB_S['wkts'] }}&nbsp;<span class="overs overs-so-font">({{ TB_S['overs'] }})</span></div>
-          <div class="score-new {% if TB == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif TB == i[7] %}score-win{% endif %}">{{ TB_S['runsSO'] }}{{ "" if TB_S['wktsSO'] == 10 else '/' ~ TB_S['wktsSO'] }}&nbsp;<span class="overs overs-so-font {% if TB == i[7] %}overs-win{% endif %}">({{ TB_S['oversSO'] }})</span></div>
+          {% for s in TB_SO %}
+          <div class="score-new {% if loop.last and TB == i[7] and i[0] | int(default=None) is none %}playoff-win{% elif loop.last and TB == i[7] %}score-win{% endif %}">{{ s['runs'] }}{{ "" if s['wkts'] == 10 else '/' ~ s['wkts'] }}&nbsp;<span class="overs overs-so-font {% if loop.last and TB == i[7] %}overs-win{% endif %}">({{ s['overs'] }})</span></div>
+          {% endfor %}
         </div>
         {% endif %}
       </div>
@@ -270,7 +283,7 @@ body {
       </div>
   <div class="timer-card">
     {% if i[7] == "NA" or i[11][0] == "NA" %}
-    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">{{ 'Match Abandoned' if i[7] == 'NA' else 'Matched Completed' }}</div>
+    <div class="header" style="{% if i[0] | int(default=None) is not none %} --c: #25478A; {% else %} --c: #401F52; {% endif %}">{{ 'Match Tied' if tied_nr else ('Match Abandoned' if i[7] == 'NA' else 'Matched Completed') }}</div>
     <div class="vsblock" style="padding-top: 35px;">
 		  <img class="team-image" style="{% if i[3] == 'RCB' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'GT' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'MI' %} --c1: {{ clr[i[3]]['c3'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% elif i[3] == 'PBKS' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c1'] }}; {% elif i[3] == 'KKR' %} --c1: {{ clr[i[3]]['c2'] }}; --c2: {{ clr[i[3]]['c3'] }}; {% else %} --c1: {{ clr[i[3]]['c1'] }}; --c2: {{ clr[i[3]]['c2'] }}; {% endif %}" src="\static\images\squad_logos\{{ i[3] }}.png" alt="Team Logo" />
 		  <img class="vs-image" src="\static\images\vs.png" alt="Team Logo" />

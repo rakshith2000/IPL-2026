@@ -16,8 +16,51 @@ from ..models import Pointstable, Fixture
 from ..config import pofs, full_name, clr
 from ..services.playoffs import run_refresh_qualification_bg
 from ..services.standings import update_rank_for_fixture, delete_rank_for_fixture
-from ..services.results import (upMatchNormal, upMatchSuperOver, upMatchAbandoned, upMatchDLS,
-                                delMatchNormal, delMatchSuperOver, delMatchAbandoned, delMatchDLS)
+from ..services.results import (upMatchNormal, upMatchSuperOver, upMatchTied, upMatchAbandoned,
+                                upMatchDLS, delMatchNormal, delMatchSuperOver, delMatchTied,
+                                delMatchAbandoned, delMatchDLS)
+
+def _overs_per_side(form):
+    """How many overs each innings was entitled to: 20, or less if rain cut it.
+
+    Only the completed and tied sections ask - a DLS result carries the revised
+    allocation already. Five is the minimum a T20 can be reduced to and still
+    count, and anything outside 5-20 is read as the full twenty rather than
+    quietly booking an allocation the match cannot have had.
+    """
+    try:
+        overs = float(form.get('overs_per_side') or 20)
+    except (TypeError, ValueError):
+        return 20
+    return overs if 5 <= overs <= 20 else 20
+
+def _revised(form, side):
+    """What DLS credited one side with, and the target and overs it was set.
+
+    The tied section shares the DLS panel with the DLS section, so the field
+    names are the same ones upMatchDLS() reads.
+    """
+    return {'runsDLS': int(form.get('dls_runs' + side) or 0),
+            'oversDLS': float(form.get('dls_overs' + side) or 0),
+            'revTarget': int(form.get('dls_target') or 0),
+            'revOvers': float(form.get('dls_overs') or 0)}
+
+def _super_overs(form, side):
+    """Every super over one side played, oldest first, off the update form.
+
+    The super-over panel in updatematch.html is repeatable - a tied super over is
+    replayed - and its blocks are numbered from 1 and renumbered on every add or
+    remove, so they are walked until the next one is not there. Blank boxes come
+    back as 0: the admin may well have only the runs for a two-ball super over.
+    """
+    innings = []
+    n = 1
+    while 'so{}_runs{}'.format(n, side) in form:
+        innings.append({'runs': int(form['so{}_runs{}'.format(n, side)] or 0),
+                        'overs': float(form['so{}_overs{}'.format(n, side)] or 0),
+                        'wkts': int(form['so{}_wkts{}'.format(n, side)] or 0)})
+        n += 1
+    return innings
 
 @main.route('/update')
 @login_required
@@ -66,18 +109,30 @@ def updatematch():
         matchStatus = request.form.get('match_status')
         if matchStatus == 'completed':
             data = {}
-            data['team_A'] = {'runs': int(request.form['runsA']), 'overs': float(request.form['oversA']), 'wkts': int(request.form['wktsA'])}
-            data['team_B'] = {'runs': int(request.form['runsB']), 'overs': float(request.form['oversB']), 'wkts': int(request.form['wktsB'])}
+            overs = _overs_per_side(request.form)
+            data['team_A'] = {'runs': int(request.form['runsA']), 'overs': float(request.form['oversA']), 'wkts': int(request.form['wktsA']), 'maxOvers': overs}
+            data['team_B'] = {'runs': int(request.form['runsB']), 'overs': float(request.form['oversB']), 'wkts': int(request.form['wktsB']), 'maxOvers': overs}
             data['match'] = request.form['match']
             data['result'] = {'win_team': request.form['wt'], 'win_type': request.form['win_type'], 'win_by': request.form['win_by']}
             upMatchNormal(data)
         elif matchStatus == 'tied':
             data = {}
-            data['team_A'] = {'runs': int(request.form['tied_runsA']), 'overs': float(request.form['tied_oversA']), 'wkts': int(request.form['tied_wktsA']), 'runsSO': int(request.form['superover_runsA']), 'oversSO': float(request.form['superover_oversA']), 'wktsSO': int(request.form['superover_wktsA'])}
-            data['team_B'] = {'runs': int(request.form['tied_runsB']), 'overs': float(request.form['tied_oversB']), 'wkts': int(request.form['tied_wktsB']), 'runsSO': int(request.form['superover_runsB']), 'oversSO': float(request.form['superover_oversB']), 'wktsSO': int(request.form['superover_wktsB'])}
+            overs = _overs_per_side(request.form)
+            data['team_A'] = {'runs': int(request.form['tied_runsA']), 'overs': float(request.form['tied_oversA']), 'wkts': int(request.form['tied_wktsA']), 'maxOvers': overs, 'SO': _super_overs(request.form, 'A')}
+            data['team_B'] = {'runs': int(request.form['tied_runsB']), 'overs': float(request.form['tied_oversB']), 'wkts': int(request.form['tied_wktsB']), 'maxOvers': overs, 'SO': _super_overs(request.form, 'B')}
+            # a rain-shortened chase that still finishes level is tied against the
+            # DLS par score, so the tied section can carry the revised figures too
+            if request.form.get('tied_dls') == 'yes':
+                data['team_A'].update(_revised(request.form, 'A'))
+                data['team_B'].update(_revised(request.form, 'B'))
             data['match'] = request.form['match']
-            data['result'] = {'so_win_team': request.form['superover_winner'], 'so_win_type': request.form['superover_win_type'], 'so_win_by': request.form['superover_win_by']}
-            upMatchSuperOver(data)
+            if request.form.get('superover_outcome') == 'not_completed':
+                # no super over was completed, so nobody won: a point each
+                data['reason'] = request.form.get('tied_reason', '')
+                upMatchTied(data)
+            else:
+                data['result'] = {'so_win_team': request.form['superover_winner'], 'so_win_type': request.form['superover_win_type'], 'so_win_by': request.form['superover_win_by']}
+                upMatchSuperOver(data)
         elif matchStatus == 'abandoned':
             data = {}
             data['match'] = request.form['match']
@@ -124,22 +179,23 @@ def deletematch():
     if request.method == "POST" and hint == 'after':
         dmatch = request.form.get('dmatch')
         result = db.session.execute(text('SELECT "Result" FROM fixture WHERE "Match_No" = :match_no'),{'match_no': dmatch}).fetchall()
-        if "Super over" not in result[0][0] and "Match abandoned" not in result[0][0] and "DLS" not in result[0][0]:
-            data = {}
-            data['match'] = dmatch
-            delMatchNormal(data)
-        elif "Super over" in result[0][0]:
-            data = {}
-            data['match'] = dmatch
+        res = result[0][0]
+        data = {'match': dmatch}
+        # Keyword order matters. "Match tied" comes first because the reason an
+        # admin gives for an unfinished super over usually names it, and a tie
+        # must not be unwound as a super-over win. "Super over" comes before
+        # "DLS" for the same reason in reverse: a super over bowled after a
+        # rain-revised chase names both, and it is the super-over result.
+        if "Match tied" in res:
+            delMatchTied(data)
+        elif "Super over" in res:
             delMatchSuperOver(data)
-        elif "Match abandoned" in result[0][0]:
-            data = {}
-            data['match'] = dmatch
+        elif "Match abandoned" in res:
             delMatchAbandoned(data)
-        elif "DLS" in result[0][0]:
-            data = {}
-            data['match'] = dmatch
+        elif "DLS" in res:
             delMatchDLS(data)
+        else:
+            delMatchNormal(data)
 
         delete_rank_for_fixture(dmatch)
         flash('Match {} result deleted successfully'.format(dmatch), category='success')

@@ -64,13 +64,18 @@
     <span class="fx-team__name"><span class="fx-team__full">{{ fn[t] }}</span><span class="fx-team__abv">{{ t }}</span></span>
 {%- endmacro %}
 
-{# Score for one innings. `so` renders the regular score plus the super over #}
+{# Score for one innings. `so` stacks the regular score and every super over
+   under it - a tied super over is replayed, so there can be more than one, and
+   the last is the one that settled the match, so it takes the win tone. #}
 {% macro score_cell(sc, won, playoff, so) -%}
     {%- set tone = ('is-playoff' if playoff else 'is-win') if won else '' -%}
-    {%- if so -%}
+    {%- set sos = super_overs(sc) if so else [] -%}
+    {%- if sos -%}
         <span class="fx-score">
             <span class="fx-score__line fx-score__line--prior">{{ sc['runs'] }}{{ '' if sc['wkts'] == 10 else '/' ~ sc['wkts'] }}<i>({{ sc['overs'] }})</i></span>
-            <span class="fx-score__line fx-score__line--so {{ tone }}"><span class="fx-so-tag">SO</span>{{ sc['runsSO'] }}{{ '' if sc['wktsSO'] == 10 else '/' ~ sc['wktsSO'] }}<i>({{ sc['oversSO'] }})</i></span>
+            {%- for s in sos %}
+            <span class="fx-score__line fx-score__line--so {{ tone if loop.last else '' }}"><span class="fx-so-tag">SO{{ ' ' ~ loop.index if sos | length > 1 else '' }}</span>{{ s['runs'] }}{{ '' if s['wkts'] == 10 else '/' ~ s['wkts'] }}<i>({{ s['overs'] }})</i></span>
+            {%- endfor %}
         </span>
     {%- elif sc['overs'] == 0 and sc['runs'] == 0 and sc['wkts'] == 0 -%}
         {#- nothing bowled — the team name alone carries the row -#}
@@ -204,8 +209,11 @@
             two scores read in the order the innings were actually played -#}
         {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
         {% set so = false %}
+        {#- a tie the super over could not settle is a no result, Win_T 'NA', and
+            its reason names the super over - so it is not a super-over result -#}
+        {% set tied_nr = i[7] == 'NA' and i[10].startswith('Match tied') %}
         {% if state == 'done' %}
-            {% set so = 'Super over' in i[10] %}
+            {% set so = 'Super over' in i[10] and i[7] != 'NA' %}
             {% if not so %}
                 {% if i[7] == i[3] and i[8] == 'runs' %}
                     {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
@@ -343,7 +351,7 @@
                     </div>
 
                     {% elif i[7] == 'NA' or i[11][0] == 'NA' %}
-                    <span class="fx-side__label">{{ 'Match abandoned' if i[7] == 'NA' else 'Match completed' }}</span>
+                    <span class="fx-side__label">{{ 'Match tied' if tied_nr else ('Match abandoned' if i[7] == 'NA' else 'Match completed') }}</span>
                     <div class="fx-duel">
                         {{ crest(i[3], '', false) }}
                         <span class="fx-duel__vs">VS</span>

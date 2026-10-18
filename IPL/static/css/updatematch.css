@@ -423,6 +423,42 @@ body::-webkit-scrollbar-thumb {
   background: var(--um-line);
 }
 
+/* --- repeatable super over ------------------------------------------------
+   Its head carries a remove button, pushed to the far edge so the crest-and-
+   title row it sits on reads the same as every other panel head. The first
+   block has no button: a tied match has at least one super over. */
+.um-so__del {
+  flex: none;
+  margin-left: auto;
+  padding: 6px;
+  border-radius: 999px;
+}
+
+.um-so__del[hidden] { display: none; }
+.um-so__del .material-icons-round { font-size: 16px; }
+
+/* A plain opt-in inside a panel — the segmented control is for choosing between
+   alternatives, this is for turning one extra section on. */
+.um-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--um-ink);
+  cursor: pointer;
+}
+
+.um-check input {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--um-cyan);
+  cursor: pointer;
+}
+
 /* section label above a group */
 .um-label {
   display: block;

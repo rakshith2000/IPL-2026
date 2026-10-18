@@ -27,7 +27,8 @@
 
 {# Generic helper: compact snapshot chip for a team.
    - Shows crest with rank badge, team code, and innings score.
-   - For Super Over, base and SO scores are stacked on separate lines.
+   - For Super Over, the base score and every super over are stacked on separate
+     lines: a tied super over is replayed, so there can be more than one.
    - For abandoned matches, if there is no base score, shows "didn't play".
    Guards against non-mapping info, missing keys, None and "no data" 0/0 in 0.0 overs. #}
 {% macro team_score_chip(team_code, info, rank=None, include_so=False, abandoned=False) -%}
@@ -37,12 +38,9 @@
         {% set overs = info.get('overs') %}
         {% set has_base = runs is not none and wkts is not none and overs is not none
                             and (runs > 0 or wkts > 0 or overs > 0) %}
-        {% set runsSO = info.get('runsSO') %}
-        {% set wktsSO = info.get('wktsSO') %}
-        {% set oversSO = info.get('oversSO') %}
-        {% set has_so = include_so and runsSO is not none and wktsSO is not none and oversSO is not none
-                           and (runsSO > 0 or wktsSO > 0 or oversSO > 0) %}
-        {% set show_card = has_base or has_so or abandoned %}
+        {# super_overs() normalises both the stored shapes and drops blank blocks #}
+        {% set sos = super_overs(info) if include_so else [] %}
+        {% set show_card = has_base or sos or abandoned %}
         {% if show_card %}
             <span class="um-chip">
                 <span class="ud-team__crest" style="position:relative; {{ getclr(team_code) }}">
@@ -64,11 +62,11 @@
                         didn't play
                     </span>
                     {% endif %}
-                    {% if has_so %}
+                    {% for s in sos %}
                     <span style="display:block; font-size:11.5px; color: var(--um-ink-3); margin-top:2px;">
-                        SO {{ runsSO }}/{{ wktsSO }} ({{ '%.1f' % oversSO }})
+                        SO{{ ' ' ~ loop.index if sos | length > 1 else '' }} {{ s['runs'] }}/{{ s['wkts'] }} ({{ '%.1f' % s['overs'] }})
                     </span>
-                    {% endif %}
+                    {% endfor %}
                 </span>
             </span>
         {% endif %}
@@ -79,10 +77,13 @@
    relies on. This is read-only UI logic; the backend branch still uses its own
    "Super over" / "Match abandoned" / "DLS" checks. #}
 {% set res = FR.Result or '' %}
-{% set res_superover = 'Super over' in res %}
-{% set res_abandoned = 'Match abandoned' in res %}
-{% set res_dls = 'DLS' in res %}
-{% set res_normal = not (res_superover or res_abandoned or res_dls) %}
+{# Same order main.deletematch() tests in: a tie the super over could not settle
+   names the super over in its reason, so it has to be claimed first. #}
+{% set res_tied = res.startswith('Match tied') %}
+{% set res_superover = 'Super over' in res and not res_tied %}
+{% set res_abandoned = 'Match abandoned' in res and not res_tied %}
+{% set res_dls = 'DLS' in res and not (res_tied or res_superover) %}
+{% set res_normal = not (res_tied or res_superover or res_abandoned or res_dls) %}
 
 {# POTM is a JSON column: {'name': ..., 'team': ...}. Guard against legacy rows. #}
 {% set potm = FR.POTM if FR.POTM is mapping else None %}
@@ -121,7 +122,11 @@
             {% endif %}
 
             {# Result type chip derived from the same substrings the backend uses. #}
-            {% if res_superover %}
+            {% if res_tied %}
+            <span class="um-chip">
+                <span class="material-icons-round">balance</span>Tied &mdash; a point each
+            </span>
+            {% elif res_superover %}
             <span class="um-chip">
                 <span class="material-icons-round">flash_on</span>Super Over result
             </span>
@@ -205,7 +210,9 @@
             {% if show_scores %}
             <div class="um-panel__rule"></div>
             <span class="um-label">
-                {% if res_superover %}
+                {% if res_tied %}
+                    Team snapshot (rank & scores · tied)
+                {% elif res_superover %}
                     Team snapshot (rank & scores · Super Over)
                 {% elif res_dls %}
                     Team snapshot (rank & scores · DLS)
@@ -220,14 +227,14 @@
                     FR.Team_A,
                     A if A is mapping else {},
                     rank=ranks.get(FR.Team_A) if ranks else None,
-                    include_so=res_superover,
+                    include_so=res_superover or res_tied,
                     abandoned=res_abandoned
                 ) }}
                 {{ team_score_chip(
                     FR.Team_B,
                     B if B is mapping else {},
                     rank=ranks.get(FR.Team_B) if ranks else None,
-                    include_so=res_superover,
+                    include_so=res_superover or res_tied,
                     abandoned=res_abandoned
                 ) }}
             </div>
@@ -304,7 +311,9 @@
                         {% if show_scores %}
                         <div class="um-panel__rule"></div>
                         <span class="um-label">
-                            {% if res_superover %}
+                            {% if res_tied %}
+                                Team snapshot (rank & scores · tied)
+                            {% elif res_superover %}
                                 Team snapshot (rank & scores · Super Over)
                             {% elif res_dls %}
                                 Team snapshot (rank & scores · DLS)
@@ -319,14 +328,14 @@
                                 FR.Team_A,
                                 A if A is mapping else {},
                                 rank=ranks.get(FR.Team_A) if ranks else None,
-                                include_so=res_superover,
+                                include_so=res_superover or res_tied,
                                 abandoned=res_abandoned
                             ) }}
                             {{ team_score_chip(
                                 FR.Team_B,
                                 B if B is mapping else {},
                                 rank=ranks.get(FR.Team_B) if ranks else None,
-                                include_so=res_superover,
+                                include_so=res_superover or res_tied,
                                 abandoned=res_abandoned
                             ) }}
                         </div>

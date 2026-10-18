@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 # Same season reference data main.py reads, out of config.json
 from .config import liveURL_Prefix, liveURL_Suffix, full_name
+from .utils.formatting import super_overs
 
 def render_live_URL(tA, tB, mn, dt):
     teamAB = full_name[tA].replace(" ", "-").lower() + "-vs-" + full_name[tB].replace(" ", "-").lower()
@@ -40,6 +41,10 @@ def create_app():
     app.jinja_env.filters['add_days'] = add_days
     app.jinja_env.filters['eval_str'] = eval_str
     app.jinja_env.filters['render_live_URL'] = render_live_URL
+
+    # Three templates print a fixture's super overs; they all read the stored
+    # A_info/B_info through this rather than reaching for the keys themselves.
+    app.jinja_env.globals['super_overs'] = super_overs
 
     db.init_app(app)
     login_manager = LoginManager()
