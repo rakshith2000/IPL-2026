@@ -1,0 +1,2778 @@
+{
+"score_strip": [
+{
+"name": "Lucknow Super Giants",
+"p_name": "Lucknow Super Giants",
+"short_name": "LSG",
+"team_flag": "https://staticg.sportskeeda.com/skm/assets/team-logos/cricket/lucknow-super-giants.png",
+"team_id": 123214,
+"slug": "lucknow-super-giants",
+"score": "155/8 & 1/2 (0.3 ov)",
+"currently_batting": false,
+"run_rate": "",
+"run_rate_numeric": 0
+},
+{
+"name": "Kolkata Knight Riders",
+"p_name": "Kolkata Knight Riders",
+"short_name": "KKR",
+"team_flag": "https://staticg.sportskeeda.com/skm/assets/team-logos/cricket/kolkata-knight-riders.png",
+"team_id": 591,
+"slug": "kolkata-knight-riders",
+"score": "155/7 & 4/0 (0.1 ov)",
+"currently_batting": true,
+"run_rate": "Run rate 24.00",
+"run_rate_numeric": 24
+}
+],
+"squad": [
+{
+"team": "Lucknow Super Giants",
+"team_id": 123214,
+"team_slug": "lucknow-super-giants",
+"team_flag": "https://staticg.sportskeeda.com/skm/assets/team-logos/cricket/lucknow-super-giants.png",
+"team_shortname": "LSG",
+"squad": [
+"Mitchell Marsh",
+"Aiden Markram",
+"Rishabh Pant",
+"Nicholas Pooran",
+"Ayush Badoni",
+"Mukul Choudhary",
+"George Linde",
+"Mohammad Shami",
+"Prince Yadav",
+"Digvesh Singh Rathi",
+"Mohsin Khan",
+"Himmat Singh",
+"Akshat Raghuwanshi",
+"Abdul Samad",
+"Avesh Khan",
+"M. Siddharth",
+"Mayank Yadav",
+"Matthew Breetzke",
+"Josh Inglis",
+"Arshin Kulkarni",
+"Shahbaz Ahamad",
+"Akash Singh",
+"Arjun Tendulkar",
+"Anrich Nortje",
+"Naman Tiwari"
+],
+"players": [
+{
+"provider_id": "83",
+"sk_slug": "mr-marsh",
+"slug": "",
+"name": "Mitchell Marsh",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 9
+},
+{
+"provider_id": "46117",
+"sk_slug": "aiden-markram",
+"slug": "",
+"name": "Aiden Markram",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 9
+},
+{
+"provider_id": "1098",
+"sk_slug": "rishabh-pant",
+"slug": "",
+"name": "Rishabh Pant",
+"role": "wicket-keeper",
+"position": "captain",
+"gender": "male",
+"fantasy_player_rating": 9
+},
+{
+"provider_id": "53715",
+"sk_slug": "nicolas-pooran",
+"slug": "",
+"name": "Nicholas Pooran",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "94182",
+"sk_slug": "ayush-badoni",
+"slug": "",
+"name": "Ayush Badoni",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "123421",
+"sk_slug": "mukul-choudhary",
+"slug": "",
+"name": "Mukul Choudhary",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 6
+},
+{
+"provider_id": "47483",
+"sk_slug": "george-linde",
+"slug": "",
+"name": "George Linde",
+"role": "all-rounder",
+"position": "",
+"delta": 1,
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "131",
+"sk_slug": "mohammed-shami-ahmed",
+"slug": "",
+"name": "Mohammad Shami",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "135731",
+"sk_slug": "prince-yadav",
+"slug": "",
+"name": "Prince Yadav",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "134428",
+"sk_slug": "digvesh-singh",
+"slug": "",
+"name": "Digvesh Singh Rathi",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "93564",
+"sk_slug": "mohsin-khan",
+"slug": "",
+"name": "Mohsin Khan",
+"role": "bowler",
+"position": "",
+"out": "true",
+"gender": "male",
+"fantasy_player_rating": 7
+}
+],
+"bench_players": [
+{
+"provider_id": "112853",
+"sk_slug": "mayank-yadav",
+"slug": "",
+"name": "Mayank Yadav",
+"role": "bowler",
+"position": "",
+"delta": -1,
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "46852",
+"sk_slug": "matthew-breetzke",
+"slug": "",
+"name": "Matthew Breetzke",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "55846",
+"sk_slug": "josh-inglis",
+"slug": "",
+"name": "Josh Inglis",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "111054",
+"sk_slug": "arshin-kulkarni",
+"slug": "",
+"name": "Arshin Kulkarni",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "94088",
+"sk_slug": "ahmed-shahbaz",
+"slug": "",
+"name": "Shahbaz Ahamad",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "94847",
+"sk_slug": "singh-akash",
+"slug": "",
+"name": "Akash Singh",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "95128",
+"sk_slug": "arjun-tendulkar",
+"slug": "",
+"name": "Arjun Tendulkar",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "57187",
+"sk_slug": "anrich-nortje",
+"slug": "",
+"name": "Anrich Nortje",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "111001",
+"sk_slug": "naman-tiwari",
+"slug": "",
+"name": "Naman Tiwari",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6
+}
+],
+"substitute_players": [
+{
+"provider_id": "90753",
+"sk_slug": "himmat-singh",
+"slug": "",
+"name": "Himmat Singh",
+"role": "batsman",
+"position": "",
+"in": "true",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "113918",
+"sk_slug": "akshat-raghuwanshi",
+"slug": "",
+"name": "Akshat Raghuwanshi",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "94721",
+"sk_slug": "abdul-samad-1",
+"slug": "",
+"name": "Abdul Samad",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "1104",
+"sk_slug": "avesh-khan",
+"slug": "",
+"name": "Avesh Khan",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "90907",
+"sk_slug": "manimaran-siddharth",
+"slug": "",
+"name": "M. Siddharth",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+}
+],
+"impact_players": [
+{
+"provider_id": "90753",
+"sk_slug": "himmat-singh",
+"slug": "",
+"name": "Himmat Singh",
+"role": "batsman",
+"position": "",
+"in": "true",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "93564",
+"sk_slug": "mohsin-khan",
+"slug": "",
+"name": "Mohsin Khan",
+"role": "bowler",
+"position": "",
+"out": "true",
+"gender": "male",
+"fantasy_player_rating": 7
+}
+]
+},
+{
+"team": "Kolkata Knight Riders",
+"team_id": 591,
+"team_slug": "kolkata-knight-riders",
+"team_flag": "https://staticg.sportskeeda.com/skm/assets/team-logos/cricket/kolkata-knight-riders.png",
+"team_shortname": "KKR",
+"squad": [
+"Tim Seifert",
+"Ajinkya Rahane",
+"Angkrish Raghuvanshi",
+"Cameron Green",
+"Rovman Powell",
+"Rinku Singh",
+"Ramandeep Singh",
+"Anukul Roy",
+"Sunil Narine",
+"Vaibhav Arora",
+"Kartik Tyagi",
+"Varun Chakaravarthy",
+"Manish Pandey",
+"Finn Allen",
+"Tejasvi Dahiya",
+"Navdeep Saini",
+"Matheesha Pathirana",
+"Rahul Tripathi",
+"Rachin Ravindra",
+"Sarthak Ranjan",
+"Daksh Kamra",
+"Umran Malik",
+"Prashant Solanki",
+"Blessing Muzarabani",
+"Saurabh Dubey"
+],
+"players": [
+{
+"provider_id": "16511",
+"sk_slug": "tim-seifert",
+"slug": "",
+"name": "Tim Seifert",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "127",
+"sk_slug": "ajinkya-rahane",
+"slug": "",
+"name": "Ajinkya Rahane",
+"role": "batsman",
+"position": "captain",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "110728",
+"sk_slug": "angkrish-raghuvanshi",
+"slug": "",
+"name": "Angkrish Raghuvanshi",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"out": "true",
+"gender": "male",
+"fantasy_player_rating": 9
+},
+{
+"provider_id": "93130",
+"sk_slug": "cameron-green",
+"slug": "",
+"name": "Cameron Green",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "55467",
+"sk_slug": "rovman-powell",
+"slug": "",
+"name": "Rovman Powell",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "55676",
+"sk_slug": "rinku-singh",
+"slug": "",
+"name": "Rinku Singh",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "90681",
+"sk_slug": "ramandeep-singh",
+"slug": "",
+"name": "Ramandeep Singh",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "90737",
+"sk_slug": "anukul-roy",
+"slug": "",
+"name": "Anukul Roy",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "601",
+"sk_slug": "sunil-narine",
+"slug": "",
+"name": "Sunil Narine",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "96653",
+"sk_slug": "vaibhav-arora",
+"slug": "",
+"name": "Vaibhav Arora",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "93340",
+"sk_slug": "tyagi-kartik",
+"slug": "",
+"name": "Kartik Tyagi",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+}
+],
+"bench_players": [
+{
+"provider_id": "95635",
+"sk_slug": "matheesha-pathirana",
+"slug": "",
+"name": "Matheesha Pathirana",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "54129",
+"sk_slug": "rahul-tripathi",
+"slug": "",
+"name": "Rahul Tripathi",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7
+},
+{
+"provider_id": "1081",
+"sk_slug": "rachin-ravindra",
+"slug": "",
+"name": "Rachin Ravindra",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+},
+{
+"provider_id": "90692",
+"sk_slug": "sarthak-ranjan",
+"slug": "",
+"name": "Sarthak Ranjan",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6
+},
+{
+"provider_id": "153003",
+"sk_slug": "daksh-kamra",
+"slug": "",
+"name": "Daksh Kamra",
+"role": "all-rounder",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "104934",
+"sk_slug": "umran-malik",
+"slug": "",
+"name": "Umran Malik",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "105696",
+"sk_slug": "prashant-solanki",
+"slug": "",
+"name": "Prashant Solanki",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "93462",
+"sk_slug": "blessing-muzarabani",
+"slug": "",
+"name": "Blessing Muzarabani",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 8
+},
+{
+"provider_id": "91481",
+"sk_slug": "saurabh-dubey",
+"slug": "",
+"name": "Saurabh Dubey",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6
+}
+],
+"substitute_players": [
+{
+"provider_id": "90910",
+"sk_slug": "varun-chakravarthy",
+"slug": "",
+"name": "Varun Chakaravarthy",
+"role": "bowler",
+"position": "",
+"in": "true",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "597",
+"sk_slug": "manish-pandey",
+"slug": "",
+"name": "Manish Pandey",
+"role": "batsman",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 6.5
+},
+{
+"provider_id": "1083",
+"sk_slug": "finn-allen",
+"slug": "",
+"name": "Finn Allen",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "145584",
+"sk_slug": "tejasvi-dahiya",
+"slug": "",
+"name": "Tejasvi Dahiya",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"gender": "male",
+"fantasy_player_rating": 6
+},
+{
+"provider_id": "53988",
+"sk_slug": "navdeep-saini",
+"slug": "",
+"name": "Navdeep Saini",
+"role": "bowler",
+"position": "",
+"gender": "male",
+"fantasy_player_rating": 7.5
+}
+],
+"impact_players": [
+{
+"provider_id": "90910",
+"sk_slug": "varun-chakravarthy",
+"slug": "",
+"name": "Varun Chakaravarthy",
+"role": "bowler",
+"position": "",
+"in": "true",
+"gender": "male",
+"fantasy_player_rating": 8.5
+},
+{
+"provider_id": "110728",
+"sk_slug": "angkrish-raghuvanshi",
+"slug": "",
+"name": "Angkrish Raghuvanshi",
+"role": "wicket-keeper",
+"position": "wicket-keeper",
+"out": "true",
+"gender": "male",
+"fantasy_player_rating": 9
+}
+]
+}
+],
+"datetime": 1777212000,
+"innings": [
+{
+"name": "Kolkata Knight Riders Inning",
+"short_name": "KKR Inning",
+"batting": [
+{
+"name": "Ajinkya Rahane",
+"slug": "ajinkya-rahane",
+"balls": "15",
+"runs": "10",
+"out_str": "c A Markram b M Khan",
+"fours": "0",
+"sixes": "1",
+"strike_rate": 66.67,
+"is_captain": true
+},
+{
+"name": "Tim Seifert",
+"slug": "tim-seifert",
+"balls": "3",
+"runs": "0",
+"out_str": "c M Choudhary b M Khan",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+},
+{
+"name": "Angkrish Raghuvanshi",
+"slug": "angkrish-raghuvanshi",
+"balls": "8",
+"runs": "9",
+"out_str": "O The Field",
+"fours": "1",
+"sixes": "0",
+"strike_rate": 112.5,
+"went_out": true
+},
+{
+"name": "Cameron Green",
+"slug": "cameron-green",
+"balls": "21",
+"runs": "34",
+"out_str": "c R Pant b M Khan",
+"fours": "0",
+"sixes": "3",
+"strike_rate": 161.9
+},
+{
+"name": "Rovman Powell",
+"slug": "rovman-powell",
+"balls": "4",
+"runs": "1",
+"out_str": "c R Pant b M Khan",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 25
+},
+{
+"name": "Rinku Singh",
+"slug": "rinku-singh",
+"balls": "51",
+"runs": "83",
+"out_str": "Not out",
+"fours": "7",
+"sixes": "5",
+"strike_rate": 162.75
+},
+{
+"name": "Anukul Roy",
+"slug": "anukul-roy",
+"balls": "1",
+"runs": "0",
+"out_str": "c A Badoni b M Khan",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+},
+{
+"name": "Ramandeep Singh",
+"slug": "ramandeep-singh",
+"balls": "11",
+"runs": "6",
+"out_str": "c M Marsh b GF Linde",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 54.55
+},
+{
+"name": "Sunil Narine",
+"slug": "sunil-narine",
+"balls": "6",
+"runs": "4",
+"out_str": "Not out",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 66.67
+}
+],
+"bowling": [
+{
+"name": "Mohammad Shami",
+"slug": "mohammed-shami-ahmed",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "34",
+"wickets": "0",
+"economy": 8.5,
+"extras": 1
+},
+{
+"name": "Mohsin Khan",
+"slug": "mohsin-khan",
+"overs": "4",
+"maiden_overs": "1",
+"runs": "23",
+"wickets": "5",
+"economy": 5.75,
+"extras": 1,
+"went_out": true
+},
+{
+"name": "Prince Yadav",
+"slug": "prince-yadav",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "24",
+"wickets": "0",
+"economy": 6,
+"extras": 3
+},
+{
+"name": "Digvesh Singh Rathi",
+"slug": "digvesh-singh",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "46",
+"wickets": "0",
+"economy": 11.5,
+"extras": 2
+},
+{
+"name": "George Linde",
+"slug": "george-linde",
+"overs": "2",
+"maiden_overs": "0",
+"runs": "18",
+"wickets": "1",
+"economy": 9,
+"extras": 0
+},
+{
+"name": "Aiden Markram",
+"slug": "aiden-markram",
+"overs": "2",
+"maiden_overs": "0",
+"runs": "9",
+"wickets": "0",
+"economy": 4.5,
+"extras": 0
+}
+],
+"batting_team_id": 591,
+"fall_of_wickets": " 3-1 (Tim Seifert, 1.6), 16-2 (Ajinkya Rahane, 3.4), 27-3 (Angkrish Raghuvanshi, 4.6), 31-4 (Rovman Powell, 6.1), 73-5 (Cameron Green, 10.5), 73-6 (Anukul Roy, 10.6), 93-7 (Ramandeep Singh, 14.6)",
+"extras": "8",
+"bye": "0",
+"legbye": "1",
+"noball": "0",
+"wide": "7",
+"penalties": "0",
+"wickets": "7",
+"overs": "20",
+"runs": "155",
+"run_rate": 7.75,
+"result": 4,
+"did_not_bat": {
+"90910": "Varun Chakaravarthy",
+"93340": "Kartik Tyagi",
+"96653": "Vaibhav Arora"
+},
+"not_batted": {
+"90910": {
+"name": "Varun Chakaravarthy",
+"slug": "varun-chakravarthy",
+"order": 3,
+"provider_id": "90910"
+},
+"93340": {
+"name": "Kartik Tyagi",
+"slug": "tyagi-kartik",
+"order": 2,
+"provider_id": "93340"
+},
+"96653": {
+"name": "Vaibhav Arora",
+"slug": "vaibhav-arora",
+"order": 1,
+"provider_id": "96653"
+}
+},
+"innings_no": 1,
+"fours": "8",
+"sixes": "9",
+"fall_of_wickets_array": [
+{
+"batsman_name": "Tim Seifert",
+"batsman_slug": "tim-seifert",
+"overs": "1.6",
+"score": "3",
+"runs": "0",
+"how_out": "c M Choudhary b M Khan",
+"bowler_name": "Mohsin Khan",
+"bowler_slug": "mohsin-khan",
+"number": 1
+},
+{
+"batsman_name": "Ajinkya Rahane",
+"batsman_slug": "ajinkya-rahane",
+"overs": "3.4",
+"score": "16",
+"runs": "10",
+"how_out": "c A Markram b M Khan",
+"bowler_name": "Mohsin Khan",
+"bowler_slug": "mohsin-khan",
+"number": 2
+},
+{
+"batsman_name": "Angkrish Raghuvanshi",
+"batsman_slug": "angkrish-raghuvanshi",
+"overs": "4.6",
+"score": "27",
+"runs": "9",
+"how_out": "O The Field",
+"bowler_name": "Prince Yadav",
+"bowler_slug": "prince-yadav",
+"number": 3
+},
+{
+"batsman_name": "Rovman Powell",
+"batsman_slug": "rovman-powell",
+"overs": "6.1",
+"score": "31",
+"runs": "1",
+"how_out": "c R Pant b M Khan",
+"bowler_name": "Mohsin Khan",
+"bowler_slug": "mohsin-khan",
+"number": 4
+},
+{
+"batsman_name": "Cameron Green",
+"batsman_slug": "cameron-green",
+"overs": "10.5",
+"score": "73",
+"runs": "34",
+"how_out": "c R Pant b M Khan",
+"bowler_name": "Mohsin Khan",
+"bowler_slug": "mohsin-khan",
+"number": 5
+},
+{
+"batsman_name": "Anukul Roy",
+"batsman_slug": "anukul-roy",
+"overs": "10.6",
+"score": "73",
+"runs": "0",
+"how_out": "c A Badoni b M Khan",
+"bowler_name": "Mohsin Khan",
+"bowler_slug": "mohsin-khan",
+"number": 6
+},
+{
+"batsman_name": "Ramandeep Singh",
+"batsman_slug": "ramandeep-singh",
+"overs": "14.6",
+"score": "93",
+"runs": "6",
+"how_out": "c M Marsh b GF Linde",
+"bowler_name": "George Linde",
+"bowler_slug": "george-linde",
+"number": 7
+}
+],
+"current_partnership": {
+"runs": 62,
+"balls": 30,
+"overs": 5,
+"batsmen": [
+{
+"runs": 56,
+"balls": 24,
+"name": "Rinku Singh",
+"slug": "rinku-singh"
+},
+{
+"runs": 4,
+"balls": 6,
+"name": "Sunil Narine",
+"slug": "sunil-narine"
+}
+]
+},
+"powerplay": {
+"p1": {
+"endover": "6",
+"startover": "0.1"
+}
+},
+"review": {
+"batting": {
+"batting_team_review_available": "1",
+"batting_team_review_failed": "1",
+"batting_team_review_retained": "0",
+"batting_team_review_success": "1",
+"batting_team_total_review": "2"
+},
+"bowling": {
+"bowling_team_review_available": "1",
+"bowling_team_review_failed": "1",
+"bowling_team_review_retained": "0",
+"bowling_team_review_success": "1",
+"bowling_team_total_review": "2"
+}
+}
+},
+{
+"name": "Lucknow Super Giants Inning",
+"short_name": "LSG Inning",
+"batting": [
+{
+"name": "Aiden Markram",
+"slug": "aiden-markram",
+"balls": "27",
+"runs": "31",
+"out_str": "c R Singh b CM Green",
+"fours": "2",
+"sixes": "1",
+"strike_rate": 114.81
+},
+{
+"name": "Mitchell Marsh",
+"slug": "mr-marsh",
+"balls": "3",
+"runs": "2",
+"out_str": "c R Powell b V Arora",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 66.67
+},
+{
+"name": "Rishabh Pant",
+"slug": "rishabh-pant",
+"balls": "38",
+"runs": "42",
+"out_str": "c TL Seifert b S Narine",
+"fours": "4",
+"sixes": "1",
+"strike_rate": 110.53,
+"is_captain": true
+},
+{
+"name": "Nicholas Pooran",
+"slug": "nicolas-pooran",
+"balls": "12",
+"runs": "9",
+"out_str": "c S Narine b V Chakaravarthy",
+"fours": "0",
+"sixes": "1",
+"strike_rate": 75
+},
+{
+"name": "Ayush Badoni",
+"slug": "ayush-badoni",
+"balls": "19",
+"runs": "24",
+"out_str": "c AS Roy b V Chakaravarthy",
+"fours": "0",
+"sixes": "2",
+"strike_rate": 126.32
+},
+{
+"name": "Mukul Choudhary",
+"slug": "mukul-choudhary",
+"balls": "2",
+"runs": "1",
+"out_str": "c R Singh b AS Roy",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 50
+},
+{
+"name": "Himmat Singh",
+"slug": "himmat-singh",
+"balls": "10",
+"runs": "19",
+"out_str": "c R Singh b K Tyagi",
+"fours": "2",
+"sixes": "1",
+"strike_rate": 190,
+"brought_in": true
+},
+{
+"name": "George Linde",
+"slug": "george-linde",
+"balls": "4",
+"runs": "8",
+"out_str": "c R Singh b V Arora",
+"fours": "2",
+"sixes": "0",
+"strike_rate": 200
+},
+{
+"name": "Mohammad Shami",
+"slug": "mohammed-shami-ahmed",
+"balls": "6",
+"runs": "11",
+"out_str": "Not out",
+"fours": "1",
+"sixes": "1",
+"strike_rate": 183.33
+},
+{
+"name": "Prince Yadav",
+"slug": "prince-yadav",
+"balls": "1",
+"runs": "0",
+"out_str": "Not out",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+}
+],
+"bowling": [
+{
+"name": "Anukul Roy",
+"slug": "anukul-roy",
+"overs": "2",
+"maiden_overs": "0",
+"runs": "19",
+"wickets": "1",
+"economy": 9.5,
+"extras": 0
+},
+{
+"name": "Vaibhav Arora",
+"slug": "vaibhav-arora",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "24",
+"wickets": "2",
+"economy": 6,
+"extras": 1
+},
+{
+"name": "Cameron Green",
+"slug": "cameron-green",
+"overs": "2",
+"maiden_overs": "0",
+"runs": "12",
+"wickets": "1",
+"economy": 6,
+"extras": 0
+},
+{
+"name": "Sunil Narine",
+"slug": "sunil-narine",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "23",
+"wickets": "1",
+"economy": 5.75,
+"extras": 0
+},
+{
+"name": "Varun Chakaravarthy",
+"slug": "varun-chakravarthy",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "33",
+"wickets": "2",
+"economy": 8.25,
+"extras": 2,
+"brought_in": true
+},
+{
+"name": "Kartik Tyagi",
+"slug": "tyagi-kartik",
+"overs": "4",
+"maiden_overs": "0",
+"runs": "41",
+"wickets": "1",
+"economy": 10.25,
+"extras": 2
+}
+],
+"batting_team_id": 123214,
+"fall_of_wickets": " 8-1 (Mitchell Marsh, 1.1), 65-2 (Aiden Markram, 10.2), 78-3 (Rishabh Pant, 12.2), 89-4 (Nicholas Pooran, 13.6), 93-5 (Mukul Choudhary, 15.2), 120-6 (Ayush Badoni, 17.3), 129-7 (George Linde, 18.2), 148-8 (Himmat Singh, 19.3)",
+"extras": "8",
+"bye": "2",
+"legbye": "1",
+"noball": "2",
+"wide": "3",
+"penalties": "0",
+"wickets": "8",
+"overs": "20",
+"runs": "155",
+"run_rate": 7.75,
+"result": 4,
+"did_not_bat": {
+"134428": "Digvesh Singh Rathi"
+},
+"not_batted": {
+"134428": {
+"name": "Digvesh Singh Rathi",
+"slug": "digvesh-singh",
+"order": 1,
+"provider_id": "134428"
+}
+},
+"innings_no": 2,
+"fours": "11",
+"sixes": "7",
+"fall_of_wickets_array": [
+{
+"batsman_name": "Mitchell Marsh",
+"batsman_slug": "mr-marsh",
+"overs": "1.1",
+"score": "8",
+"runs": "2",
+"how_out": "c R Powell b V Arora",
+"bowler_name": "Vaibhav Arora",
+"bowler_slug": "vaibhav-arora",
+"number": 1
+},
+{
+"batsman_name": "Aiden Markram",
+"batsman_slug": "aiden-markram",
+"overs": "10.2",
+"score": "65",
+"runs": "31",
+"how_out": "c R Singh b CM Green",
+"bowler_name": "Cameron Green",
+"bowler_slug": "cameron-green",
+"number": 2
+},
+{
+"batsman_name": "Rishabh Pant",
+"batsman_slug": "rishabh-pant",
+"overs": "12.2",
+"score": "78",
+"runs": "42",
+"how_out": "c TL Seifert b S Narine",
+"bowler_name": "Sunil Narine",
+"bowler_slug": "sunil-narine",
+"number": 3
+},
+{
+"batsman_name": "Nicholas Pooran",
+"batsman_slug": "nicolas-pooran",
+"overs": "13.6",
+"score": "89",
+"runs": "9",
+"how_out": "c S Narine b V Chakaravarthy",
+"bowler_name": "Varun Chakaravarthy",
+"bowler_slug": "varun-chakravarthy",
+"number": 4
+},
+{
+"batsman_name": "Mukul Choudhary",
+"batsman_slug": "mukul-choudhary",
+"overs": "15.2",
+"score": "93",
+"runs": "1",
+"how_out": "c R Singh b AS Roy",
+"bowler_name": "Anukul Roy",
+"bowler_slug": "anukul-roy",
+"number": 5
+},
+{
+"batsman_name": "Ayush Badoni",
+"batsman_slug": "ayush-badoni",
+"overs": "17.3",
+"score": "120",
+"runs": "24",
+"how_out": "c AS Roy b V Chakaravarthy",
+"bowler_name": "Varun Chakaravarthy",
+"bowler_slug": "varun-chakravarthy",
+"number": 6
+},
+{
+"batsman_name": "George Linde",
+"batsman_slug": "george-linde",
+"overs": "18.2",
+"score": "129",
+"runs": "8",
+"how_out": "c R Singh b V Arora",
+"bowler_name": "Vaibhav Arora",
+"bowler_slug": "vaibhav-arora",
+"number": 7
+},
+{
+"batsman_name": "Himmat Singh",
+"batsman_slug": "himmat-singh",
+"overs": "19.3",
+"score": "148",
+"runs": "19",
+"how_out": "c R Singh b K Tyagi",
+"bowler_name": "Kartik Tyagi",
+"bowler_slug": "tyagi-kartik",
+"number": 8
+}
+],
+"current_partnership": {
+"runs": 7,
+"balls": 3,
+"overs": 0.3,
+"batsmen": [
+{
+"runs": 0,
+"balls": 1,
+"name": "Prince Yadav",
+"slug": "prince-yadav"
+},
+{
+"runs": 6,
+"balls": 2,
+"name": "Mohammad Shami",
+"slug": "mohammed-shami-ahmed"
+}
+]
+},
+"powerplay": {
+"p1": {
+"endover": "6",
+"startover": "0.1"
+}
+},
+"review": {
+"batting": {
+"batting_team_review_available": "2",
+"batting_team_review_failed": "0",
+"batting_team_review_retained": "0",
+"batting_team_review_success": "1",
+"batting_team_total_review": "2"
+},
+"bowling": {
+"bowling_team_review_available": "0",
+"bowling_team_review_failed": "2",
+"bowling_team_review_retained": "0",
+"bowling_team_review_success": "1",
+"bowling_team_total_review": "2"
+}
+}
+},
+{
+"name": "Lucknow Super Giants Super Over Inning",
+"short_name": "LSG Super Over Inning",
+"batting": [
+{
+"name": "Nicholas Pooran",
+"slug": "nicolas-pooran",
+"balls": "1",
+"runs": "0",
+"out_str": "b S Narine",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+},
+{
+"name": "Aiden Markram",
+"slug": "aiden-markram",
+"balls": "1",
+"runs": "0",
+"out_str": "c R Singh b S Narine",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+},
+{
+"name": "Rishabh Pant",
+"slug": "rishabh-pant",
+"balls": "1",
+"runs": "1",
+"out_str": "Not out",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 100,
+"is_captain": true
+}
+],
+"bowling": [
+{
+"name": "Sunil Narine",
+"slug": "sunil-narine",
+"overs": "0.3",
+"maiden_overs": "0",
+"runs": "1",
+"wickets": "2",
+"economy": 2,
+"extras": 0
+}
+],
+"batting_team_id": 123214,
+"fall_of_wickets": " 0-1 (Nicholas Pooran, 0.1), 1-2 (Aiden Markram, 0.3)",
+"extras": "0",
+"bye": "0",
+"legbye": "0",
+"noball": "0",
+"wide": "0",
+"penalties": "0",
+"wickets": "2",
+"overs": "0.3",
+"runs": "1",
+"run_rate": 2,
+"result": 1,
+"did_not_bat": {
+"83": "Mitchell Marsh",
+"131": "Mohammad Shami",
+"47483": "George Linde",
+"90753": "Himmat Singh",
+"94182": "Ayush Badoni",
+"123421": "Mukul Choudhary",
+"134428": "Digvesh Singh Rathi",
+"135731": "Prince Yadav"
+},
+"not_batted": {
+"83": {
+"name": "Mitchell Marsh",
+"slug": "mr-marsh",
+"order": 1,
+"provider_id": "83"
+},
+"131": {
+"name": "Mohammad Shami",
+"slug": "mohammed-shami-ahmed",
+"order": 5,
+"provider_id": "131"
+},
+"47483": {
+"name": "George Linde",
+"slug": "george-linde",
+"order": 4,
+"provider_id": "47483"
+},
+"90753": {
+"name": "Himmat Singh",
+"slug": "himmat-singh",
+"order": 8,
+"provider_id": "90753"
+},
+"94182": {
+"name": "Ayush Badoni",
+"slug": "ayush-badoni",
+"order": 2,
+"provider_id": "94182"
+},
+"123421": {
+"name": "Mukul Choudhary",
+"slug": "mukul-choudhary",
+"order": 3,
+"provider_id": "123421"
+},
+"134428": {
+"name": "Digvesh Singh Rathi",
+"slug": "digvesh-singh",
+"order": 7,
+"provider_id": "134428"
+},
+"135731": {
+"name": "Prince Yadav",
+"slug": "prince-yadav",
+"order": 6,
+"provider_id": "135731"
+}
+},
+"innings_no": 3,
+"fours": "0",
+"sixes": "0",
+"fall_of_wickets_array": [
+{
+"batsman_name": "Nicholas Pooran",
+"batsman_slug": "nicolas-pooran",
+"overs": "0.1",
+"score": "0",
+"runs": "0",
+"how_out": "b S Narine",
+"bowler_name": "Sunil Narine",
+"bowler_slug": "sunil-narine",
+"number": 1
+},
+{
+"batsman_name": "Aiden Markram",
+"batsman_slug": "aiden-markram",
+"overs": "0.3",
+"score": "1",
+"runs": "0",
+"how_out": "c R Singh b S Narine",
+"bowler_name": "Sunil Narine",
+"bowler_slug": "sunil-narine",
+"number": 2
+}
+],
+"current_partnership": {
+"runs": 1,
+"balls": 2,
+"overs": 0.2,
+"batsmen": [
+{
+"runs": 1,
+"balls": 1,
+"name": "Rishabh Pant",
+"slug": "rishabh-pant"
+},
+{
+"runs": 0,
+"balls": 1,
+"name": "Aiden Markram",
+"slug": "aiden-markram"
+}
+]
+},
+"powerplay": [],
+"review": {
+"batting": {
+"batting_team_review_available": "0",
+"batting_team_review_failed": "0",
+"batting_team_review_retained": "0",
+"batting_team_review_success": "0",
+"batting_team_total_review": "0"
+},
+"bowling": {
+"bowling_team_review_available": "0",
+"bowling_team_review_failed": "0",
+"bowling_team_review_retained": "0",
+"bowling_team_review_success": "0",
+"bowling_team_total_review": "0"
+}
+}
+},
+{
+"name": "Kolkata Knight Riders Super Over Inning",
+"short_name": "KKR Super Over Inning",
+"batting": [
+{
+"name": "Rinku Singh",
+"slug": "rinku-singh",
+"balls": "1",
+"runs": "4",
+"out_str": "Not out",
+"fours": "1",
+"sixes": "0",
+"strike_rate": 400
+},
+{
+"name": "Rovman Powell",
+"slug": "rovman-powell",
+"balls": "0",
+"runs": "0",
+"out_str": "Not out",
+"fours": "0",
+"sixes": "0",
+"strike_rate": 0
+}
+],
+"bowling": [
+{
+"name": "Prince Yadav",
+"slug": "prince-yadav",
+"overs": "0.1",
+"maiden_overs": "0",
+"runs": "4",
+"wickets": "0",
+"economy": 24,
+"extras": 0
+}
+],
+"batting_team_id": 591,
+"fall_of_wickets": "",
+"extras": "0",
+"bye": "0",
+"legbye": "0",
+"noball": "0",
+"wide": "0",
+"penalties": "0",
+"wickets": "0",
+"overs": "0.1",
+"runs": "4",
+"run_rate": 24,
+"result": 3,
+"did_not_bat": {
+"127": "Ajinkya Rahane",
+"601": "Sunil Narine",
+"16511": "Tim Seifert",
+"90681": "Ramandeep Singh",
+"90737": "Anukul Roy",
+"90910": "Varun Chakaravarthy",
+"93130": "Cameron Green",
+"93340": "Kartik Tyagi",
+"96653": "Vaibhav Arora"
+},
+"not_batted": {
+"127": {
+"name": "Ajinkya Rahane",
+"slug": "ajinkya-rahane",
+"order": 2,
+"provider_id": "127"
+},
+"601": {
+"name": "Sunil Narine",
+"slug": "sunil-narine",
+"order": 6,
+"provider_id": "601"
+},
+"16511": {
+"name": "Tim Seifert",
+"slug": "tim-seifert",
+"order": 1,
+"provider_id": "16511"
+},
+"90681": {
+"name": "Ramandeep Singh",
+"slug": "ramandeep-singh",
+"order": 4,
+"provider_id": "90681"
+},
+"90737": {
+"name": "Anukul Roy",
+"slug": "anukul-roy",
+"order": 5,
+"provider_id": "90737"
+},
+"90910": {
+"name": "Varun Chakaravarthy",
+"slug": "varun-chakravarthy",
+"order": 9,
+"provider_id": "90910"
+},
+"93130": {
+"name": "Cameron Green",
+"slug": "cameron-green",
+"order": 3,
+"provider_id": "93130"
+},
+"93340": {
+"name": "Kartik Tyagi",
+"slug": "tyagi-kartik",
+"order": 8,
+"provider_id": "93340"
+},
+"96653": {
+"name": "Vaibhav Arora",
+"slug": "vaibhav-arora",
+"order": 7,
+"provider_id": "96653"
+}
+},
+"innings_no": 4,
+"fours": "1",
+"sixes": "0",
+"fall_of_wickets_array": [],
+"current_partnership": {
+"runs": 4,
+"balls": 1,
+"overs": 0.1,
+"batsmen": [
+{
+"runs": 4,
+"balls": 1,
+"name": "Rinku Singh",
+"slug": "rinku-singh"
+},
+{
+"runs": 0,
+"balls": 0,
+"name": "Rovman Powell",
+"slug": "rovman-powell"
+}
+]
+},
+"powerplay": [],
+"review": {
+"batting": {
+"batting_team_review_available": "0",
+"batting_team_review_failed": "0",
+"batting_team_review_retained": "0",
+"batting_team_review_success": "0",
+"batting_team_total_review": "0"
+},
+"bowling": {
+"bowling_team_review_available": "0",
+"bowling_team_review_failed": "0",
+"bowling_team_review_retained": "0",
+"bowling_team_review_success": "0",
+"bowling_team_total_review": "0"
+}
+}
+}
+],
+"now_batting": {
+"b1": {
+"name": "",
+"slug": "",
+"stats": {
+"sixes": "",
+"runs": "",
+"balls": "",
+"fours": "",
+"strike_rate": 0
+}
+},
+"b2": {
+"name": "",
+"slug": "",
+"stats": {
+"sixes": "",
+"runs": "",
+"balls": "",
+"fours": "",
+"strike_rate": 0
+}
+},
+"team": {
+"name": "",
+"short_name": "",
+"score": ""
+}
+},
+"now_bowling": {
+"b1": {
+"name": "",
+"slug": "",
+"stats": {
+"runs": "",
+"balls": "",
+"maiden_overs": "",
+"wickets": "",
+"overs": "",
+"economy": 0
+}
+},
+"b2": {
+"name": "",
+"slug": "",
+"stats": {
+"runs": "",
+"balls": "",
+"maiden_overs": "",
+"wickets": "",
+"overs": "",
+"economy": 0
+}
+}
+},
+"has_commentary": true,
+"is_line": true,
+"title": "Lucknow Super Giants vs Kolkata Knight Riders",
+"short_title": "LSG vs KKR",
+"series": "IPL 2026",
+"series_keeda_slug": "ipl",
+"series_image_url": "https://staticg.sportskeeda.com/editor/2026/03/8a4ad-17738128169494.png",
+"series_tv_streaming": "JioHotstar, Star Sports Network",
+"game_type": "T20",
+"game_format": 6,
+"game_state": 0,
+"last_wkt": "",
+"last_wkt_min": "",
+"endtime": 1777248000,
+"match_status": "post",
+"stumps": false,
+"in_play": false,
+"secondary_info": "Lucknow Super Giants elected to bowl",
+"venue": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium, Lucknow",
+"venue_stadium": "Bharat Ratna Shri Atal Bihari Vajpayee Ekana Cricket Stadium",
+"venue_location": "Lucknow",
+"venue_country": "India",
+"session": "",
+"info": "Kolkata Knight Riders won by superover",
+"day": "1",
+"mom": "Rinku Singh",
+"description": "Match 38",
+"win_type_id": "2",
+"home_team": "",
+"away_team": "",
+"winner_team": "Kolkata Knight Riders",
+"umpires": "Abhijeet Bengeri (India), Keyur Kelkar (India), Rohan Pandit (India, TV)",
+"referee": "Javagal Srinath (India)",
+"topic_slug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"commentary": [
+{
+"comment_type": "comment",
+"timestamp": 1777229598000,
+"source": "comment",
+"comment_text": "<div>Five losses in a row for LSG and a total of 8 in a row at their home venue Ekana Stadium, they have now sunk to the bottom of the log and have a lot of thinking to do. KKR's campaign will get a big boost with this win, they have got two wins in a row now and are above MI and LSG at number 8 with minimal room of slipping up themselves. That was a long shift, we need to catch our breaths, you do so too and make sure you catch all the content that is going to be out on all our platforms after a classic like this. We move to Delhi tomorrow as DC host RCB, make sure to be there with us. For now, this is <strong>Sourabh Agrawal </strong>signing off on behalf of <strong>Pradeep</strong> and the entire team. Sleep well!</div>",
+"_id": {
+"$oid": "69ee5f1ebddc7e491c5c5606",
+"$id": "69ee5f1ebddc7e491c5c5606"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777229207000,
+"source": "comment",
+"comment_text": "<div>Let us now hear from the man of the night, the player of the match&nbsp;<strong>Rinku Singh:&nbsp;</strong>When I go into bat, if the wickets have fallen so I look to knock it around and take it to the end. The plan was to hit the bad ball away and go deep. (was targetting the spinnner in the last over a plan?) I got to know in the last over only that the spinner was going to bowl, did not have a plan as such. (catching) I love fielding since my childhood, by God's grace I am fit and can run around, I enjoy myself. (on the catch in the Super Over) I was not ready for it, thought Rovman would take it himself but he threw it to me and I took it</div>",
+"_id": {
+"$oid": "69ee5d97bddc7e491e69d7e8",
+"$id": "69ee5d97bddc7e491e69d7e8"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_player_of_the_match",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777229145000,
+"source": "comment",
+"comment_text": "<div><strong>Ajinkya Rahane (KKR captain): </strong>(How is your heart rate?) Settled. Really happy with the victory, the way we batted after the first 16 overs. Credit goes to Rinku Singh, taking it deep and getting the big over at the last to bring the momentum to our side. (on the total) We played the Mushtaq Ali trophy here, the soil which we played on today was the same and we knew that 160 was going to be a good total. (message in the second half) The powerplay with the bat was badf for us, that is where we need to work on as a unit but the kind of bowling we did was really good, it is just about having belief. We knew that one wicket here or there could turn the game, not easy to chase down, we had confidence in our spinners, Narine, Varun and even Anukul. (were there other options with the ball in the Super Over other than Narine?) No, Sunil Narine was the option, he has been bowling really well. I would like to mention couple of my young fast bowlers, Kartik Tyagi, Vaibhav and even Anukul Roy, all the young guys. Let's not forget Rinku Singh. (bowling plans)&nbsp;Using the longer boundary is what we spoke about, as long as you are clear as to what you want to bowl it is fine, if it doesn't work, it doesn't.</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee5d59bddc7e491e69d7e7",
+"$id": "69ee5d59bddc7e491e69d7e7"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_winning_cap",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228502000,
+"source": "comment",
+"comment_text": "<div><strong>AWARDS<br><br>- Green Dot Ball Award Goes To Mohsin Khan (13 dot balls)<br>- On-the-go Fours of the match Award Goes to Rinku Singh (7 fours)<br>- Super SIxes Award Goes To Rinku Singh (5 sixes)<br>- SUPER Striker Award Goes to Himmat Singh (190 strike rate)&nbsp;</strong></div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee5ad6bddc7e491dd27237",
+"$id": "69ee5ad6bddc7e491dd27237"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228450000,
+"source": "comment",
+"comment_text": "<div><strong>12:03 PM local time and IST:&nbsp;</strong>It is time for the&nbsp;<strong>post-match presentations!</strong></div>",
+"_id": {
+"$oid": "69ee5aa2bddc7e491e69d7e6",
+"$id": "69ee5aa2bddc7e491e69d7e6"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228112000,
+"source": "comment",
+"comment_text": "<div><strong>Sunil Narine [Kolkata Knight Riders]:</strong> \"(On bowling in Super Overs) You don’t really have a choice in those moments—if you’re asked to bowl, you take it on. It’s always a tough situation, but bowling first in a Super Over can make it slightly easier in terms of clarity.(On his subdued celebration) Cricket is demanding enough without thinking about celebrations. The focus is always on execution and what needs to be done in the moment—celebrations come last.(On the delivery to dismiss Pooran) That one ranks up there, especially given the situation. But more than anything, I’m pleased for the team. We’ve been through a tough phase, and a win like this can help build momentum.(On defending totals and backing teammates) Defending in the final over is never easy, no matter the experience level. Kartik has been bowling well throughout the season, and moments like these are part of the learning curve. You take it, learn from it, and move forward.(On stepping up as a senior player) The entire team backed me to bowl the Super Over, which made the decision straightforward. Once everyone is on the same page, it becomes easier to focus and deliver.(On the decision to bowl the Super Over) It came from the coaching staff. They backed me to do the job, and I was happy to take it on.\"</div>",
+"_id": {
+"$oid": "69ee5950bddc7e491e69d7e5",
+"$id": "69ee5950bddc7e491e69d7e5"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227930000,
+"source": "comment",
+"comment_text": "<div><strong>Rishabh Pant [Lucknow Super Giants]:</strong> \"(On handling pressure and team mindset) I think we need a bit of a break to reset. Pressure is always going to be there in games like this, but the answers have to come from within the group. It’s about keeping things simple and taking responsibility as a unit—it can’t be down to just one or two players.(On backing Nicholas Pooran in a crunch situation) It was a collective decision. Even if he hasn’t been in the best form, you’ve got to trust your players in tough moments. These are the situations where experienced players can come through, so there are no excuses—just a matter of backing them.(On bowling decisions in key moments) In cricket, there are always moments where you might think differently in hindsight. But sometimes bowlers have to take on the tough overs. The idea was to use him in those situations to try and get a breakthrough, but it didn’t quite come off.(On the takeaway from the game) Right now, there may not seem like many positives, but with a bit of time and a reset, we believe things will turn around and improve going forward.\"</div>",
+"_id": {
+"$oid": "69ee589abddc7e4920ad5059",
+"$id": "69ee589abddc7e4920ad5059"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_losing_cap",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227580000,
+"source": "comment",
+"comment_text": "<div><strong>11:49 PM local time and IST: MATCH SUMMARY<br><br>Kolkata Knight Riders (155/7 in 20 overs) and 4/0 in 0.1 in the Super Over beat Lucknow Super Giants (155/8 in 20 overs) and 1/2 in 0.3 in the Super Over<br><br>Rinku Singh 83*(51) &amp; 4(1) | Sunil Narine 1/23(4) &amp; 2/1(0.3)<br>Rishabh Pant 42(38) | Mohsin Khan 5/23(4)<br><br></strong>PHEW! We've witnessed a classic, haven't we? Pant gives a big hug to Rinku, it was just meant to be for him tonight. 83 runs with the bat including a 26-run last over that gave KKR the momentum into the innings break, 4 catches to follow it up on the field and then he did it again in the super over with another catch and then the winning runs, quite fittingly<br><br>How about Sunil Narine? The man doesn't age, does he? You need a wicket as a KKR captain, you turn to Sunil Narine. You need to stop the runs, you turn to Sunil Narine, you need runs at the top of the order you often turn to Sunil Narine and even if that is not enough you turn to him once again with the ball in the Super Over and the legend gets the job done with so much ease<br><br>What will be the mood in the LSG camp though? They had this game with them at many instances, first up when Mohsin Khan ran through the KKR lineup and registered the first five-wicket haul of the season with figures of 5/23. They should have stopped KKR to much lesser than 155 in the first innings but Digvesh Rathi was taken down in the 20th over by Rinku Singh<br><br>The run chase kept swinging from one way to the other, just like LSG's thoughts regarding their batting combination. They came out with yet another opening combo tonight, back to Marsh and Markram and then Marsh departed cheaply. Markram and Pant did well to stabilize the innings, they were cool and calm in the chase but then the both of them got out in quick succession and KKR came back into it again<br><br>Badoni then tried with the bat, Himmat Singh did too until that last over which was as dramatic as it gets with Kartik Tyagi bowling a couple of beamers. It was 7 needed off the final ball when Shami got one in the slot and parked it over long-off to get us into the Super Over<br><br>Pooran, suprirsingly, was trusted with the bat for LSG ahead of Pant, Marsh and even Markram who was at the other end to start. A first ball duck for him making it <strong>three ducks in three super overs for Pooran in IPL</strong>, it was all KKR then</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee573cbddc7e491dd27236",
+"$id": "69ee573cbddc7e491dd27236"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"runs": 4,
+"comment_type": "comment",
+"timestamp": 1777227504000,
+"source": "comment",
+"comment_text": "<div>0.1 Prince Yadav to Rinku Singh, FOUR! RINKU SINGH HITS THE WINNING RUNS, FITTINGLY FOR KKR! KKR hold their nerve in a Super Over thriller to snatch victory from the jaws of chaos! Full outside the off-stump, Rinku carved it through to deep backward point boundary and finishes the game in style. It had to be Rinku Singh, a game to remember for him.</div>",
+"opta_ball_type": "normal",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee56f0bddc7e491dd27235",
+"$id": "69ee56f0bddc7e491dd27235"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227472000,
+"source": "comment",
+"comment_text": "<div>Pretty much everyone in the ring barring a square leg in the deep and cover halfway back. Rinku to face Prince, here we go</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee56d0bddc7e491dd27234",
+"$id": "69ee56d0bddc7e491dd27234"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "milestone",
+"timestamp": 1777227456000,
+"source": "comment",
+"comment_text": "Prince Yadav's Opening Bowling spell",
+"_id": {
+"$oid": "69ee56c0bddc7e491dd27233",
+"$id": "69ee56c0bddc7e491dd27233"
+},
+"inning_number": "4",
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"milestone_type": "new_bowler",
+"milestone_value": "opening",
+"milestone_provider_id": "135731",
+"milestone_bowling_style": "Right Arm",
+"milestone_matches": "13",
+"milestone_average": "27.69",
+"milestone_wickets": "16",
+"milestone_economy": "9.07",
+"milestone_stats_for": "IPL",
+"is_processed": true,
+"auto_comms_idx": 0
+},
+{
+"comment_type": "milestone",
+"timestamp": 1777227448000,
+"source": "comment",
+"comment_text": "Rovman Powell opening at non-striker's end",
+"_id": {
+"$oid": "69ee56b8bddc7e491e69d7e4",
+"$id": "69ee56b8bddc7e491e69d7e4"
+},
+"inning_number": "4",
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"milestone_type": "new_batsmen",
+"milestone_value": "2",
+"milestone_provider_id": "55467",
+"milestone_balls": "315",
+"milestone_runs": "462",
+"milestone_batting_style": "Right Handed",
+"milestone_matches": "33",
+"milestone_average": "22.00",
+"milestone_stats_for": "IPL",
+"milestone_fifties": "1",
+"milestone_hundreds": "0",
+"is_processed": true,
+"auto_comms_idx": 0
+},
+{
+"comment_type": "milestone",
+"timestamp": 1777227441000,
+"source": "comment",
+"comment_text": "Rinku Singh opening at striker's end",
+"_id": {
+"$oid": "69ee56b1bddc7e4920ad5058",
+"$id": "69ee56b1bddc7e4920ad5058"
+},
+"inning_number": "4",
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"milestone_type": "new_batsmen",
+"milestone_value": "1",
+"milestone_provider_id": "55676",
+"milestone_balls": "824",
+"milestone_runs": "1178",
+"milestone_batting_style": "Left Handed",
+"milestone_matches": "65",
+"milestone_average": "29.45",
+"milestone_stats_for": "IPL",
+"milestone_fifties": "4",
+"milestone_hundreds": "0",
+"is_processed": true,
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227340000,
+"source": "comment",
+"comment_text": "<div><strong>11:45 PM local time and IST:</strong> Right then, the players come out once again, for one final time in the night. Pant can still afford a smile, he is such a character but his team needs to produce a miracle here because you know who is coming out to bat for KKR, it is that man&nbsp;<strong>Rinku Singh&nbsp;</strong>with his assist&nbsp;<strong>Rovman Powell&nbsp;</strong>who just need to get 2 runs. Who will bowl for LSG? Looks like&nbsp;<strong>Prince Yadav</strong>, yes</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee564cbddc7e491dd27232",
+"$id": "69ee564cbddc7e491dd27232"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "innings_start_end",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227098000,
+"source": "comment",
+"comment_text": "<div><strong>11:41 PM local time and IST: </strong>Oh so poetic! They say that 71% of the earth is covered by water and the rest by Rinku Singh, surely that has been proven right tonight. KKR can afford to smile, they are smiling as wide from ear to ear now, some of them in the dugout and now the scenes have been flipped with pensive looks in the LSG camp.&nbsp;<strong>LSG have been bowled out for just 1 run in the super over, take a bow Sunil Narine! KKR need 2 runs to win in 6 balls, surely not another twist right?</strong></div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee555abddc7e491e69d7e3",
+"$id": "69ee555abddc7e491e69d7e3"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "innings_start_end",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "milestone",
+"timestamp": 1777227079000,
+"source": "comment",
+"comment_text": "Aiden Markram has been dismissed for 0 runs off 1 balls",
+"_id": {
+"$oid": "69ee5547bddc7e491dd27231",
+"$id": "69ee5547bddc7e491dd27231"
+},
+"inning_number": "3",
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"milestone_type": "last_wicket",
+"milestone_provider_id": "46117",
+"milestone_balls": "1",
+"milestone_runs": "0",
+"milestone_how_out": "c Singh b Narine",
+"milestone_fours": "0",
+"milestone_sixes": "0",
+"is_processed": true,
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227072000,
+"source": "comment",
+"comment_text": "<div>0.3 Sunil Narine to Aiden Markram, OUT! RELAY CATCH, POWELL AND RINKU TAKES A STUNNER! It's all over for LSG. Short on the middle and off, Markram hangs back and slams it to long-on. Powell running around, takes the catch, but parries it in the air before he steps over the ropes. Rinku there on the other side, completes the catch.</div>",
+"opta_ball_type": "wicket",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee5540bddc7e4920ad5057",
+"$id": "69ee5540bddc7e4920ad5057"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"runs": 1,
+"comment_type": "comment",
+"timestamp": 1777227023000,
+"source": "comment",
+"comment_text": "<div>0.2 Sunil Narine to Rishabh Pant, short on the stumps, Pant down the wicket and slaps it to deep covers for just one.</div>",
+"opta_ball_type": "normal",
+"_id": {
+"$oid": "69ee550fbddc7e491e69d7e2",
+"$id": "69ee550fbddc7e491e69d7e2"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227021000,
+"source": "comment",
+"comment_text": "<div>The LSG skipper<strong> Rishabh Pant </strong>walks out now, should he have come out ahead of Pooran? All that is in hindsight though</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee550dbddc7e491dd27230",
+"$id": "69ee550dbddc7e491dd27230"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "milestone",
+"timestamp": 1777227016000,
+"source": "comment",
+"comment_text": "Rishabh Pant opening at non-striker's end",
+"_id": {
+"$oid": "69ee5508bddc7e491dd2722f",
+"$id": "69ee5508bddc7e491dd2722f"
+},
+"inning_number": "3",
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"milestone_type": "new_batsmen",
+"milestone_value": "2",
+"milestone_provider_id": "1098",
+"milestone_balls": "2518",
+"milestone_runs": "3700",
+"milestone_batting_style": "Left Handed",
+"milestone_matches": "132",
+"milestone_average": "33.64",
+"milestone_stats_for": "IPL",
+"milestone_fifties": "20",
+"milestone_hundreds": "2",
+"is_processed": true,
+"auto_comms_idx": 0
+}
+],
+"dirty": [
+{
+"comment_type": "comment",
+"timestamp": 1777229598000,
+"source": "comment",
+"comment_text": "<div>Five losses in a row for LSG and a total of 8 in a row at their home venue Ekana Stadium, they have now sunk to the bottom of the log and have a lot of thinking to do. KKR's campaign will get a big boost with this win, they have got two wins in a row now and are above MI and LSG at number 8 with minimal room of slipping up themselves. That was a long shift, we need to catch our breaths, you do so too and make sure you catch all the content that is going to be out on all our platforms after a classic like this. We move to Delhi tomorrow as DC host RCB, make sure to be there with us. For now, this is <strong>Sourabh Agrawal </strong>signing off on behalf of <strong>Pradeep</strong> and the entire team. Sleep well!</div>",
+"_id": {
+"$oid": "69ee5f1ebddc7e491c5c5606",
+"$id": "69ee5f1ebddc7e491c5c5606"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777229207000,
+"source": "comment",
+"comment_text": "<div>Let us now hear from the man of the night, the player of the match&nbsp;<strong>Rinku Singh:&nbsp;</strong>When I go into bat, if the wickets have fallen so I look to knock it around and take it to the end. The plan was to hit the bad ball away and go deep. (was targetting the spinnner in the last over a plan?) I got to know in the last over only that the spinner was going to bowl, did not have a plan as such. (catching) I love fielding since my childhood, by God's grace I am fit and can run around, I enjoy myself. (on the catch in the Super Over) I was not ready for it, thought Rovman would take it himself but he threw it to me and I took it</div>",
+"_id": {
+"$oid": "69ee5d97bddc7e491e69d7e8",
+"$id": "69ee5d97bddc7e491e69d7e8"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_player_of_the_match",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777229145000,
+"source": "comment",
+"comment_text": "<div><strong>Ajinkya Rahane (KKR captain): </strong>(How is your heart rate?) Settled. Really happy with the victory, the way we batted after the first 16 overs. Credit goes to Rinku Singh, taking it deep and getting the big over at the last to bring the momentum to our side. (on the total) We played the Mushtaq Ali trophy here, the soil which we played on today was the same and we knew that 160 was going to be a good total. (message in the second half) The powerplay with the bat was badf for us, that is where we need to work on as a unit but the kind of bowling we did was really good, it is just about having belief. We knew that one wicket here or there could turn the game, not easy to chase down, we had confidence in our spinners, Narine, Varun and even Anukul. (were there other options with the ball in the Super Over other than Narine?) No, Sunil Narine was the option, he has been bowling really well. I would like to mention couple of my young fast bowlers, Kartik Tyagi, Vaibhav and even Anukul Roy, all the young guys. Let's not forget Rinku Singh. (bowling plans)&nbsp;Using the longer boundary is what we spoke about, as long as you are clear as to what you want to bowl it is fine, if it doesn't work, it doesn't.</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee5d59bddc7e491e69d7e7",
+"$id": "69ee5d59bddc7e491e69d7e7"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_winning_cap",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228502000,
+"source": "comment",
+"comment_text": "<div><strong>AWARDS<br><br>- Green Dot Ball Award Goes To Mohsin Khan (13 dot balls)<br>- On-the-go Fours of the match Award Goes to Rinku Singh (7 fours)<br>- Super SIxes Award Goes To Rinku Singh (5 sixes)<br>- SUPER Striker Award Goes to Himmat Singh (190 strike rate)&nbsp;</strong></div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee5ad6bddc7e491dd27237",
+"$id": "69ee5ad6bddc7e491dd27237"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228450000,
+"source": "comment",
+"comment_text": "<div><strong>12:03 PM local time and IST:&nbsp;</strong>It is time for the&nbsp;<strong>post-match presentations!</strong></div>",
+"_id": {
+"$oid": "69ee5aa2bddc7e491e69d7e6",
+"$id": "69ee5aa2bddc7e491e69d7e6"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777228112000,
+"source": "comment",
+"comment_text": "<div><strong>Sunil Narine [Kolkata Knight Riders]:</strong> \"(On bowling in Super Overs) You don’t really have a choice in those moments—if you’re asked to bowl, you take it on. It’s always a tough situation, but bowling first in a Super Over can make it slightly easier in terms of clarity.(On his subdued celebration) Cricket is demanding enough without thinking about celebrations. The focus is always on execution and what needs to be done in the moment—celebrations come last.(On the delivery to dismiss Pooran) That one ranks up there, especially given the situation. But more than anything, I’m pleased for the team. We’ve been through a tough phase, and a win like this can help build momentum.(On defending totals and backing teammates) Defending in the final over is never easy, no matter the experience level. Kartik has been bowling well throughout the season, and moments like these are part of the learning curve. You take it, learn from it, and move forward.(On stepping up as a senior player) The entire team backed me to bowl the Super Over, which made the decision straightforward. Once everyone is on the same page, it becomes easier to focus and deliver.(On the decision to bowl the Super Over) It came from the coaching staff. They backed me to do the job, and I was happy to take it on.\"</div>",
+"_id": {
+"$oid": "69ee5950bddc7e491e69d7e5",
+"$id": "69ee5950bddc7e491e69d7e5"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227930000,
+"source": "comment",
+"comment_text": "<div><strong>Rishabh Pant [Lucknow Super Giants]:</strong> \"(On handling pressure and team mindset) I think we need a bit of a break to reset. Pressure is always going to be there in games like this, but the answers have to come from within the group. It’s about keeping things simple and taking responsibility as a unit—it can’t be down to just one or two players.(On backing Nicholas Pooran in a crunch situation) It was a collective decision. Even if he hasn’t been in the best form, you’ve got to trust your players in tough moments. These are the situations where experienced players can come through, so there are no excuses—just a matter of backing them.(On bowling decisions in key moments) In cricket, there are always moments where you might think differently in hindsight. But sometimes bowlers have to take on the tough overs. The idea was to use him in those situations to try and get a breakthrough, but it didn’t quite come off.(On the takeaway from the game) Right now, there may not seem like many positives, but with a bit of time and a reset, we believe things will turn around and improve going forward.\"</div>",
+"_id": {
+"$oid": "69ee589abddc7e4920ad5059",
+"$id": "69ee589abddc7e4920ad5059"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"comment_category": "post_match_speech_losing_cap",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227580000,
+"source": "comment",
+"comment_text": "<div><strong>11:49 PM local time and IST: MATCH SUMMARY<br><br>Kolkata Knight Riders (155/7 in 20 overs) and 4/0 in 0.1 in the Super Over beat Lucknow Super Giants (155/8 in 20 overs) and 1/2 in 0.3 in the Super Over<br><br>Rinku Singh 83*(51) &amp; 4(1) | Sunil Narine 1/23(4) &amp; 2/1(0.3)<br>Rishabh Pant 42(38) | Mohsin Khan 5/23(4)<br><br></strong>PHEW! We've witnessed a classic, haven't we? Pant gives a big hug to Rinku, it was just meant to be for him tonight. 83 runs with the bat including a 26-run last over that gave KKR the momentum into the innings break, 4 catches to follow it up on the field and then he did it again in the super over with another catch and then the winning runs, quite fittingly<br><br>How about Sunil Narine? The man doesn't age, does he? You need a wicket as a KKR captain, you turn to Sunil Narine. You need to stop the runs, you turn to Sunil Narine, you need runs at the top of the order you often turn to Sunil Narine and even if that is not enough you turn to him once again with the ball in the Super Over and the legend gets the job done with so much ease<br><br>What will be the mood in the LSG camp though? They had this game with them at many instances, first up when Mohsin Khan ran through the KKR lineup and registered the first five-wicket haul of the season with figures of 5/23. They should have stopped KKR to much lesser than 155 in the first innings but Digvesh Rathi was taken down in the 20th over by Rinku Singh<br><br>The run chase kept swinging from one way to the other, just like LSG's thoughts regarding their batting combination. They came out with yet another opening combo tonight, back to Marsh and Markram and then Marsh departed cheaply. Markram and Pant did well to stabilize the innings, they were cool and calm in the chase but then the both of them got out in quick succession and KKR came back into it again<br><br>Badoni then tried with the bat, Himmat Singh did too until that last over which was as dramatic as it gets with Kartik Tyagi bowling a couple of beamers. It was 7 needed off the final ball when Shami got one in the slot and parked it over long-off to get us into the Super Over<br><br>Pooran, suprirsingly, was trusted with the bat for LSG ahead of Pant, Marsh and even Markram who was at the other end to start. A first ball duck for him making it <strong>three ducks in three super overs for Pooran in IPL</strong>, it was all KKR then</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee573cbddc7e491dd27236",
+"$id": "69ee573cbddc7e491dd27236"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"runs": 4,
+"comment_type": "comment",
+"timestamp": 1777227504000,
+"source": "comment",
+"comment_text": "<div>0.1 Prince Yadav to Rinku Singh, FOUR! RINKU SINGH HITS THE WINNING RUNS, FITTINGLY FOR KKR! KKR hold their nerve in a Super Over thriller to snatch victory from the jaws of chaos! Full outside the off-stump, Rinku carved it through to deep backward point boundary and finishes the game in style. It had to be Rinku Singh, a game to remember for him.</div>",
+"opta_ball_type": "normal",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee56f0bddc7e491dd27235",
+"$id": "69ee56f0bddc7e491dd27235"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+},
+{
+"comment_type": "comment",
+"timestamp": 1777227472000,
+"source": "comment",
+"comment_text": "<div>Pretty much everyone in the ring barring a square leg in the deep and cover halfway back. Rinku to face Prince, here we go</div>",
+"comment_edited": true,
+"_id": {
+"$oid": "69ee56d0bddc7e491dd27234",
+"$id": "69ee56d0bddc7e491dd27234"
+},
+"cardSlug": "lucknow-super-giants-vs-kolkata-knight-riders-match-38-26-april-2026",
+"cardId": "69d948b6726feb067ded10de",
+"auto_comms_idx": 0
+}
+],
+"recent_overs": [],
+"match_id": "95995",
+"publish_time": 1777229597,
+"preview_data": {
+"probable_home_team": {
+"team_name": "",
+"team_slug": "",
+"players": null,
+"bench_players": null
+},
+"probable_away_team": {
+"team_name": "",
+"team_slug": "",
+"players": null,
+"bench_players": null
+},
+"team_a_playing_11": {
+"team": "",
+"team_flag": "",
+"team_shortname": "",
+"squad": null,
+"players": null,
+"bench_players": null,
+"substitute_players": null,
+"impact_players": null
+},
+"team_b_playing_11": {
+"team": "",
+"team_flag": "",
+"team_shortname": "",
+"squad": null,
+"players": null,
+"bench_players": null,
+"substitute_players": null,
+"impact_players": null
+},
+"fantasy_tips": {
+"tips": {
+"one_liner_tip": "",
+"before_toss": null,
+"after_toss": null,
+"updated_at": 0
+},
+"top_players": {
+"players": null
+}
+},
+"key_players_home_team": null,
+"key_players_away_team": null,
+"injury_data_home_team": null,
+"injury_data_away_team": null,
+"is_playing_11": false,
+"expert_comment": {
+"expert_name": "",
+"expert_profile_pic": "",
+"expert_profile_url": "",
+"comment_text": ""
+},
+"preview_points": null,
+"toss_status": "",
+"fantasy_tips_points": null,
+"head_to_head": {
+"no_result": 0,
+"home_team_wins": 0,
+"away_team_wins": 0,
+"home_team_win_ratio": ""
+},
+"venue_stat": {},
+"pitch_report": "",
+"pitch_type": "",
+"toss_advantage": "",
+"weather_title": "",
+"weather_rain": "",
+"weather_temperature": "",
+"weather_timestamp": "",
+"weather_prediction": "",
+"avg_venue_scores": null,
+"tv_streaming": "",
+"match_venue_stats": null
+},
+"sr_id": "",
+"srScorePresent": false,
+"has_table": true,
+"is_follow_on": 0,
+"seoTitle": "Lucknow Super Giants Vs Kolkata Knight Riders Match 38 26 April 2026",
+"player_images": {
+"abdul-samad-1": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/abdul-samad-1.png",
+"ahmed-shahbaz": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/ahmed-shahbaz.png",
+"aiden-markram": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/aiden-markram.png",
+"ajinkya-rahane": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/ajinkya-rahane.png",
+"akshat-raghuwanshi": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/akshat-raghuwanshi.png",
+"angkrish-raghuvanshi": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/angkrish-raghuvanshi.png",
+"anrich-nortje": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/anrich-nortje.png",
+"anukul-roy": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/anukul-roy.png",
+"arjun-tendulkar": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/arjun-tendulkar.png",
+"arshin-kulkarni": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/arshin-kulkarni.png",
+"avesh-khan": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/avesh-khan.png",
+"ayush-badoni": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/ayush-badoni.png",
+"blessing-muzarabani": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/blessing-muzarabani.png",
+"cameron-green": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/cameron-green.png",
+"daksh-kamra": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/daksh-kamra.png",
+"digvesh-singh": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/digvesh-singh.png",
+"finn-allen": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/finn-allen.png",
+"george-linde": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/george-linde.png",
+"himmat-singh": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/himmat-singh.png",
+"josh-inglis": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/josh-inglis.png",
+"manimaran-siddharth": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/manimaran-siddharth.png",
+"manish-pandey": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/manish-pandey.png",
+"matheesha-pathirana": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/matheesha-pathirana.png",
+"matthew-breetzke": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/matthew-breetzke.png",
+"mayank-yadav": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/mayank-yadav.png",
+"mohammed-shami-ahmed": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/mohammed-shami-ahmed.png",
+"mohsin-khan": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/mohsin-khan.png",
+"mr-marsh": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/mr-marsh.png",
+"mukul-choudhary": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/mukul-choudhary.png",
+"naman-tiwari": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/naman-tiwari.png",
+"navdeep-saini": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/navdeep-saini.png",
+"nicolas-pooran": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/nicolas-pooran.png",
+"prashant-solanki": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/prashant-solanki.png",
+"prince-yadav": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/prince-yadav.png",
+"rachin-ravindra": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/rachin-ravindra.png",
+"rahul-tripathi": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/rahul-tripathi.png",
+"ramandeep-singh": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/ramandeep-singh.png",
+"rinku-singh": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/rinku-singh.png",
+"rishabh-pant": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/rishabh-pant.png",
+"rovman-powell": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/rovman-powell.png",
+"sarthak-ranjan": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/sarthak-ranjan.png",
+"saurabh-dubey": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/saurabh-dubey.png",
+"singh-akash": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/singh-akash.png",
+"sunil-narine": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/sunil-narine.png",
+"tejasvi-dahiya": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/tejasvi-dahiya.png",
+"tim-seifert": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/tim-seifert.png",
+"tyagi-kartik": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/tyagi-kartik.png",
+"umran-malik": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/umran-malik.png",
+"vaibhav-arora": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/vaibhav-arora.png",
+"varun-chakravarthy": "https://staticg.sportskeeda.com/skm/assets/player-images/cricket/varun-chakravarthy.png"
+},
+"prediction_poll": {
+"question": "Which team will win?",
+"created_at": "2026-04-11T01:54:10+05:30",
+"options": {
+"opt1": {
+"text": "Lucknow Super Giants",
+"vote_count": 12096
+},
+"opt2": {
+"text": "Kolkata Knight Riders",
+"vote_count": 11755
+}
+}
+},
+"predictor_poll": [
+{
+"question": "Who will win?",
+"created_at": "2026-04-11T01:54:10+05:30",
+"options": {
+"opt1": {
+"text": "LSG",
+"vote_count": 0
+},
+"opt2": {
+"text": "KKR",
+"vote_count": 0,
+"is_correct_option": true
+}
+},
+"expires_on": 1777213800,
+"_id": "69d95c6a982df08d43706fb9"
+},
+{
+"question": "How many fours will be hit in the entire match?",
+"created_at": "2026-04-11T01:54:10+05:30",
+"options": {
+"opt1": {
+"text": "15 or below",
+"vote_count": 0
+},
+"opt2": {
+"text": "16-24",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt3": {
+"text": "25-40",
+"vote_count": 0
+},
+"opt4": {
+"text": "41 or more",
+"vote_count": 0
+}
+},
+"expires_on": 1777213800,
+"_id": "69d95c6a982df08d43706fba"
+},
+{
+"question": "What will be the maximum runs scored in an over?",
+"created_at": "2026-04-11T01:54:10+05:30",
+"options": {
+"opt1": {
+"text": "8-12",
+"vote_count": 0
+},
+"opt2": {
+"text": "13-16",
+"vote_count": 0
+},
+"opt3": {
+"text": "17-20",
+"vote_count": 0
+},
+"opt4": {
+"text": "21 or more",
+"vote_count": 0,
+"is_correct_option": true
+}
+},
+"expires_on": 1777213800,
+"_id": "69d95c6a982df08d43706fbb"
+},
+{
+"question": "How many runs will be scored in the final over (batting first)?",
+"created_at": "2026-04-11T01:54:10+05:30",
+"options": {
+"opt1": {
+"text": "5 or below",
+"vote_count": 0
+},
+"opt2": {
+"text": "6-10",
+"vote_count": 0
+},
+"opt3": {
+"text": "11-15",
+"vote_count": 0
+},
+"opt4": {
+"text": "16 or more",
+"vote_count": 0,
+"is_correct_option": true
+}
+},
+"expires_on": 1777213800,
+"_id": "69d95c6a982df08d43706fbc"
+},
+{
+"question": "How many extras will be bowled in the first innings?",
+"created_at": "2026-04-26T14:09:22Z",
+"options": {
+"opt1": {
+"text": "Less than 5",
+"vote_count": 0
+},
+"opt2": {
+"text": "5 to 8",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt3": {
+"text": "9 to 12",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 12",
+"vote_count": 0
+}
+},
+"expires_on": 1777213165,
+"_id": "69ee1c92ebe96083ab191246",
+"manually_added": true
+},
+{
+"question": "How many runs will be scored between the two timeouts in the first innings?",
+"created_at": "2026-04-26T14:49:35Z",
+"options": {
+"opt1": {
+"text": "Less than 40",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt2": {
+"text": "41-55",
+"vote_count": 0
+},
+"opt3": {
+"text": "56-70",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 70",
+"vote_count": 0
+}
+},
+"expires_on": 1777215579,
+"_id": "69ee25ffebe96083ab19124b",
+"manually_added": true
+},
+{
+"question": "How many wickets will the LSG spinners take?",
+"created_at": "2026-04-26T15:09:37Z",
+"options": {
+"opt1": {
+"text": "None",
+"vote_count": 0
+},
+"opt2": {
+"text": "1",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt3": {
+"text": "2 or 3",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 3",
+"vote_count": 0
+}
+},
+"expires_on": 1777216784,
+"_id": "69ee2ab1ebe96083ab19124e",
+"manually_added": true
+},
+{
+"question": "How many runs will be scored in the powerplay in the chase?",
+"created_at": "2026-04-26T16:13:55Z",
+"options": {
+"opt1": {
+"text": "Less than 40",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt2": {
+"text": "41-50",
+"vote_count": 0
+},
+"opt3": {
+"text": "51-60",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 60",
+"vote_count": 0
+}
+},
+"expires_on": 1777220639,
+"_id": "69ee39c3ebe96083ab191254",
+"manually_added": true
+},
+{
+"question": "How many runs will be scored in the middle overs in the second innings (7-15)?",
+"created_at": "2026-04-26T16:36:20Z",
+"options": {
+"opt1": {
+"text": "Less than 50",
+"vote_count": 0
+},
+"opt2": {
+"text": "51 to 60",
+"vote_count": 0,
+"is_correct_option": true
+},
+"opt3": {
+"text": "61 to 70",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 70",
+"vote_count": 0
+}
+},
+"expires_on": 1777221987,
+"_id": "69ee3f04ebe96083ab1912cf",
+"manually_added": true
+},
+{
+"question": "How many wickets will fall in the second innings?",
+"created_at": "2026-04-26T16:56:44Z",
+"options": {
+"opt1": {
+"text": "2 or less",
+"vote_count": 0
+},
+"opt2": {
+"text": "3 or 4",
+"vote_count": 0
+},
+"opt3": {
+"text": "5 or 6",
+"vote_count": 0
+},
+"opt4": {
+"text": "More than 6",
+"vote_count": 0,
+"is_correct_option": true
+}
+},
+"expires_on": 1777223208,
+"_id": "69ee43cc85d8215a4ee595ff",
+"manually_added": true
+}
+],
+"current_poll": [
+{
+"question": "Which team has the advantage going into the Super Over?",
+"options": {
+"opt1": {
+"text": "LSG",
+"vote_count": 705
+},
+"opt2": {
+"text": "KKR",
+"vote_count": 696
+}
+},
+"start_timestamp": 1777226642169,
+"expires_on": 1777227242169,
+"poll_theme": "default",
+"_id": "69ee5392bddc7e491e69d7de"
+}
+],
+"auto_commentary": false,
+"latest_inning_number": 4,
+"competition_id": 129908,
+"is_highlights_available": false,
+"pinned_videos": {
+"preview": "",
+"fantasy": "",
+"live": ""
+},
+"overs_timeline": [
+[
+"W",
+"1",
+"W",
+"4",
+"x",
+"x"
+],
+[
+"1b",
+"1nb",
+"3nb",
+"4",
+"W",
+"1b",
+"0",
+"6"
+]
+],
+"overs_timeline_v2": [
+{
+"over": "1.0",
+"runs": 4,
+"summary": [
+"4",
+"x",
+"x",
+"x",
+"x",
+"x"
+]
+}
+],
+"player_of_match": {
+"player_name": "Rinku Singh",
+"player_slug": "rinku-singh",
+"batting_stat": "83(51) & 4(1)",
+"bowling_stat": ""
+},
+"player_of_series": {
+"player_name": "",
+"player_slug": "",
+"batting_stat": "",
+"bowling_stat": ""
+},
+"weather": {
+"weather": "Haze",
+"weather_desc": "haze",
+"temp": "33.5",
+"humidity": "25",
+"visibility": "20480",
+"wind_speed": "3.3",
+"clouds": "2",
+"dew_point": "10.9",
+"pop": "0",
+"last_updated_at": "1777226418"
+},
+"weather_info_by_one_weather": {
+"weather_condition": "Haze",
+"temp": "32",
+"humidity": "35",
+"visibility": "4000",
+"wind_speed": "0",
+"dew_point": "15",
+"pop": "0",
+"time_of_day": "night",
+"last_updated_at": "1777226418"
+},
+"toss_won_by": 123214,
+"toss_decision": "BOWL",
+"winning_team": 591,
+"winning_margin": "superover",
+"match_number": "38",
+"team_win_probability": {
+"DRAW": 0,
+"KKR": 87.8,
+"LSG": 12.2
+},
+"is_english_commentary": true,
+"pitch": {
+"pitch_condition": "Fast & Bounce",
+"batting_condition": "Average",
+"pace_bowling_condition": "Pace & Bounce",
+"spine_bowling_condition": "Average"
+},
+"match_number_with_format": "38th T20",
+"team_live_odds": {
+"DRAW": {
+"back": 0,
+"lay": 0
+},
+"KKR": {
+"back": 1.1,
+"lay": 1.21
+},
+"LSG": {
+"back": 5.7,
+"lay": 11
+}
+},
+"pitch_report_from_venue": "<div><br><br><strong>Deepdas Gupta<br><br></strong>(On ground dimensions and conditions)This has been one of the lowest-scoring venues this season, with average totals around 155–156. The boundaries are relatively larger—64 meters on one side, 69 on the other, and 73 straight down the ground. It’s a big ground overall, though it looks slightly smaller this evening. The surface appears a bit tacky, so batting early on could be tricky, and chasing might be the preferred option.<br><br><strong>Simon Katich<br>&nbsp;</strong><br>(On pitch characteristics and expected behavior)This is a black-soil pitch being used for the first time this season, and there are visible cracks, almost like a jigsaw pattern. That could bring variable bounce into play. Compared to the red-soil surface used earlier, this pitch is likely to offer lower bounce, which could make strokeplay a bit more challenging.<br><br>(On match trends and tactical approach)Historically, chasing has been successful here, with eight of the last eleven games won by the side batting second. Teams will need to pace their innings carefully—going too hard early can hurt them later, especially given the conditions and the nature of the surface.</div>",
+"updated_at": 1792301182791,
+"bet_odds": {
+"provider": "ES",
+"is_suspended": true,
+"odds": [
+{
+"team_shortname": "LSG",
+"value": 0
+},
+{
+"team_shortname": "KKR",
+"value": 0
+}
+]
+}
+}

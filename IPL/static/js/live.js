@@ -19,12 +19,9 @@ function renderTabLive(data) {
     const esc = MX.esc;
     const dt1 = (data.dt1 || [{}])[0];
     const dt3 = data.dt3 || {};
-    const tid = data.tid || {};
     const fn = data.fn || {};
     const clr = data.clr || {};        /* one brand colour per team */
     const clr2 = data.clr2 || {};      /* the full c1/c2/c3 set */
-    const innSrc = [data.inn1, data.inn2];
-    const strip = dt3.score_strip || [];
     const info = String(dt3.info || '');
     const over = /\b(won|abandoned|no result|tied)\b/i.test(info);
 
@@ -131,18 +128,11 @@ function renderTabLive(data) {
         }
     }
 
-    /* --- commentary, one pane per innings --------------------------------- */
-    const panes = [];
-    for (let idx = 0; idx < Math.min((dt3.innings || []).length, 2); idx++) {
-        const team = tid[dt3.innings[idx].batting_team_id] || [];
-        panes.push({
-            key: 'inn' + (idx + 1),
-            abv: team[0] || '',
-            label: (team[0] || 'Innings ' + (idx + 1)) + ' innings',
-            live: !!(strip[idx] && strip[idx].currently_batting),
-            src: innSrc[idx]
-        });
-    }
+    /* --- commentary, one pane per innings ---------------------------------
+       Every innings the scorecard feed carries, super overs included — each
+       pane's `src` is the matching apiv2 call, which live.py now makes one per
+       innings rather than two flat. */
+    const panes = MX.inningsPanes(data);
 
     if (panes.length) {
         const active = MX.activePane(panes);
@@ -182,8 +172,17 @@ function commentary(pane, MX) {
     const esc = MX.esc;
     const inn = pane.src && pane.src.inning;
     if (!inn || !Array.isArray(inn.overs) || !inn.overs.length) {
+        /* The two feeds are independent, and a super over is the innings the
+           ball-by-ball one is most likely to be missing altogether — so say
+           which of the two it is rather than always promising it is coming. */
+        const bowled = parseFloat((pane.inn || {}).overs) > 0;
         return '<div class="mx-empty"><span class="material-icons-round">chat_bubble_outline</span>' +
-               '<b>No commentary yet</b><p>Ball-by-ball updates appear here once the innings begins.</p></div>';
+               (bowled
+                 ? '<b>No commentary for this innings</b>' +
+                   '<p>The ball-by-ball feed has not published it.</p>'
+                 : '<b>No commentary yet</b>' +
+                   '<p>Ball-by-ball updates appear here once the innings begins.</p>') +
+               '</div>';
     }
 
     let html = '<div class="mx-comm">';

@@ -11,8 +11,15 @@ function parseOvers(oversStr) {
     return (whole || 0) * 6 + (isNaN(part) ? 0 : part);
 }
 
+/* Top performers come from the match proper only. A super over is scored
+   separately in the record books, and three balls at the death would otherwise
+   list the same player twice — once for the innings, once for the decider. */
+function mainInnings(innings) {
+    return innings.slice(0, 2);
+}
+
 function getTopBatters(innings) {
-    const all = (innings[0].batting || []).concat(innings[1] ? innings[1].batting || [] : []);
+    const all = mainInnings(innings).reduce((list, i) => list.concat(i.batting || []), []);
     return all.slice().sort((a, b) => {
         if (Number(a.runs) !== Number(b.runs)) return Number(b.runs) - Number(a.runs);
         return Number(a.balls) - Number(b.balls);   /* fewer balls for the same runs */
@@ -20,7 +27,7 @@ function getTopBatters(innings) {
 }
 
 function getTopBowlers(innings) {
-    const all = (innings[0].bowling || []).concat(innings[1] ? innings[1].bowling || [] : []);
+    const all = mainInnings(innings).reduce((list, i) => list.concat(i.bowling || []), []);
     return all.slice().sort((a, b) => {
         if (Number(a.wickets) !== Number(b.wickets)) return Number(b.wickets) - Number(a.wickets);
         if (Number(a.runs) !== Number(b.runs)) return Number(a.runs) - Number(b.runs);
@@ -32,11 +39,11 @@ function renderTabScorecard(data) {
     const MX = window.MX;
     const esc = MX.esc;
     const dt3 = data.dt3 || {};
-    const tid = data.tid || {};
     const fn = data.fn || {};
     const clr2 = data.clr2 || {};
-    const strip = dt3.score_strip || [];
-    const innings = (dt3.innings || []).slice(0, 2);
+    /* every innings the feed carries, super overs included */
+    const panes = MX.inningsPanes(data);
+    const innings = panes.map(p => p.inn);
     const info = String(dt3.info || '');
     const settled = /\b(won|tied)\b/i.test(info);
 
@@ -68,24 +75,12 @@ function renderTabScorecard(data) {
     }
 
     /* --- one pane per innings --------------------------------------------- */
-    if (!innings.length) {
+    if (!panes.length) {
         document.getElementById('tab-content').innerHTML = html ||
             '<div class="mx-empty"><span class="material-icons-round">list_alt</span>' +
             '<b>No scorecard yet</b><p>The card fills in as soon as the first innings is under way.</p></div>';
         return;
     }
-
-    const panes = innings.map((inn, idx) => {
-        const team = tid[inn.batting_team_id] || [];
-        return {
-            key: 'inn' + (idx + 1),
-            abv: team[0] || '',
-            label: (team[0] || 'Innings ' + (idx + 1)) + ' innings',
-            live: !!(strip[idx] && strip[idx].currently_batting),
-            inn: inn,
-            idx: idx
-        };
-    });
 
     const active = MX.activePane(panes);
     let tabs = '';
@@ -139,9 +134,12 @@ function inningsCard(pane, dt3, MX, clr2) {
                    '</tr>';
     });
 
-    /* --- yet to bat / did not bat ----------------------------------------- */
+    /* --- yet to bat / did not bat -----------------------------------------
+       Skipped for a super over: three batters are all the rules allow, so the
+       feed lists the whole rest of the XI as not having batted, which says
+       nothing and buries the three lines that matter. */
     let rest = '';
-    const notBatted = i.not_batted || [];
+    const notBatted = pane.so ? [] : (i.not_batted || []);
     if (notBatted.length) {
         const label = dt3.match_status === 'post' ? "Didn't bat"
                     : (pane.live ? 'Yet to bat' : "Didn't bat");
@@ -178,7 +176,8 @@ function inningsCard(pane, dt3, MX, clr2) {
 
     return '<div class="mx-card">' +
              '<div class="mx-card__head mx-card__head--team" style="' + MX.tint(pane.abv, clr2) + '">' +
-               '<span class="material-icons-round">sports_cricket</span>' + esc(pane.label) +
+               '<span class="material-icons-round">' +
+                 (pane.so ? 'bolt' : 'sports_cricket') + '</span>' + esc(pane.label) +
                (pane.live ? '' : '') +
              '</div>' +
 

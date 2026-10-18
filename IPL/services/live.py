@@ -35,10 +35,13 @@ def get_matchInfo(match):
 def get_matchOvers(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall()
     MatchURL = render_live_URL(MatchDT[0][4], MatchDT[0][5], match, MatchDT[0][2])
-    Inn1, Inn2 = get_innings_data(MatchDT[0][11])
     dttm = concat_DT(MatchDT[0][2], MatchDT[0][3])
     response = requests.get(MatchURL, verify=False)
     MatchLDT = response.json()
+    # The scorecard feed is fetched first because it is the one that knows how
+    # many innings there are: a super over adds a third and a fourth, and apiv2
+    # has to be asked for each of them by number.
+    Inns = get_innings_data(MatchDT[0][11], len(MatchLDT.get('innings') or []))
     MatchDT2 = []
     MatchDT2.append(num_suffix(int(MatchDT[0][1]))+" Match" if MatchDT[0][1].isdigit() else MatchDT[0][1])
     MatchDT2.append(MatchDT[0][6].split(", ")[1])
@@ -48,16 +51,17 @@ def get_matchOvers(match):
     MatchDT = [dict(row._mapping) for row in MatchDT]
     # ptclr/sqclr ride along for the graphs tab, which draws a line per team and
     # so needs the single-colour and gradient picks as well as the full set.
-    return serialize({'match':match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'inn1':Inn1, 'inn2':Inn2, 'clr':clr, 'ptclr':ptclr, 'sqclr':sqclr})
+    return serialize({'match':match, 'cd':current_date, 'dt1':MatchDT, 'dt2':MatchDT2, 'dt3':MatchLDT, 'tid':teamID, 'dttm':dttm, 'inns':Inns, 'clr':clr, 'ptclr':ptclr, 'sqclr':sqclr})
 
 def get_liveScore(match):
     MatchDT = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),{'matchno': match}).fetchall()
     SquadFull = (db.session.execute(text('SELECT * FROM Squad')).fetchall())
     MatchURL = render_live_URL(MatchDT[0][4], MatchDT[0][5], match, MatchDT[0][2])
-    Inn1, Inn2 = get_innings_data(MatchDT[0][11])
     dttm = concat_DT(MatchDT[0][2], MatchDT[0][3])
     response = requests.get(MatchURL, verify=False)
     MatchLDT = response.json()
+    # Innings count first, then the commentary: see get_matchOvers() above.
+    Inns = get_innings_data(MatchDT[0][11], len(MatchLDT.get('innings') or []))
     if "player_of_match" in MatchLDT and MatchLDT["player_of_match"]["player_name"] != "":
         pom = find_player(MatchLDT["player_of_match"]["player_name"], SquadFull)
         MatchLDT["player_of_match"]["player_name"] = pom[2] if pom is not None else MatchLDT["player_of_match"]["player_name"]
@@ -83,7 +87,7 @@ def get_liveScore(match):
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     MatchDT = [dict(row._mapping) for row in MatchDT]
-    return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm, 'clr': ptclr, 'clr2': clr, 'inn1': Inn1, 'inn2': Inn2, 'fn': full_name})
+    return serialize({'match': match, 'cd': current_date, 'dt1': MatchDT, 'dt2': MatchDT2, 'dt3': MatchLDT, 'tid': teamID, 'dttm': dttm, 'clr': ptclr, 'clr2': clr, 'inns': Inns, 'fn': full_name})
 
 def get_liveStrip(match):
     """Scores + status line only, for the ticker on the fixtures list.
@@ -143,8 +147,11 @@ def get_scoreCard(match):
         MatchLDT["player_of_series"]["team_name"] = pos[3] if pos is not None else "NA"
     # Which side a name belongs to is already in the innings, so tell find_player:
     # it settles the namesakes a bare "M Choudhary" cannot.
+    # Every innings, not just the first two: a super over is a third and a fourth
+    # (and a fifth and sixth when that one is tied too), and those carry batting,
+    # bowling and a fall of wickets of their own that need the same resolving.
     sides = (MatchDT[0][4], MatchDT[0][5])
-    for inn in MatchLDT.get("innings", [])[:2]:
+    for inn in MatchLDT.get("innings", []):
         bat_team = team_abbr(inn.get("batting_team_id"))
         bowl_team = next((t for t in sides if t != bat_team), None) if bat_team in sides else None
         if "batting" in inn:
@@ -164,7 +171,7 @@ def get_scoreCard(match):
                 nbb["name"] = nbd[2] if nbd is not None else nbb["name"]
                 nbb["team"] = nbd[3] if nbd is not None else "NA"
             inn['not_batted'] = nb
-        if inn["fall_of_wickets"] is not None:
+        if inn.get("fall_of_wickets") is not None:
             fow = []
             if inn["fall_of_wickets"] != "":
                 for bt in inn["fall_of_wickets"].split('),'):

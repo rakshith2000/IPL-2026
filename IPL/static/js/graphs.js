@@ -710,9 +710,6 @@
     var MX = window.MX;
     var esc = MX.esc;
     var root = document.getElementById('tab-content');
-    var dt3 = data.dt3 || {};
-    var tid = data.tid || {};
-    var strip = dt3.score_strip || [];
 
     /* the three team-colour tables straight off main.py */
     var brand = {
@@ -721,14 +718,21 @@
       squad: data.sqclr || {}    /* sqclr — the crest gradient's two stops */
     };
 
-    /* first innings first here: these charts read in the order the match was
-       played, which is the opposite of the overs list */
-    var a = tid[(strip[0] || {}).team_id] || [];
-    var b = tid[(strip[1] || {}).team_id] || [];
-    var models = [
-      innModel(data.inn1, a[0] || 'Inn 1', a[1]),
-      innModel(data.inn2, b[0] || 'Inn 2', b[1])
-    ].filter(Boolean);
+    /* First innings first here: these charts read in the order the match was
+       played, which is the opposite of the overs list. The side comes off each
+       innings' own batting team — the score strip is not in batting order.
+
+       The match proper only. The worm and the run rate lay exactly two series
+       over each other, and a super over has nothing to draw either way: one
+       over is a single Manhattan bar and a two-point worm. It is on the
+       scorecard, the commentary and the overs list instead. */
+    var models = [];
+    MX.inningsPanes(data).slice(0, 2).forEach(function (p, i) {
+      var m = innModel(p.src, p.abv || 'Inn ' + (i + 1), p.full);
+      /* an innings with no feed yet drops out, so each model carries its own
+         pane rather than the two lists being matched up again by index */
+      if (m) { m.pane = p; models.push(m); }
+    });
 
     if (!models.length) {
       root.innerHTML =
@@ -748,11 +752,8 @@
     if (standing && standing.getAttribute('data-sig') === sig) return;
 
     /* which innings the reader was on — read before the old DOM goes */
-    var panes = models.map(function (m, i) {
-      return {
-        key: 'inn' + (i + 1), abv: m.abv, label: m.abv + ' innings',
-        live: !!(strip[i] && strip[i].currently_batting)
-      };
+    var panes = models.map(function (m) {
+      return { key: m.pane.key, abv: m.abv, label: m.pane.label, live: m.pane.live };
     });
     var pick = models.length < 2 ? 0 : panes.indexOf(MX.activePane(panes));
     if (pick < 0) pick = models.length - 1;

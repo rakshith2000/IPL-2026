@@ -551,7 +551,9 @@
 
   /* A super over arrives as one string joined by "&", with the regular innings
      usually carrying no overs: "155/8 & 1/2 (0.3 ov)". Stack it the same way a
-     finished super over is shown — innings above, decider below with an SO tag. */
+     finished super over is shown — innings above, decider below with an SO tag.
+     A second super over, bowled when the first is tied as well, joins on as a
+     third part and gets a line of its own; only then are they numbered. */
   function paintScore(el, raw, batting) {
     var text = String(raw || '').replace(/^\*/, '').trim();
     if (el.getAttribute('data-shown') === text) {
@@ -582,14 +584,16 @@
     }
 
     var halves = text.split('&');
-    if (halves.length === 2) {
+    if (halves.length > 1) {
       box.appendChild(scoreLine(halves[0].trim(), 'fx-score__line--prior'));
-      var so = scoreLine(halves[1].trim(), 'fx-score__line--so');
-      var tag = document.createElement('span');
-      tag.className = 'fx-so-tag';
-      tag.textContent = 'SO';
-      so.insertBefore(tag, so.firstChild);
-      box.appendChild(so);
+      for (var i = 1; i < halves.length; i++) {
+        var so = scoreLine(halves[i].trim(), 'fx-score__line--so');
+        var tag = document.createElement('span');
+        tag.className = 'fx-so-tag';
+        tag.textContent = halves.length > 2 ? 'SO ' + i : 'SO';
+        so.insertBefore(tag, so.firstChild);
+        box.appendChild(so);
+      }
       el.classList.add('has-so');
     } else {
       box.appendChild(scoreLine(text, ''));

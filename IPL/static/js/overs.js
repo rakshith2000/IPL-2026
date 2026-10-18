@@ -1,8 +1,8 @@
 /* ==========================================================================
    IPL 2026 · Match centre — Overs panel
    Every over of the match, newest first: who bowled it to whom, the six balls
-   and what it cost. Second innings on top, first innings underneath, which is
-   the order they are read in.
+   and what it cost. Latest innings on top, working back to the first, which is
+   the order they are read in — so a super over leads once there has been one.
 
    Ball maths lives on window.MX (js/match.js), shared with the Live panel.
    ========================================================================== */
@@ -10,17 +10,13 @@
 function renderTabOvers(data) {
     const MX = window.MX;
     const esc = MX.esc;
-    const dt3 = data.dt3 || {};
-    const tid = data.tid || {};
     const clr = data.clr || {};          /* the full c1/c2/c3 set on this route */
-    const strip = dt3.score_strip || [];
 
-    /* second innings first — the overs feed is keyed the same way as the
-       score strip, so inn2 belongs to strip[1] */
-    const blocks = [
-        { src: data.inn2, team: (tid[(strip[1] || {}).team_id] || [])[0] || '' },
-        { src: data.inn1, team: (tid[(strip[0] || {}).team_id] || [])[0] || '' }
-    ].filter(b => b.src && b.src.inning && (b.src.inning.overs || []).length);
+    /* Newest innings first. The side comes off each innings' own batting team
+       rather than the score strip, which has one row per side however many
+       innings were played and is not in batting order. */
+    const blocks = MX.inningsPanes(data).slice().reverse()
+        .filter(p => p.src && p.src.inning && (p.src.inning.overs || []).length);
 
     if (!blocks.length) {
         document.getElementById('tab-content').innerHTML =
@@ -31,10 +27,10 @@ function renderTabOvers(data) {
 
     let html = '';
 
-    blocks.forEach(block => {
+    blocks.forEach(pane => {
         let rows = '';
 
-        block.src.inning.overs.forEach(over => {
+        pane.src.inning.overs.forEach(over => {
             if (over.overNumber === 0) return;
 
             const balls = over.balls || [];
@@ -60,7 +56,7 @@ function renderTabOvers(data) {
 
             rows += '<div class="mx-over' + tone + '">' +
                       '<div class="mx-over__left">' +
-                        MX.crest(block.team, clr, 'mx-crest--xs') +
+                        MX.crest(pane.abv, clr, 'mx-crest--xs') +
                         '<span class="mx-over__no">Ov ' + esc(over.overNumber) + '</span>' +
                         '<span class="mx-over__score">' + esc(over.totalInningRuns) + '-' +
                           esc(over.totalInningWickets) + '</span>' +
@@ -78,9 +74,10 @@ function renderTabOvers(data) {
         });
 
         html += '<div class="mx-card">' +
-                  '<div class="mx-card__head mx-card__head--team" style="' + MX.tint(block.team, clr) + '">' +
-                    '<span class="material-icons-round">av_timer</span>' +
-                    esc(block.team || 'Innings') + ' innings<small>Newest first</small>' +
+                  '<div class="mx-card__head mx-card__head--team" style="' + MX.tint(pane.abv, clr) + '">' +
+                    '<span class="material-icons-round">' +
+                      (pane.so ? 'bolt' : 'av_timer') + '</span>' +
+                    esc(pane.label) + '<small>Newest first</small>' +
                   '</div>' + rows +
                 '</div>';
     });

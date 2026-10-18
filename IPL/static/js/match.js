@@ -276,6 +276,67 @@
            '</div>';
   }
 
+  /* ------------------------------------------------------- innings and panes
+     Four panels split the match by innings, and none of that can be read off
+     the score strip: the strip carries one row per side however many innings
+     the two of them played, and it is ordered by the fixture title rather than
+     by who batted first. Pairing innings[i] with score_strip[i] therefore puts
+     the wrong crest on an innings whenever the side named second batted first,
+     and says nothing at all once there is a super over.
+
+     So the side comes off the innings' own batting_team_id, and the strip is
+     consulted for one thing only: which side is at the crease.
+
+     Innings 3 and 4 are the first super over, 5 and 6 a second one when that is
+     tied as well — both feeds number them straight on from the match proper. */
+
+  function superOverNo(idx) {
+    return idx < 2 ? 0 : Math.floor((idx - 2) / 2) + 1;
+  }
+
+  /* One pane per innings the scorecard feed carries, in the order they were
+     played. `src` is that innings' ball-by-ball payload, which only the routes
+     that fetch apiv2 send — the rest get null and read `inn` alone. */
+  function inningsPanes(data) {
+    var dt3 = data.dt3 || {};
+    var tid = data.tid || {};
+    var list = dt3.innings || [];
+    var strip = dt3.score_strip || [];
+    var src = data.inns || [];
+    var playing = matchState(data) === 'live';
+    var decided = superOverNo(list.length - 1);     /* super overs so far */
+
+    var onField = null;
+    strip.forEach(function (s) {
+      if (s && s.currently_batting) onField = String(s.team_id);
+    });
+
+    return list.map(function (inn, idx) {
+      var id = tid[inn.batting_team_id] || [];
+      var abv = id[0] || '';
+      var so = superOverNo(idx);
+      var tag = so ? ' super over' + (decided > 1 ? ' ' + so : '') : ' innings';
+
+      return {
+        key: 'inn' + (idx + 1),
+        idx: idx,
+        abv: abv,
+        full: id[1] || '',
+        so: so,
+        label: abv ? abv + tag
+                   : (so ? 'Super over' + (decided > 1 ? ' ' + so : '')
+                         : 'Innings ' + (idx + 1)),
+        /* only the newest innings can be the one in progress, and only while
+           the strip agrees that side is batting — the feed leaves
+           currently_batting set after the last ball */
+        live: playing && idx === list.length - 1 &&
+              (!onField || String(inn.batting_team_id) === onField),
+        inn: inn,
+        src: src[idx] || null
+      };
+    });
+  }
+
   /* One button per innings, one pane each. */
   function subtab(pane, active, colours) {
     return '<button type="button" class="mx-subtab" role="tab" data-inn="' + esc(pane.key) + '" ' +
@@ -316,6 +377,7 @@
     ballScore: ballScore, ballRuns: ballRuns, overRuns: overRuns, overBatsmen: overBatsmen,
     stripBallScore: stripBallScore,
     playerLink: playerLink, awardCard: awardCard,
+    inningsPanes: inningsPanes,
     subtab: subtab, wireSubtabs: wireSubtabs, activePane: activePane
   };
 
@@ -325,7 +387,8 @@
      ======================================================================= */
 
   /* "174/8 (20 ov)" -> {runs: '174/8', overs: '20'}; a super over arrives as
-     two innings joined by "&". All out prints as the runs alone. */
+     a further innings joined on with "&", and a second super over as a third
+     part again. All out prints as the runs alone. */
   function parseScore(raw) {
     var text = String(raw || '').replace(/^\*/, '').trim();
     if (!text) return [];
@@ -344,10 +407,19 @@
       return '<b>' + esc(parts[0].runs) + '</b>' +
              (parts[0].overs ? '<i>(' + esc(parts[0].overs) + ')</i>' : '');
     }
-    return '<span class="mx-side__prior">' + esc(parts[0].runs) +
-             (parts[0].overs ? ' (' + esc(parts[0].overs) + ')' : '') + '</span>' +
-           '<span class="mx-side__so"><span class="mx-so-tag">SO</span><b>' + esc(parts[1].runs) + '</b>' +
-             (parts[1].overs ? '<i>(' + esc(parts[1].overs) + ')</i>' : '') + '</span>';
+    /* The match proper stays as the quiet line it already was, with every super
+       over stacked under it. They are only numbered once there is more than one
+       — a single "SO 1" would read as if a second were still to come. */
+    var html = '<span class="mx-side__prior">' + esc(parts[0].runs) +
+                 (parts[0].overs ? ' (' + esc(parts[0].overs) + ')' : '') + '</span>';
+    for (var i = 1; i < parts.length; i++) {
+      html += '<span class="mx-side__so">' +
+                '<span class="mx-so-tag">SO' + (parts.length > 2 ? ' ' + i : '') + '</span>' +
+                '<b>' + esc(parts[i].runs) + '</b>' +
+                (parts[i].overs ? '<i>(' + esc(parts[i].overs) + ')</i>' : '') +
+              '</span>';
+    }
+    return html;
   }
 
   /* The first number in "Run Rate: 8.70" — the feed has shipped a few
@@ -465,24 +537,34 @@
       html += '<p class="mx-board__info ' + tone + '">' + esc(info) + '</p>';
     }
 
-    /* --- run-rate tiles, only while there is a game to describe ---------- */
+    /* --- run-rate tiles, only while there is a game to describe ----------
+       All four read the innings in progress, which the strip cannot name: it
+       is the last innings of inningsPanes(), and in a super over that is the
+       third or the fourth. A chase is any even-numbered innings — the 2nd of
+       the match, or the second half of a super over — and what it is chasing
+       is the innings right before it. */
     if (state === 'live') {
-      var battingIdx = sides.reduce(function (at, s, i) { return s.batting ? i : at; }, -1);
-      var inns = dt3.innings || [];
-      var pship = battingIdx > -1 && inns[battingIdx] ? inns[battingIdx].current_partnership : null;
+      var panes = inningsPanes(data);
+      var now = panes.filter(function (p) { return p.live; })[0] || panes[panes.length - 1];
+      var target = now && now.idx % 2 === 1 ? panes[now.idx - 1] : null;
+      var pship = now ? now.inn.current_partnership : null;
+      var batting = now ? sides.filter(function (s) {
+        return s.strip && String(s.strip.team_id) === String(now.inn.batting_team_id);
+      })[0] : null;
       var tiles = '';
 
-      if (battingIdx === 1) {
-        var chased = parseScore(sides[0].score)[0];
-        var target = chased ? parseInt(String(chased.runs).split('/')[0], 10) + 1 : null;
-        if (target) tiles += tile('Target', target, '', 'mx-tile--target');
+      if (target) {
+        var chased = parseInt(String(target.inn.runs), 10);
+        if (!isNaN(chased)) tiles += tile('Target', chased + 1, '', 'mx-tile--target');
       }
 
-      var crr = battingIdx > -1 ? rate(sides[battingIdx].strip.run_rate) : null;
+      var crr = batting ? rate(batting.strip.run_rate) : null;
       if (crr) tiles += tile('CRR', crr);
 
-      if (battingIdx === 1) {
-        var rrr = requiredRate(sides[0].strip, info) || requiredRate(sides[1].strip, info);
+      if (target) {
+        var rrr = requiredRate(batting && batting.strip, info) ||
+                  requiredRate(sides[0] && sides[0].strip, info) ||
+                  requiredRate(sides[1] && sides[1].strip, info);
         if (rrr) tiles += tile('RRR', rrr, '', 'mx-tile--rrr');
       }
 
@@ -567,7 +649,10 @@
   function syncTitle(data) {
     var sides = sidesOf(data);
     var batting = sides.filter(function (s) { return s.batting; })[0];
-    var p = batting && batting.score ? parseScore(batting.score)[0] : null;
+    /* the last part, not the first: in a super over the live score is the
+       decider rather than the innings it was tied in */
+    var parts = batting && batting.score ? parseScore(batting.score) : [];
+    var p = parts[parts.length - 1] || null;
     if (matchState(data) === 'live' && p) {
       document.title = batting.abv + ' ' + p.runs + (p.overs ? ' (' + p.overs + ')' : '') +
                        ' · ' + sides.map(function (s) { return s.abv; }).join(' v ');
