@@ -1,9 +1,10 @@
 import warnings
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from .services.toppers import get_stats
 from .services.live import (get_matchInfo, get_scoreCard, get_liveScore,
                             get_matchOvers, get_liveSquad, get_liveStrip)
+from .services import predictor
 
 warnings.filterwarnings("ignore")
 
@@ -55,3 +56,33 @@ def api_liveStrip(match):
     resp = jsonify(get_liveStrip(match))
     resp.headers['Cache-Control'] = 'no-store'
     return resp
+
+# ---------------------------------------------------------------- predictor
+# All three are read-only: they answer from the live table and the fixture list
+# and never write. Picks live in the caller's browser, not in the database.
+
+@api.route('/api/predictor/state')
+def api_predictor_state():
+    """Fixtures, the live table and the per-match prices. Fetched once."""
+    return jsonify(predictor.get_state())
+
+@api.route('/api/predictor/simulate', methods=['POST'])
+def api_predictor_simulate():
+    """The standings a set of picks produces, plus odds for everything unpicked.
+
+    `replay` throws the real results away and plays the whole season out from an
+    empty table; without it, only matches that have not been played yet are open.
+    """
+    body = request.get_json(silent=True) or {}
+    resp = jsonify(predictor.simulate(body.get('picks') or {},
+                                      replay=bool(body.get('replay'))))
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+@api.route('/api/predictor/impact', methods=['POST'])
+def api_predictor_impact():
+    """How far one result would move every side's top-four chance."""
+    body = request.get_json(silent=True) or {}
+    return jsonify(predictor.impact(str(body.get('match') or ''),
+                                    body.get('picks') or {},
+                                    replay=bool(body.get('replay'))))

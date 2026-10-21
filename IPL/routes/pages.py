@@ -111,6 +111,16 @@ def displayFR():
     current_date = current_date.replace(tzinfo=None)
     return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=current_date, clr=clr, sqclr=sqclr)
 
+@main.route('/predictor')
+def predictor():
+    """The season predictor: play the rest of the IPL out and see what happens.
+
+    The shell only; js/predictor.js fetches the fixtures and drives every
+    simulation from /api/predictor/*. Nothing on this page writes a result -
+    picks live in the browser and the standings it shows are hypothetical.
+    """
+    return render_template('predictor.html', fn=full_name, clr=clr)
+
 @main.route('/todayMatch')
 def todayMatch():
     current_date = datetime.now(tz).replace(tzinfo=None).date()

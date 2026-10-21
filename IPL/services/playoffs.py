@@ -176,8 +176,39 @@ def _pct(count, total):
         return 100.0
     return float(min(99.9, max(0.1, round(count / total * 100.0, 1))))
 
-def get_top4_playoffs(teams, remaining_matches, model=None):
-    """Monte-Carlo playoff probabilities for every team.
+def _norm_cdf(x):
+    return 0.5 * math.erfc(-x / math.sqrt(2.0))
+
+def match_win_prob(model, a, b, venue=None, neutral=False):
+    """P(a beats b), straight off the scoring model rather than by simulation.
+
+    Both innings are normal draws, so the margin between them is normal too and
+    the probability is a single Phi(). Who chases is a coin toss and the chase
+    adjustment follows whoever bats second, so the two cases are averaged.
+    """
+    attack, defence = model['attack'], model['defence']
+    exp_a = model['mean'] + attack.get(a, 0.0) + defence.get(b, 0.0)
+    exp_b = model['mean'] + attack.get(b, 0.0) + defence.get(a, 0.0)
+    if not neutral:
+        home = model.get('home_of', {}).get(venue, a)
+        exp_a += model['home_adv'] if home == a else 0.0
+        exp_b += model['home_adv'] if home == b else 0.0
+    sd = model['sigma'] * math.sqrt(2.0)
+    chase, d = model['chase_adj'], exp_a - exp_b
+    return 0.5 * _norm_cdf((d - chase) / sd) + 0.5 * _norm_cdf((d + chase) / sd)
+
+def _win_matrix(model, names):
+    """P(row beats column) for every pair, at a neutral venue. For the bracket."""
+    n = len(names)
+    out = np.full((n, n), 0.5)
+    for i, a in enumerate(names):
+        for j, b in enumerate(names):
+            if i != j:
+                out[i, j] = match_win_prob(model, a, b, neutral=True)
+    return out
+
+def simulate_season(teams, remaining_matches, model=None, sims=None, detail=False):
+    """Monte-Carlo the rest of the league, and the bracket after it.
 
     teams:             {team: {points, wins, runs_for, overs_faced, runs_against, overs_bowled}}
                        with overs as DECIMAL overs (run ovToPer() on the stored x.y values).
@@ -189,6 +220,11 @@ def get_top4_playoffs(teams, remaining_matches, model=None):
     what moves net run rate, and net run rate is what settles most top-4 cut-offs.
     Teams are ranked on points, then wins, then NRR, matching both the IPL playing
     conditions and the table this feeds.
+
+    detail=True also returns what the predictor page needs and the hourly refresh
+    does not, so it is kept behind the flag: where each side finishes, who lifts
+    the trophy, and - the expensive one - top-4 rate broken down by final win
+    count, which is what turns a percentage into "13 of 14 wins needed".
     """
     names = list(teams)
     n_t = len(names)
@@ -214,9 +250,17 @@ def get_top4_playoffs(teams, remaining_matches, model=None):
     base = {k: np.array([float(teams[t].get(k, 0) or 0) for t in names])
             for k in ('points', 'wins', 'runs_for', 'overs_faced', 'runs_against', 'overs_bowled')}
 
-    total = SIMULATIONS if fixtures else 1     # nothing left to play => one deterministic pass
+    want = SIMULATIONS if sims is None else max(1, int(sims))
+    total = want if fixtures else 1            # nothing left to play => one deterministic pass
     rng = np.random.default_rng(SIM_SEED + len(fixtures))
     counts = np.zeros((n_t, 3))
+    # detail accumulators
+    max_wins = int(base['wins'].max()) + len(fixtures) + 1
+    seed_counts = np.zeros((n_t, 4))
+    title_counts = np.zeros(n_t)
+    wins_total = np.zeros((n_t, max_wins))
+    wins_top4 = np.zeros((n_t, max_wins))
+    pwin = _win_matrix(model, names) if detail else None
     done = 0
     while done < total:
         n = min(SIM_CHUNK, total - done)
@@ -290,11 +334,53 @@ def get_top4_playoffs(teams, remaining_matches, model=None):
         counts[:, 0] += np.bincount(order[:, :4].ravel(), minlength=n_t)
         counts[:, 1] += np.bincount(order[:, :2].ravel(), minlength=n_t)
         counts[:, 2] += np.bincount(order[:, 0], minlength=n_t)
+
+        if detail:
+            for p in range(4):
+                seed_counts[:, p] += np.bincount(order[:, p], minlength=n_t)
+
+            # Top-4 rate by final win count. Narrowing to the sims where a side
+            # actually won w of them is what answers "how many do we need?" -
+            # the flat percentage averages over every path at once.
+            # Teams are folded into one index space (team * max_wins + wins) so
+            # the whole table is two bincounts rather than two per side.
+            top4 = np.zeros((n_t, n), dtype=bool)
+            top4[order[:, :4].ravel(), np.repeat(np.arange(n), 4)] = True
+            flat = np.arange(n_t)[:, None] * max_wins + wins.astype(np.int64)
+            wins_total += np.bincount(flat.ravel(),
+                                      minlength=n_t * max_wins).reshape(n_t, max_wins)
+            wins_top4 += np.bincount(flat[top4],
+                                     minlength=n_t * max_wins).reshape(n_t, max_wins)
+
+            # The bracket: 1v2 for a place in the final, 3v4 to stay alive, the
+            # beaten qualifier against the eliminator winner, then the final.
+            s1, s2, s3, s4 = order[:, 0], order[:, 1], order[:, 2], order[:, 3]
+            q1 = np.where(rng.random(n) < pwin[s1, s2], s1, s2)
+            q1_lost = np.where(q1 == s1, s2, s1)
+            elim = np.where(rng.random(n) < pwin[s3, s4], s3, s4)
+            q2 = np.where(rng.random(n) < pwin[q1_lost, elim], q1_lost, elim)
+            champ = np.where(rng.random(n) < pwin[q1, q2], q1, q2)
+            title_counts += np.bincount(champ, minlength=n_t)
         done += n
 
-    return {t: {'top4': _pct(counts[k, 0], total),
-                'top2': _pct(counts[k, 1], total),
-                'top1': _pct(counts[k, 2], total)} for t, k in idx.items()}
+    out = {t: {'top4': _pct(counts[k, 0], total),
+               'top2': _pct(counts[k, 1], total),
+               'top1': _pct(counts[k, 2], total)} for t, k in idx.items()}
+    if not detail:
+        return out
+    for t, k in idx.items():
+        out[t]['title'] = _pct(title_counts[k], total)
+        out[t]['seeds'] = [_pct(seed_counts[k, p], total) for p in range(4)]
+        # only win counts that actually came up, so the caller can read the
+        # cliff edge straight off: [(wins, share of sims, top-4 rate), ...]
+        out[t]['by_wins'] = [
+            (int(w), float(wins_total[k, w] / total), float(wins_top4[k, w] / wins_total[k, w]))
+            for w in range(max_wins) if wins_total[k, w] > 0]
+    return out
+
+def get_top4_playoffs(teams, remaining_matches, model=None):
+    """Top-4 / top-2 / top-1 percentages for the points table. See simulate_season()."""
+    return simulate_season(teams, remaining_matches, model=model)
 
 def refresh_qualification():
     dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()
