@@ -36,7 +36,6 @@
   var simTimer = null;
   var simToken = 0;
   var openScores = {};     /* which score editors the reader has unfolded */
-  var openEdit = {};       /* completed matches the reader has opened for rewriting */
   var impacts = {};        /* impact analysis answers, per match */
 
   var panel = document.getElementById('prPanel');
@@ -109,22 +108,38 @@
 
   function pickOf(no) { return (PICKS[no] || {}).w || null; }
 
+  /* Re-predict marks the match open, which is a real instruction to the server
+     and not just a UI state: its actual result stops counting and it goes back
+     into the pile to be simulated. Opening it client-side only would leave the
+     result still in the table, so every "what if" would come back as "what
+     happened" — top four at 100%, everyone else at nothing. */
+  function openedOf(no) { return !!(PICKS[no] || {}).open; }
+
   /* A pick on a match that really happened. Those are the ones the UI has to
      be loud about — the rest are just predictions of the future. */
   function rewritten(m) { return m.played && !!pickOf(m.no); }
 
-  /* A played match whose result is being ignored: replay mode is on and the
-     reader has not said what should have happened instead, so it is simulated. */
-  function setAside(m) { return m.played && REPLAY && !pickOf(m.no); }
+  /* A played match whose result is being ignored and left to the simulation. */
+  function setAside(m) {
+    return m.played && !pickOf(m.no) && (REPLAY || openedOf(m.no));
+  }
 
   /* Can this card be picked on? Anything unplayed, anything already rewritten,
      anything the reader opened by hand, and everything at all in replay mode. */
   function editable(m) {
-    return !m.played || REPLAY || !!pickOf(m.no) || !!openEdit[m.no];
+    return !m.played || REPLAY || !!pickOf(m.no) || openedOf(m.no);
   }
 
   function pickCount() {
     return STATE ? STATE.league.filter(function (m) { return pickOf(m.no); }).length : 0;
+  }
+
+  /* The price of a fixture. Replaying the season means nothing has been played,
+     so the bars come off the prior model — one where no side has yet shown it
+     is any better than another — rather than this season's fitted ratings. */
+  function priceOf(m) {
+    var p = REPLAY ? m.wp0 : m.wp;
+    return typeof p === 'number' ? p : 0.5;
   }
 
   /* ======================================================================
@@ -182,12 +197,16 @@
     });
 
     var open = STATE.league.filter(function (m) {
-      return (REPLAY || !m.played) && !pickOf(m.no);
+      return !pickOf(m.no) && (REPLAY || openedOf(m.no) || !m.played);
     }).length;
+    var aside = REPLAY
+      ? STATE.league.filter(function (m) { return m.played && !pickOf(m.no); }).length
+      : STATE.league.filter(setAside).length;
     var mine = pickCount();
     countEl.innerHTML = '<b>' + open + '</b> still to simulate &middot; <b>' + mine +
                         '</b> picked by you' +
-                        (REPLAY ? ' &middot; real results set aside' : '') +
+                        (aside ? ' &middot; <b>' + aside + '</b> real result' +
+                                 (aside === 1 ? '' : 's') + ' set aside' : '') +
                         (LAST ? ' &middot; ' + LAST.sims.toLocaleString() + ' sims in ' +
                                 LAST.ms + 'ms' : '');
 
@@ -202,7 +221,7 @@
   function matchCard(m) {
     var pick = pickOf(m.no);
     var a = m.a, b = m.b;
-    var wpA = Math.round((m.wp || 0.5) * 100);
+    var wpA = Math.round(priceOf(m) * 100);
     var label = /^\d+$/.test(m.no) ? 'Match ' + m.no : m.no;
     var isRewrite = rewritten(m);
     var aside = setAside(m);
@@ -232,10 +251,11 @@
     var actual = '';
     if (m.played) {
       var stale = isRewrite || aside;
-      /* Restore only means anything when there is a pick of your own to drop.
-         In replay mode the whole season is set aside, so the way back is the
-         Replay button rather than a per-card action. */
-      var act = isRewrite
+      /* Restore undoes whatever this card is carrying — a pick of your own or
+         simply having been opened. In replay mode the whole season is set aside
+         at once, so there the way back is the Replay button, not a per-card
+         action, and no Restore is offered. */
+      var act = (isRewrite || openedOf(m.no))
         ? '<button type="button" class="pr-match__act" data-restore="' + esc(m.no) + '">Restore</button>'
         : (editing ? '' : '<button type="button" class="pr-match__act" data-edit="' +
            esc(m.no) + '">Re-predict</button>');
@@ -327,8 +347,14 @@
            '</article>';
   }
 
-  var FIELDS = [['runs', 'Runs', 10], ['wkts', 'Wickets', 1],
-                ['overs', 'Overs', 1], ['balls', 'Balls', 1]];
+  /* Runs get a coarse step as well as a fine one — nudging 180 one at a time
+     is nobody's idea of a good evening — and every box can be typed into. */
+  var FIELDS = [
+    { key: 'runs', label: 'Runs', steps: [10, 1] },
+    { key: 'wkts', label: 'Wickets', steps: [1] },
+    { key: 'overs', label: 'Overs', steps: [1] },
+    { key: 'balls', label: 'Balls', steps: [1] }
+  ];
 
   function hasScores(no) {
     var p = PICKS[no] || {};
@@ -341,14 +367,27 @@
              '<div class="pr-score__head">' + crest(abv, 'pr-crest--xs') + esc(abv) + ' innings</div>' +
              '<div class="pr-score__grid">' +
                FIELDS.map(function (f) {
-                 return '<div class="pr-step">' +
-                          '<span class="pr-step__label">' + f[1] + '</span>' +
-                          '<button type="button" data-step="' + esc(m.no) + '" data-side="' + side +
-                            '" data-key="' + f[0] + '" data-by="' + f[2] + '">+ ' + f[2] + '</button>' +
-                          '<b>' + (v[f[0]] || 0) + '</b>' +
-                          '<button type="button" data-step="' + esc(m.no) + '" data-side="' + side +
-                            '" data-key="' + f[0] + '" data-by="' + (-f[2]) + '">&minus; ' + f[2] + '</button>' +
-                        '</div>';
+                 var at = 'data-no="' + esc(m.no) + '" data-side="' + side +
+                          '" data-key="' + f.key + '"';
+                 /* steps run coarse to fine left to right, so the tens sit in
+                    one column and the ones in the other on both rows */
+                 var row = function (dir) {
+                   return '<span class="pr-step__btns">' + f.steps.map(function (s) {
+                     return '<button type="button" class="pr-step__btn" ' + at +
+                            ' data-by="' + (dir * s) + '" aria-label="' + f.label +
+                            (dir > 0 ? ' plus ' : ' minus ') + s + '">' +
+                            (dir > 0 ? '+ ' : '&minus; ') + s + '</button>';
+                   }).join('') + '</span>';
+                 };
+                 return '<label class="pr-step">' +
+                          '<span class="pr-step__label">' + f.label + '</span>' +
+                          '<span class="pr-step__box">' + row(1) +
+                            '<input class="pr-step__val" type="text" inputmode="numeric" ' +
+                              'autocomplete="off" ' + at + ' data-num value="' +
+                              (v[f.key] || 0) + '">' +
+                            row(-1) +
+                          '</span>' +
+                        '</label>';
                }).join('') +
              '</div>' +
            '</div>';
@@ -476,14 +515,16 @@
            LAST.table.map(scenarioCard).join('');
   }
 
+  /* One team's route in. The two lines the server works out — what it has to
+     win and what it has to win by — carry the whole story, so they are the
+     headline and the prose underneath is the footnote. */
   function scenarioCard(r) {
     var s = r.scenario || {};
-    var need = s.need === null || s.need === undefined
-      ? '&mdash;'
-      : (s.need === 0 ? 'None &mdash; already there'
-                      : esc(s.need) + ' of ' + esc(s.remaining) + ' wins needed');
+    var out = s.alive === false;
+    var warn = !out && !s.nrr_ok;
 
-    return '<section class="pr-card pr-scn" style="' + tint(r.team) + '">' +
+    return '<section class="pr-card pr-scn' + (out ? ' is-out' : '') +
+             '" style="' + tint(r.team) + '">' +
              '<div class="pr-scn__head">' + crest(r.team, 'pr-crest--sm') +
                '<b>' + esc(team(r.team).name) + '</b>' +
                '<span class="pr-scn__pos">#' + r.pos + '</span></div>' +
@@ -492,10 +533,11 @@
                bar('Top 2', r.top2, '#ffc247') +
                bar('Title', r.title, '#2ee27a') +
                '<dl class="pr-scn__facts">' +
-                 '<div><dt>Need wins</dt><dd>' + need + '</dd></div>' +
-                 '<div><dt>NRR boost</dt><dd' + (s.nrr_ok ? '' : ' class="is-warn"') + '>' +
-                   (s.nrr_ok ? 'Current NRR sufficient' : 'Net run rate will decide') +
-                 '</dd></div>' +
+                 '<div><dt>Need wins</dt><dd' + (out ? ' class="is-out"' : '') + '>' +
+                   esc(s.need_text || '—') + '</dd></div>' +
+                 '<div><dt>NRR boost</dt><dd class="' +
+                   (out ? 'is-out' : (warn ? 'is-warn' : '')) + '">' +
+                   esc(s.nrr_text || '—') + '</dd></div>' +
                '</dl>' +
                (s.note ? '<p class="pr-scn__note">' + esc(s.note) + '</p>' : '') +
              '</div>' +
@@ -539,12 +581,35 @@
     return '<div class="pr-skel"></div><div class="pr-skel"></div><div class="pr-skel"></div>';
   }
 
+  /* A score box identifies itself by match, side and field, which survives the
+     panel being rebuilt — so a simulation landing while you are halfway through
+     typing a total can put the caret back where it was instead of throwing you
+     out of the box. */
+  function focusKey(el) {
+    return el && el.matches && el.matches('[data-num]')
+      ? [el.getAttribute('data-no'), el.getAttribute('data-side'),
+         el.getAttribute('data-key')].join(' ')
+      : null;
+  }
+
   function render() {
+    var was = focusKey(document.activeElement);
+    var caret = was ? document.activeElement.selectionStart : null;
+
     filters.hidden = tab !== 'league';
     panel.innerHTML = tab === 'league' ? leaguePanel()
                     : tab === 'playoffs' ? playoffPanel()
                     : tablePanel();
     renderDock();
+
+    if (!was) return;
+    var boxes = panel.querySelectorAll('[data-num]');
+    for (var i = 0; i < boxes.length; i++) {
+      if (focusKey(boxes[i]) !== was) continue;
+      boxes[i].focus();
+      try { boxes[i].setSelectionRange(caret, caret); } catch (e) { /* not selectable */ }
+      return;
+    }
   }
 
   /* ======================================================================
@@ -558,6 +623,15 @@
         b.setAttribute('aria-selected', String(b === btn));
       });
       render();
+      /* The strip holds position, so switching tabs deep in a long list would
+         otherwise drop you into the middle of a panel you have not seen the
+         top of. Only scrolls up, never down. */
+      var strip = document.getElementById('prTabs');
+      if (!strip) return;
+      var y = window.pageYOffset + strip.getBoundingClientRect().top -
+              (parseFloat(getComputedStyle(document.documentElement)
+                .getPropertyValue('--pr-stick')) || 68);
+      if (window.pageYOffset > y) window.scrollTo({ top: y, behavior: 'smooth' });
     });
   });
 
@@ -591,8 +665,11 @@
 
     var editBtn = e.target.closest('[data-edit]');
     if (editBtn) {
-      openEdit[editBtn.getAttribute('data-edit')] = true;
+      var eno = editBtn.getAttribute('data-edit');
+      PICKS[eno] = Object.assign({}, PICKS[eno], { open: true });
+      save();
       render();
+      queueSim();            /* the real result stops counting from here */
       return;
     }
 
@@ -600,7 +677,6 @@
     if (restoreBtn) {
       var rno = restoreBtn.getAttribute('data-restore');
       delete PICKS[rno];
-      delete openEdit[rno];
       delete openScores[rno];
       save();
       render();
@@ -616,9 +692,9 @@
       return;
     }
 
-    var step = e.target.closest('[data-step]');
+    var step = e.target.closest('.pr-step__btn');
     if (step) {
-      bumpScore(step.getAttribute('data-step'), step.getAttribute('data-side'),
+      bumpScore(step.getAttribute('data-no'), step.getAttribute('data-side'),
                 step.getAttribute('data-key'), parseInt(step.getAttribute('data-by'), 10));
       return;
     }
@@ -627,20 +703,52 @@
     if (impactBtn) askImpact(impactBtn.getAttribute('data-impact'));
   });
 
+  /* Typed scores. The value is stored on every keystroke so the simulation
+     keeps up, but the panel is deliberately not repainted until the box is
+     left — redrawing mid-word would take the caret with it. Blur repaints so
+     anything clamped on the way in is shown as it was actually stored. */
+  panel.addEventListener('input', function (e) {
+    var box = e.target.closest && e.target.closest('[data-num]');
+    if (!box) return;
+    var n = parseInt(String(box.value).replace(/[^0-9]/g, ''), 10);
+    setScore(box.getAttribute('data-no'), box.getAttribute('data-side'),
+             box.getAttribute('data-key'), isNaN(n) ? 0 : n);
+  });
+
+  panel.addEventListener('change', function (e) {
+    if (e.target.closest && e.target.closest('[data-num]')) render();
+  });
+
+  /* Enter means "I am done with this box" on a form-less page. */
+  panel.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.closest && e.target.closest('[data-num]')) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  });
+
   var LIMITS = { runs: [0, 400], wkts: [0, 10], overs: [0, 20], balls: [0, 5] };
 
-  function bumpScore(no, side, key, by) {
+  /* Write one figure onto a pick, clamped. Returns the value actually stored,
+     which is not always the one asked for. */
+  function setScore(no, side, key, value) {
     var pick = PICKS[no] || {};
     var raw = pick[side + '_raw'] || { runs: 0, wkts: 0, overs: 0, balls: 0 };
     var lim = LIMITS[key];
-    raw[key] = Math.max(lim[0], Math.min(lim[1], (raw[key] || 0) + by));
+    raw[key] = Math.max(lim[0], Math.min(lim[1], value));
     pick[side + '_raw'] = raw;
     /* the server wants decimal overs; x.y in cricket is y balls out of six */
     pick[side] = { runs: raw.runs, wkts: raw.wkts, overs: raw.overs + raw.balls / 6 };
     PICKS[no] = pick;
     save();
-    render();
     queueSim();
+    return raw[key];
+  }
+
+  function bumpScore(no, side, key, by) {
+    var raw = (PICKS[no] || {})[side + '_raw'] || {};
+    setScore(no, side, key, (raw[key] || 0) + by);
+    render();
   }
 
   function askImpact(no) {
@@ -670,7 +778,6 @@
      already made are kept, because they are the part you did by hand. */
   replayBtn.addEventListener('click', function () {
     setReplay(!REPLAY);
-    openEdit = {};
     impacts = {};
     render();
     queueSim(true);
@@ -679,7 +786,6 @@
   document.getElementById('prReset').addEventListener('click', function () {
     PICKS = {};
     impacts = {};
-    openEdit = {};
     openScores = {};
     setReplay(false);                 /* "actual" means the real results are back */
     save();
@@ -698,7 +804,7 @@
     STATE.league.forEach(function (m) {
       if ((m.played && !REPLAY) || pickOf(m.no)) return;
       var cur = PICKS[m.no] || {};
-      cur.w = Math.random() < (m.wp || 0.5) ? m.a : m.b;
+      cur.w = Math.random() < priceOf(m) ? m.a : m.b;
       PICKS[m.no] = cur;
     });
     save();
@@ -711,6 +817,38 @@
   });
 
   /* -------------------------------------------------------------- start up */
+
+  /* ---------------------------------------------------------- sticky tabs
+     The navbar is fixed and its height moves with the viewport, so the offset
+     the tab strip sticks at is measured rather than assumed. The is-stuck
+     class only lifts it once it is genuinely holding position, which is the
+     same treatment the fixtures toolbar gets. */
+  var tabsEl = document.getElementById('prTabs');
+
+  function navHeight() {
+    var nav = document.querySelector('nav.navbar');
+    return nav ? nav.getBoundingClientRect().height : 66;
+  }
+
+  function syncStick() {
+    document.documentElement.style.setProperty('--pr-stick', (navHeight() + 8) + 'px');
+  }
+
+  syncStick();
+  window.addEventListener('resize', syncStick);
+
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      if (tabsEl) {
+        tabsEl.classList.toggle('is-stuck',
+          tabsEl.getBoundingClientRect().top <= navHeight() + 9);
+      }
+      ticking = false;
+    });
+  }, { passive: true });
 
   setDock(load(DOCK_STORE, false) === true);
   setReplay(REPLAY);                  /* re-apply whatever the last visit left on */

@@ -199,16 +199,31 @@ body.is-working .pr-panel { opacity: 0.5; transition: opacity 0.12s linear; }
 
 /* --------------------------------------------------------------------- tabs */
 
+/* Pinned under the fixed navbar, like the fixtures toolbar. --pr-stick is
+   re-measured from the real navbar on load and resize, because its height
+   moves with the viewport. The fill is near-opaque rather than the glass used
+   elsewhere: cards slide underneath this, and a 5% wash would show them. */
 .pr-tabs {
+  position: sticky;
+  top: var(--pr-stick, 68px);
+  z-index: 20;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
   padding: 5px;
   border: 1px solid var(--pr-line);
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.05);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(18, 29, 51, 0.94), rgba(11, 19, 35, 0.94));
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: box-shadow 0.22s var(--pr-ease), border-color 0.22s var(--pr-ease);
+}
+
+/* lifts once it is actually holding position over the content */
+.pr-tabs.is-stuck {
+  border-color: var(--pr-line-2);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .pr-tab {
@@ -710,9 +725,23 @@ body.is-working .pr-panel { opacity: 0.5; transition: opacity 0.12s linear; }
   text-transform: uppercase;
 }
 
-.pr-score__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+/* One figure, stacked: the plus row, the total, the minus row. Runs carry a
+   coarse step as well as a fine one, so their rows split in two — tens on the
+   left, ones on the right, lining up top and bottom. The total is an input,
+   so any of them can simply be typed instead. */
+.pr-score__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
-.pr-step {
+.pr-step { display: block; cursor: default; }
+
+.pr-step__label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pr-ink);
+}
+
+.pr-step__box {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--pr-line);
@@ -721,37 +750,53 @@ body.is-working .pr-panel { opacity: 0.5; transition: opacity 0.12s linear; }
   background: rgba(0, 0, 0, 0.24);
 }
 
-.pr-step__label {
-  padding: 6px 0 3px;
-  text-align: center;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--pr-ink-3);
+.pr-step__btns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
 }
 
-.pr-step button {
+.pr-step__btn {
   min-height: 32px;
   border: 0;
-  border-top: 1px solid var(--pr-line);
   background: transparent;
   color: var(--pr-ink-3);
   font: inherit;
   font-size: 11.5px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
+  transition: background 140ms var(--pr-ease), color 140ms var(--pr-ease);
 }
 
-.pr-step button:hover { background: rgba(255, 255, 255, 0.09); color: var(--pr-ink); }
+.pr-step__btn + .pr-step__btn { border-left: 1px solid var(--pr-line); }
+.pr-step__btn:hover { background: rgba(255, 255, 255, 0.09); color: var(--pr-ink); }
+.pr-step__btn:active { background: rgba(255, 255, 255, 0.15); }
 
-.pr-step b {
-  padding: 6px 0;
+.pr-step__val {
+  width: 100%;
+  min-height: 44px;
+  padding: 2px 6px;
+  border: 0;
+  border-top: 1px solid var(--pr-line);
+  border-bottom: 1px solid var(--pr-line);
+  background: transparent;
+  color: var(--pr-ink);
   text-align: center;
   font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+
+.pr-step__val::-webkit-outer-spin-button,
+.pr-step__val::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.pr-step__val:focus {
+  outline: none;
+  background: rgba(76, 201, 240, 0.12);
+  box-shadow: inset 0 0 0 1px var(--pr-cyan);
 }
 
 .pr-note {
@@ -1001,6 +1046,11 @@ body.is-working .pr-panel { opacity: 0.5; transition: opacity 0.12s linear; }
 }
 
 .pr-scn__facts dd.is-warn { color: var(--pr-gold); }
+.pr-scn__facts dd.is-out { color: var(--pr-red); }
+
+/* a side that cannot get there any more, however it finishes */
+.pr-scn.is-out { opacity: 0.72; }
+.pr-scn.is-out .pr-scn__pos { background: rgba(255, 255, 255, 0.12); color: var(--pr-ink-3); }
 
 .pr-scn__note {
   margin: 11px 0 0;
@@ -1141,7 +1191,7 @@ body.is-working .pr-panel { opacity: 0.5; transition: opacity 0.12s linear; }
   .pr-hero { padding-top: 18px; }
   .pr-btn__label { display: none; }
   .pr-btn { padding: 0 13px; }
-  .pr-scores { grid-template-columns: 1fr; }
+  .pr-scores { grid-template-columns: repeat(auto-fit, minmax(99px, 1fr)) }
   .pr-side__name { font-size: 0.88rem; }
   .pr-match__sides { gap: 8px; }
   .pr-impact__row, .pr-impact__key { grid-template-columns: minmax(0, 1fr) 48px 48px 46px; }

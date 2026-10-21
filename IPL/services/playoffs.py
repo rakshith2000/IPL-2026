@@ -67,9 +67,14 @@ def home_venue_map():
             hosts[venue][team_a] += 1
     return {venue: counter.most_common(1)[0][0] for venue, counter in hosts.items()}
 
-def innings_observations(home_of):
+def innings_observations(home_of, skip=()):
     """One row per completed league innings, as
     (batting, bowling, is_home, is_chase, runs, censor_at).
+
+    `skip` drops matches by Match_No. The predictor uses it to hold out the
+    results a reader has set aside: asking what might have happened in the last
+    twenty matches, while the ratings still quietly know how those twenty went,
+    answers a different and much less interesting question.
 
     censor_at is None when the innings was seen in full, or the target when the
     chase succeeded - the side stopped batting on reaching it, so all we know is
@@ -82,9 +87,12 @@ def innings_observations(home_of):
     """
     fixtures = Fixture.query.filter(Fixture.Result != None).filter(
         Fixture.Match_No.notin_(list(pofs.values()))).order_by(Fixture.id).all()
+    skip = set(skip or ())
     rows = []
     for fx in fixtures:
         res = fx.Result or ''
+        if fx.Match_No in skip:
+            continue
         if fx.Win_T in (None, 'NA') or 'Super over' in res or 'DLS' in res or 'abandoned' in res:
             continue
         if 'wicket' in res:        # the winner chased, so it batted second
@@ -221,10 +229,14 @@ def simulate_season(teams, remaining_matches, model=None, sims=None, detail=Fals
     Teams are ranked on points, then wins, then NRR, matching both the IPL playing
     conditions and the table this feeds.
 
+    Returns {'teams': {team: {...}}} plus, under detail, the season-wide figures
+    that belong to no single side.
+
     detail=True also returns what the predictor page needs and the hourly refresh
     does not, so it is kept behind the flag: where each side finishes, who lifts
-    the trophy, and - the expensive one - top-4 rate broken down by final win
-    count, which is what turns a percentage into "13 of 14 wins needed".
+    the trophy, top-4 rate broken down by final win count - which is what turns a
+    percentage into "13 of 14 wins needed" - and the net run rate the side
+    finishing fourth ended on, which is the bar a team chasing on NRR has to clear.
     """
     names = list(teams)
     n_t = len(names)
@@ -260,6 +272,7 @@ def simulate_season(teams, remaining_matches, model=None, sims=None, detail=Fals
     title_counts = np.zeros(n_t)
     wins_total = np.zeros((n_t, max_wins))
     wins_top4 = np.zeros((n_t, max_wins))
+    cut_nrr = []                               # fourth place's NRR, one per sim
     pwin = _win_matrix(model, names) if detail else None
     done = 0
     while done < total:
@@ -339,6 +352,11 @@ def simulate_season(teams, remaining_matches, model=None, sims=None, detail=Fals
             for p in range(4):
                 seed_counts[:, p] += np.bincount(order[:, p], minlength=n_t)
 
+            # Where the cut fell: the net run rate of whoever squeezed into
+            # fourth. A side relying on NRR has to beat this number, so it is
+            # what "win by about this much" is measured against.
+            cut_nrr.append((scored - conceded)[order[:, 3], np.arange(n)])
+
             # Top-4 rate by final win count. Narrowing to the sims where a side
             # actually won w of them is what answers "how many do we need?" -
             # the flat percentage averages over every path at once.
@@ -367,7 +385,7 @@ def simulate_season(teams, remaining_matches, model=None, sims=None, detail=Fals
                'top2': _pct(counts[k, 1], total),
                'top1': _pct(counts[k, 2], total)} for t, k in idx.items()}
     if not detail:
-        return out
+        return {'teams': out}
     for t, k in idx.items():
         out[t]['title'] = _pct(title_counts[k], total)
         out[t]['seeds'] = [_pct(seed_counts[k, p], total) for p in range(4)]
@@ -376,11 +394,16 @@ def simulate_season(teams, remaining_matches, model=None, sims=None, detail=Fals
         out[t]['by_wins'] = [
             (int(w), float(wins_total[k, w] / total), float(wins_top4[k, w] / wins_total[k, w]))
             for w in range(max_wins) if wins_total[k, w] > 0]
-    return out
+    cut = np.concatenate(cut_nrr) if cut_nrr else np.zeros(1)
+    return {'teams': out,
+            # the median is the bar in a typical season; the upper quartile is
+            # what it takes to be comfortable rather than lucky
+            'cut_nrr': float(np.median(cut)),
+            'cut_nrr_hi': float(np.percentile(cut, 75))}
 
 def get_top4_playoffs(teams, remaining_matches, model=None):
     """Top-4 / top-2 / top-1 percentages for the points table. See simulate_season()."""
-    return simulate_season(teams, remaining_matches, model=model)
+    return simulate_season(teams, remaining_matches, model=model)['teams']
 
 def refresh_qualification():
     dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.W.desc(),Pointstable.NRR.desc(),Pointstable.id.asc()).all()

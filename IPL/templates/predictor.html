@@ -51,7 +51,9 @@
         </div>
     </header>
 
-    <div class="pr-tabs" role="tablist" aria-label="Predictor sections">
+    {#  Pinned under the navbar while the panel scrolls, the way the fixtures
+        toolbar is — --pr-stick is measured from the real navbar height. #}
+    <div class="pr-tabs" id="prTabs" role="tablist" aria-label="Predictor sections">
         <button type="button" class="pr-tab" role="tab" data-tab="league" aria-selected="true">League Stage</button>
         <button type="button" class="pr-tab" role="tab" data-tab="playoffs" aria-selected="false">Playoffs</button>
         <button type="button" class="pr-tab" role="tab" data-tab="table" aria-selected="false">Points Table</button>

@@ -25,7 +25,8 @@ from .. import db
 from ..models import Pointstable, Fixture
 from ..config import pofs, full_name, clr, teamID
 from ..utils.overs import ovToPer
-from .playoffs import calibrate_match_model, simulate_season, match_win_prob
+from .playoffs import (calibrate_match_model, simulate_season, match_win_prob,
+                       home_venue_map, innings_observations)
 from .pointstable import _booked
 
 # Sims are shared out so the wall clock stays roughly flat however much season
@@ -63,18 +64,36 @@ def _model_signature():
     return tuple(int(v or 0) for v in row)
 
 
-def get_model():
-    """The season's scoring model, refitted only when a result has moved.
+def get_model(replay=False, skip=()):
+    """The scoring model behind every simulated match.
 
-    The fit is a ridge solve plus a dozen EM sweeps over every innings played,
-    which is far too much to repeat on each keystroke, and its inputs only
-    change when a match is entered or deleted.
+    Normally this is the season's own fit - a ridge solve plus a dozen EM sweeps
+    over every innings played.
+
+    `skip` holds out the matches the reader has set aside, and this is the whole
+    trick. Ask what might have happened over the last twenty games of a finished
+    season and the ratings, fitted on all seventy, already know exactly how
+    those twenty went: every "what if" collapses back onto what did happen. Fit
+    on the fifty that still stand and the other twenty are genuinely open, which
+    is the question being asked.
+
+    Replaying the season is the limit of that: hold everything out. Feeding
+    calibrate_match_model() no observations returns the priors untouched, so
+    every side has the same attack and defence and the only thing telling two
+    fixtures apart is who is at home.
+
+    The fit costs well under a millisecond against a simulation's few hundred,
+    so it is done per request and only the common cases are cached.
     """
     sig = _model_signature()
-    if _MODEL_CACHE.get('sig') != sig:
-        _MODEL_CACHE['sig'] = sig
-        _MODEL_CACHE['model'] = calibrate_match_model()
-    return _MODEL_CACHE['model']
+    key = ('prior' if replay else 'fit', sig, frozenset(skip or ()))
+    if key not in _MODEL_CACHE:
+        if len(_MODEL_CACHE) > 24:              # a reader can hold out any subset
+            _MODEL_CACHE.clear()
+        home_of = home_venue_map()
+        obs = [] if replay else innings_observations(home_of, skip=key[2])
+        _MODEL_CACHE[key] = calibrate_match_model(observations=obs, home_of=home_of)
+    return _MODEL_CACHE[key]
 
 
 # --------------------------------------------------------------------- state
@@ -109,6 +128,7 @@ def get_state():
     first simulation comes back.
     """
     model = get_model()
+    prior = get_model(replay=True)
     playoff_nos = list(pofs.values())
     rows = Fixture.query.order_by(Fixture.id).all()
 
@@ -128,7 +148,11 @@ def get_state():
         if fx.Match_No in playoff_nos:
             playoffs.append(entry)
         else:
+            # two prices: what this season says, and what a season nobody has
+            # played says. Replay mode shows the second, and the page is given
+            # both so flipping the toggle costs no round trip.
             entry['wp'] = round(match_win_prob(model, fx.Team_A, fx.Team_B, fx.Venue), 4)
+            entry['wp0'] = round(match_win_prob(prior, fx.Team_A, fx.Team_B, fx.Venue), 4)
             entry['tally'] = _tally(fx)
             league.append(entry)
 
@@ -195,10 +219,17 @@ def _award(a_row, b_row, choice):
 def build_table(picks, state=None, replay=False):
     """The standings a set of picks produces, rebuilt from the fixture list.
 
-    picks is {match_no: {'w': 'RCB' | 'NR', 'a': {runs, wkts, overs}, 'b': {...}}}
+    picks is {match_no: {'w': 'RCB' | 'NR', 'open': true,
+                         'a': {runs, wkts, overs}, 'b': {...}}}
     and overrides any match, played or not - replaying a completed one is the
-    point of a simulator. A match with no pick falls back to its real result if
-    it has one, and otherwise goes into the pile to be simulated.
+    point of a simulator.
+
+    Three states, then. A match with a 'w' takes that result. A match marked
+    'open' has its real result set aside and is simulated like any unplayed one
+    - which is what the per-match Re-predict button means, and without it that
+    button could only ever re-show a result that was still being counted.
+    Anything else falls back to what really happened, or is simulated if it has
+    not been played.
 
     replay=True drops the real results altogether, so the season starts from an
     empty table and every match is either picked or simulated. Half a season in,
@@ -216,7 +247,7 @@ def build_table(picks, state=None, replay=False):
 
         if a_row is None or b_row is None:          # a TBA playoff-style fixture
             continue
-        if not mine and (replay or not m['played']):
+        if not mine and (replay or pick.get('open') or not m['played']):
             remaining.append((m['a'], m['b'], m['venue']))
             continue
 
@@ -256,53 +287,112 @@ def _book(row, mine, theirs):
 
 # ------------------------------------------------------------------ scenarios
 
-def _scenario(team, odds, row, remaining):
-    """Turn a team's by-win-count curve into "x of y wins needed".
+def _nrr_margin(row, remaining, target, mean_score):
+    """How much a side must win each remaining match by to reach a target NRR.
 
-    `remaining` is this side's own games left, not the league's - "13 of 14" is
-    a thing a supporter can act on, "13 of 90" is not.
+    Net run rate is (runs for / overs faced) - (runs against / overs bowled).
+    Win the next `remaining` matches by d runs apiece, with both innings going
+    the full twenty, and the difference of the two totals grows by d each time
+    while both over counts grow by twenty:
 
-    by_wins is (total wins, share of sims, top-4 rate within them). The answer is
-    the fewest extra wins whose branch qualifies essentially always; if even
-    winning out does not get there the team is relying on other results, and if
-    the best branch is short of certain it is relying on net run rate too.
+        target = (RF - RA + remaining*d) / (overs + 20*remaining)
+
+    which rearranges to the d below. It is an approximation - a chase that ends
+    early books fewer overs than twenty, which flatters the winner - so it reads
+    as "about this much" and never as a promise.
+
+    The overs-to-spare twin is the same margin seen from the other end. Chasing
+    `t` with v overs unused scores at t/(20-v) instead of t/20, and setting that
+    gain equal to d/20 gives v = 20d / (t + d) with t the par score.
     """
-    out = {'need': None, 'remaining': remaining, 'nrr_ok': True, 'note': ''}
+    overs = (row['of'] + row['ob']) / 2.0
+    diff = row['rf'] - row['ra']
     if remaining <= 0:
-        out['note'] = 'Season complete.'
-        out['nrr_ok'] = odds['top4'] >= 50
+        return None, None
+    runs = (target * (overs + 20.0 * remaining) - diff) / remaining
+    if runs <= 0:
+        return 0, 0
+    runs = int(round(runs))
+    spare = 20.0 * runs / max(mean_score + runs, 1.0)
+    return runs, round(spare, 1)
+
+
+def _scenario(odds, row, remaining, sim, model):
+    """What this side has to do, in the terms a supporter would ask it.
+
+    `remaining` is its own games left, not the league's - "1 of 2" is a thing
+    you can act on, "1 of 35" is not.
+
+    by_wins is (total wins, share of sims, top-4 rate within them), so the curve
+    says what each finishing win count is worth. Reading it from the top gives
+    the four cases that matter: through already, a win count that locks it in,
+    winning out being enough, and winning out still not being enough - which is
+    where other results and net run rate come in. A side that never makes the
+    four in any branch, however it finishes, is out.
+    """
+    out = {'need': None, 'remaining': remaining, 'nrr_ok': True,
+           'need_text': '', 'nrr_text': '', 'note': '', 'alive': True}
+
+    if remaining <= 0:
+        through = odds.get('top4', 0.0) >= 50
+        out.update(need=0, alive=through, nrr_ok=through,
+                   need_text='Qualified' if through else 'Eliminated',
+                   nrr_text='Qualified' if through else 'Eliminated',
+                   note=('Through to the playoffs - every match played.' if through else
+                         'All matches played; the four is out of reach.'))
         return out
 
     curve = [(w, share, rate) for w, share, rate in odds.get('by_wins', []) if share >= 0.0015]
     if not curve:
-        out['note'] = 'Not enough simulations reached a usable split.'
+        out.update(need_text='Not enough simulations', nrr_text='—')
         return out
 
-    secure = [(w, rate) for w, rate in ((w, r) for w, _s, r in curve) if rate >= 0.995]
-    best_w, best_rate = max(curve, key=lambda c: c[0])[0], max(c[2] for c in curve)
+    max_w = max(w for w, _s, _r in curve)
+    best_rate = max(r for _w, _s, r in curve)
+    win_all_rate = max((r for w, _s, r in curve if w >= row['w'] + remaining), default=best_rate)
+    secure = [w for w, _s, r in curve if r >= 0.995]
+    mean_score = model.get('mean', 172.0)
+    target = sim.get('cut_nrr', 0.0)
 
+    # --- out of it ---------------------------------------------------------
+    if best_rate <= 0.0005:
+        out.update(need=None, alive=False, nrr_ok=False,
+                   need_text='Eliminated', nrr_text='Eliminated',
+                   note='No route to the top four, even winning every remaining match.')
+        return out
+
+    # --- a win count that settles it --------------------------------------
     if secure:
-        need = min(w for w, _ in secure) - row['w']
-        need = max(need, 0)
-        out['need'] = need
-        out['nrr_ok'] = True
-        out['note'] = ('Already through on current form.' if need == 0 else
-                       'Winning {} of {} remaining would secure qualification.'.format(need, remaining))
+        need = max(min(secure) - row['w'], 0)
+        out.update(need=need, nrr_ok=True)
+        if need == 0:
+            out['need_text'] = 'Already through'
+            out['note'] = 'Qualification is secure whatever happens from here.'
+        elif need >= remaining:
+            out['need_text'] = 'Win all {}'.format(remaining)
+            out['note'] = 'Winning every remaining match qualifies regardless of other results.'
+        else:
+            out['need_text'] = '{} of {} wins locks it in'.format(need, remaining)
+            out['note'] = ('{} more win{} is enough on its own; anything beyond that is '
+                           'seeding.'.format(need, '' if need == 1 else 's'))
+        out['nrr_text'] = 'Current NRR sufficient'
         return out
 
-    # nothing is a lock: report the win count that gets closest
-    likely = [(w, rate) for w, _s, rate in curve if rate >= 0.5]
-    if likely:
-        need = max(min(w for w, _ in likely) - row['w'], 0)
-        out['need'] = need
-        out['nrr_ok'] = False
-        out['note'] = ('Winning {} of {} would make it more likely than not, but net run '
-                       'rate and other results still decide.'.format(need, remaining))
+    # --- winning out is the best it can do, and it is not certain ----------
+    need = max(max_w - row['w'], 0)
+    out.update(need=need, nrr_ok=False)
+    out['need_text'] = 'Win all {} + need help'.format(remaining)
+
+    runs, spare = _nrr_margin(row, remaining, target, mean_score)
+    if runs is None or runs <= 0:
+        out['nrr_ok'] = True
+        out['nrr_text'] = 'Current NRR sufficient'
     else:
-        out['need'] = max(best_w - row['w'], 0)
-        out['nrr_ok'] = False
-        out['note'] = ('Winning out reaches only {:.0f}% - other results have to '
-                       'fall its way.'.format(best_rate * 100))
+        out['nrr_text'] = 'Win by ~{} runs or ~{} overs to spare each match'.format(
+            runs, ('%g' % spare))
+    out['note'] = ('Winning out reaches {:.0f}% - the rest is other results, and net run '
+                   'rate decides a tie on points (the fourth side typically finishes on '
+                   '{:+.2f}).'.format(win_all_rate * 100, target))
     return out
 
 
@@ -312,14 +402,23 @@ def simulate(picks=None, sims=None, detail=True, replay=False):
     """The whole answer for one set of picks: table, odds and scenarios."""
     started = time.perf_counter()
     state = get_state()
-    model = get_model()
-    ranked, remaining, used = build_table(picks or {}, state, replay)
+    picks = picks or {}
+    # Results the reader has taken off the board, either by picking a different
+    # one or by opening the match. They must not feed the ratings - see
+    # get_model() - and they are also what makes the season hypothetical, so a
+    # real playoff result stops meaning anything once any of them exist.
+    held = {m['no'] for m in state['league'] if m['played']
+            and ((picks.get(m['no']) or {}).get('w')
+                 or (picks.get(m['no']) or {}).get('open'))}
+    model = get_model(replay, held)
+    ranked, remaining, used = build_table(picks, state, replay)
 
     teams_in = {r['team']: {'points': r['pts'], 'wins': r['w'], 'runs_for': r['rf'],
                             'overs_faced': r['of'], 'runs_against': r['ra'],
                             'overs_bowled': r['ob']} for r in ranked}
     count = _sim_count(len(remaining)) if sims is None else sims
-    odds = simulate_season(teams_in, remaining, model=model, sims=count, detail=detail)
+    sim = simulate_season(teams_in, remaining, model=model, sims=count, detail=detail)
+    odds = sim['teams']
 
     left = {}
     for a, b, _venue in remaining:
@@ -333,7 +432,7 @@ def simulate(picks=None, sims=None, detail=True, replay=False):
                    top1=o.get('top1', 0.0), title=o.get('title', 0.0),
                    seeds=o.get('seeds', []), left=left.get(r['team'], 0))
         if detail:
-            row['scenario'] = _scenario(r['team'], o, r, left.get(r['team'], 0))
+            row['scenario'] = _scenario(o, r, left.get(r['team'], 0), sim, model)
         rows.append(row)
 
     return {
@@ -343,17 +442,26 @@ def simulate(picks=None, sims=None, detail=True, replay=False):
         'sims': count if remaining else 0,
         'ms': int((time.perf_counter() - started) * 1000),
         'replay': bool(replay),
-        'bracket': bracket(ranked, picks or {}, state, model, len(remaining)),
+        'held': sorted(held),
+        'cut_nrr': round(sim.get('cut_nrr', 0.0), 3),
+        'bracket': bracket(ranked, picks, state, model, len(remaining),
+                           replay or bool(held)),
     }
 
 
-def bracket(ranked, picks, state, model, open_matches):
+def bracket(ranked, picks, state, model, open_matches, hypothetical=False):
     """The playoff bracket for the predicted top four.
 
     The seeding is only meaningful once every league match has an answer, which
     here means played or picked - until then these are the sides currently in
     the four, not the ones that will be, and the page says so. Each tie carries
     the model's own price, and a pick on a playoff fixture overrides it.
+
+    A real playoff result is only worth anything when the league that produced
+    it still stands and the two sides here are the two that actually contested
+    it. Change one league result and the road to the final changed with it, so
+    last season's winner must not be handed the trophy in a bracket it may not
+    even be in - `hypothetical` says that has happened.
     """
     seeds = [r['team'] for r in ranked[:4]]
     if len(seeds) < 4:
@@ -366,11 +474,14 @@ def bracket(ranked, picks, state, model, open_matches):
         m = by_label.get(key) or {}
         no = m.get('no', pofs.get(key, key))
         pick = (picks.get(no) or {}).get('w')
-        played = m.get('played')
-        winner = m.get('winner') if played else (pick if pick in (a, b) else None)
+        # the stored fixture only describes this tie if the league behind it is
+        # untouched and the two sides here are the two that played it
+        same = (not hypothetical and m.get('played') and a and b
+                and {m.get('a'), m.get('b')} == {a, b})
+        winner = m.get('winner') if same else (pick if pick in (a, b) else None)
         return {'key': key, 'no': no, 'title': title, 'a': a, 'b': b,
                 'venue': m.get('venue', ''), 'date': m.get('date', ''),
-                'played': bool(played), 'winner': winner,
+                'played': bool(same), 'winner': winner,
                 'wp': round(match_win_prob(model, a, b, neutral=True), 4) if a and b else 0.5}
 
     q1 = tie('Q1', seeds[0], seeds[1], 'Qualifier 1')
@@ -394,12 +505,19 @@ def impact(match_no, picks=None, replay=False):
     the button exists.
     """
     state = get_state()
-    model = get_model()
     match = next((m for m in state['league'] if m['no'] == match_no), None)
     if match is None:
         return {'ok': False}
 
     picks = dict(picks or {})
+    # the match being weighed is itself held out, along with anything else the
+    # reader has set aside, so neither side is priced on a result being undone
+    held = {m['no'] for m in state['league'] if m['played']
+            and ((picks.get(m['no']) or {}).get('w')
+                 or (picks.get(m['no']) or {}).get('open'))}
+    if match['played']:
+        held.add(match_no)
+    model = get_model(replay, held)
     out = {}
     for side in (match['a'], match['b']):
         forced = dict(picks)
@@ -409,7 +527,7 @@ def impact(match_no, picks=None, replay=False):
                                 'overs_faced': r['of'], 'runs_against': r['ra'],
                                 'overs_bowled': r['ob']} for r in ranked}
         odds = simulate_season(teams_in, remaining, model=model,
-                               sims=_sim_count(len(remaining), IMPACT_FRACTION))
+                               sims=_sim_count(len(remaining), IMPACT_FRACTION))['teams']
         out[side] = {t: o['top4'] for t, o in odds.items()}
 
     a, b = match['a'], match['b']
