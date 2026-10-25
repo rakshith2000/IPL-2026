@@ -1,21 +1,55 @@
 {
-    "name": "IPL",
-    "short_name": "IPL",
-    "description": "A web application to display IPL 2026 stats and information.",
+    "id": "/",
+    "name": "TATA IPL 2026",
+    "short_name": "IPL 2026",
+    "description": "Live scores, scorecards, standings and the season predictor for IPL 2026.",
+    "lang": "en",
+    "dir": "ltr",
     "start_url": "/",
+    "scope": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "categories": ["sports", "news"],
+    "background_color": "#07122b",
+    "theme_color": "#0b47bd",
     "icons": [
         {
-            "src": "/static/images/icons/ipl.png",
-            "sizes": "512x512",
-            "type": "image/png"
+            "src": "/static/images/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
         },
         {
-            "src": "/static/images/icons/ipl.ico",
-            "sizes": "256x256",
-            "type": "image/x-icon"
+            "src": "/static/images/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/static/images/icons/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Live matches",
+            "short_name": "Live",
+            "url": "/fixtures?filter=live",
+            "icons": [{ "src": "/static/images/icons/icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Points table",
+            "short_name": "Table",
+            "url": "/pointstable",
+            "icons": [{ "src": "/static/images/icons/icon-192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Season predictor",
+            "short_name": "Predictor",
+            "url": "/predictor",
+            "icons": [{ "src": "/static/images/icons/icon-192.png", "sizes": "192x192" }]
         }
     ]
-
 }
