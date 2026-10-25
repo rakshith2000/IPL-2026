@@ -59,12 +59,17 @@
     {#  Launch splash. Inert unless <html> carries .is-launching, which the head
         script only adds for an installed app on the first page of a session. #}
     <div class="app-splash" id="appSplash" role="status" aria-label="Loading IPL 2026">
-      <div class="app-splash__glow"></div>
+      <div class="app-splash__aurora"></div>
+      <div class="app-splash__beams"></div>
       <div class="app-splash__stage">
-        <span class="app-splash__ring"></span>
-        <span class="app-splash__frame"></span>
+        <span class="app-splash__wave"></span>
+        <span class="app-splash__wave"></span>
+        <span class="app-splash__wave"></span>
+        <span class="app-splash__trail"></span>
+        <span class="app-splash__orbit"><i></i></span>
         <span class="app-splash__tile">
           <img src="{{ url_for('static', filename='images/icons/ipl.png') }}" alt="" />
+          <span class="app-splash__glare"></span>
         </span>
       </div>
       <div class="app-splash__name">TATA IPL</div>
@@ -146,7 +151,10 @@
         var el = document.getElementById('appSplash');
         if (!el || !document.documentElement.classList.contains('is-launching')) return;
 
-        var FLOOR = 1100, CEILING = 2800;
+        /* FLOOR outlasts the entry sequence — the badge lands at 1000ms, the
+           wordmark wipes to 1220, the line arrives at 1340 — so the splash is
+           never cut off part-built on a warm start. CEILING is the backstop. */
+        var FLOOR = 1450, CEILING = 3200;
         var born = Date.now();
         var gone = false;
 
