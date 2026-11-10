@@ -8,8 +8,140 @@ from .. import db
 from ..main import main
 from ..models import Pointstable, Fixture, Toppers
 from ..config import full_name, clr, sqclr
-from ..utils.dates import tz
+from ..utils.dates import tz, start_DT
 from ..services.standings import getRanksForPT, getNextOpponents
+
+def _homepage_records(fixtures):
+    """Derive compact season records from result data already stored locally."""
+    team_codes = set(full_name) - {'TBA'}
+    completed = [fx for fx in fixtures if fx.Win_T is not None
+                 and 'abandoned' not in (fx.Result or '').lower()]
+    totals = []
+    margins = []
+    successful_chases = []
+    successful_defends = []
+
+    def match_card(fx):
+        def score(info):
+            info = info if isinstance(info, dict) else {}
+            try:
+                runs = int(info.get('runs') or 0)
+                wickets = int(info.get('wkts') or 0)
+                overs = float(info.get('overs') or 0)
+            except (TypeError, ValueError):
+                runs, wickets, overs = 0, 0, 0.0
+            display = str(runs) if wickets == 10 else f'{runs}/{wickets}'
+            return {'runs': runs, 'wickets': wickets, 'overs': f'{overs:.1f}',
+                    'display': display}
+
+        return {
+            'match': fx.Match_No,
+            'team_a': fx.Team_A,
+            'team_b': fx.Team_B,
+            'winner': fx.Win_T,
+            'score_a': score(fx.A_info),
+            'score_b': score(fx.B_info),
+        }
+
+    for fx in completed:
+        card = match_card(fx)
+        for side, opponent, info in (
+                (fx.Team_A, fx.Team_B, fx.A_info),
+                (fx.Team_B, fx.Team_A, fx.B_info)):
+            runs = info.get('runs', 0) if isinstance(info, dict) else 0
+            try:
+                runs = int(runs or 0)
+            except (TypeError, ValueError):
+                runs = 0
+            if runs > 0:
+                totals.append({'team': side, 'opponent': opponent, 'runs': runs,
+                               'match': fx.Match_No, 'scorecard': card})
+
+        result = fx.Result or ''
+        if fx.Win_T in team_codes and 'super over' not in result.lower():
+            margin = re.search(r'won by\s+(\d+)\s+(runs?|wickets?)\b', result, re.I)
+            if margin:
+                value = int(margin.group(1))
+                unit = 'runs' if margin.group(2).lower().startswith('run') else 'wickets'
+                margins.append({'value': value, 'unit': unit, 'winner': fx.Win_T,
+                                'match': fx.Match_No, 'scorecard': card})
+
+                if unit == 'wickets':
+                    winning_score = card['score_a' if fx.Win_T == fx.Team_A else 'score_b']
+                    target = fx.B_info if fx.Win_T == fx.Team_A else fx.A_info
+                    target_runs = target.get('runs', 0) if isinstance(target, dict) else 0
+                    try:
+                        target_runs = int(target_runs or 0)
+                    except (TypeError, ValueError):
+                        target_runs = 0
+                    dls_target = re.search(r'\bTarget\s+(\d+)', result, re.I)
+                    successful_chases.append({
+                        'team': fx.Win_T,
+                        'runs': winning_score['runs'],
+                        'target': int(dls_target.group(1)) if dls_target else target_runs + 1,
+                        'match': fx.Match_No,
+                        'scorecard': card,
+                    })
+                else:
+                    winning_info = fx.A_info if fx.Win_T == fx.Team_A else fx.B_info
+                    defended_runs = winning_info.get('runs', 0) if isinstance(winning_info, dict) else 0
+                    try:
+                        defended_runs = int(defended_runs or 0)
+                    except (TypeError, ValueError):
+                        defended_runs = 0
+                    if defended_runs > 0:
+                        successful_defends.append({
+                            'team': fx.Win_T, 'runs': defended_runs,
+                            'match': fx.Match_No, 'scorecard': card,
+                        })
+
+    ordered = sorted(completed, key=lambda fx: start_DT(fx.Date, fx.Time))
+    winning_streaks = {team: 0 for team in team_codes}
+    best_streak = None
+    losing_streaks = {team: 0 for team in team_codes}
+    worst_streak = None
+    for fx in ordered:
+        sides = (fx.Team_A, fx.Team_B)
+        if fx.Win_T in team_codes:
+            for team in sides:
+                if team not in winning_streaks:
+                    continue
+                if fx.Win_T == team:
+                    winning_streaks[team] += 1
+                    if best_streak is None or winning_streaks[team] > best_streak['wins']:
+                        best_streak = {'team': team, 'wins': winning_streaks[team],
+                                       'scorecard': match_card(fx)}
+                    losing_streaks[team] = 0
+                else:
+                    winning_streaks[team] = 0
+                    losing_streaks[team] += 1
+                    if worst_streak is None or losing_streaks[team] > worst_streak['losses']:
+                        worst_streak = {'team': team, 'losses': losing_streaks[team],
+                                        'scorecard': match_card(fx)}
+        else:
+            for team in sides:
+                if team in winning_streaks:
+                    winning_streaks[team] = 0
+                    losing_streaks[team] = 0
+
+    return {
+        'highest_total': max(totals, key=lambda row: row['runs']) if totals else None,
+        'lowest_total': min(totals, key=lambda row: row['runs']) if totals else None,
+        'narrowest_win_runs': min((m for m in margins if m['unit'] == 'runs'),
+                                  key=lambda row: row['value'], default=None),
+        'narrowest_win_wickets': min((m for m in margins if m['unit'] == 'wickets'),
+                                     key=lambda row: row['value'], default=None),
+        'biggest_win_runs': max((m for m in margins if m['unit'] == 'runs'),
+                                key=lambda row: row['value'], default=None),
+        'biggest_win_wickets': max((m for m in margins if m['unit'] == 'wickets'),
+                                   key=lambda row: row['value'], default=None),
+        'highest_successful_chase': max(successful_chases, key=lambda row: row['target'],
+                                        default=None),
+        'lowest_successful_defend': min(successful_defends, key=lambda row: row['runs'],
+                                        default=None),
+        'winning_streak': best_streak,
+        'losing_streak': worst_streak,
+    }
 
 @main.route('/')
 def index():
@@ -17,11 +149,30 @@ def index():
                                     Pointstable.NRR.desc(), Pointstable.id.asc()).all()
     TP = {t.category: t.stats for t in Toppers.query.order_by(Toppers.id.asc())}
     finalsData = Fixture.query.filter(Fixture.Match_No == 'Final').first()
+    fixtures = Fixture.query.order_by(Fixture.id).all()
+    now = datetime.now(tz).replace(tzinfo=None)
+    ordered = sorted(fixtures, key=lambda fx: start_DT(fx.Date, fx.Time))
+    live = [fx for fx in ordered if fx.Win_T is None and start_DT(fx.Date, fx.Time) <= now]
+    upcoming = [fx for fx in ordered if fx.Win_T is None and start_DT(fx.Date, fx.Time) > now]
+    completed = [fx for fx in ordered if fx.Win_T is not None]
+
+    featured = (live[0] if live else upcoming[0] if upcoming
+                else completed[-1] if completed else None)
+    featured_state = ('live' if live else 'upcoming' if upcoming
+                      else 'completed' if featured else 'empty')
+    latest_result = completed[-1] if completed else None
+    following = next((fx for fx in upcoming if featured is None or fx.id != featured.id), None)
+    featured_start = (tz.localize(start_DT(featured.Date, featured.Time)).isoformat()
+                      if featured else None)
     # Same extras the standings page shows, so the home cards can match it exactly
     return render_template('index.html', teams=full_name, clr=clr, pt=PT, tp=TP,
                            ranks=getRanksForPT(),
                            nxt=getNextOpponents([i.team_name for i in PT]),
-                           champion=finalsData.Win_T if finalsData else None)
+                           champion=finalsData.Win_T if finalsData else None,
+                           featured=featured, featured_state=featured_state,
+                           featured_start=featured_start, latest_result=latest_result,
+                           following=following, records=_homepage_records(fixtures),
+                           playoff_spots=4)
 
 @main.route('/pointstable')
 def displayPT():
